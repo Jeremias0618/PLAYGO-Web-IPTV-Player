@@ -285,6 +285,39 @@ if ($ep_img_from_get) {
             .header__content {
                 padding-left: 4px !important;
             }
+        }
+
+        /* Fix para iOS - Ocultar header en pantalla completa */
+        @supports (-webkit-touch-callout: none) {
+            /* Solo para dispositivos iOS */
+            video::-webkit-media-controls-fullscreen-button {
+                display: block !important;
+            }
+            
+            /* Ocultar header cuando el video está en pantalla completa */
+            video:fullscreen ~ .header,
+            video:fullscreen ~ .navbar-overlay,
+            video:-webkit-full-screen ~ .header,
+            video:-webkit-full-screen ~ .navbar-overlay,
+            video:-moz-full-screen ~ .header,
+            video:-moz-full-screen ~ .navbar-overlay {
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+            }
+            
+            /* También ocultar cuando el body está en pantalla completa */
+            :fullscreen .header,
+            :fullscreen .navbar-overlay,
+            :-webkit-full-screen .header,
+            :-webkit-full-screen .navbar-overlay,
+            :-moz-full-screen .header,
+            :-moz-full-screen .navbar-overlay {
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+            }
+        }
             /* Menú lateral móvil mejorado */
             @media (max-width: 600px) {
             .mobile-menu {
@@ -541,11 +574,9 @@ if ($ep_img_from_get) {
                     <?php if ($ep_ext === 'mp4'): ?>
                         <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
                         <div class="video-player-container" style="margin:32px auto 0 auto; max-width:1100px; width:100%; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden;">
-                                <video id="player" playsinline controls poster="<?php echo htmlspecialchars($ep_poster); ?>" style="width:100%;height:100%;display:block;object-fit:contain;background:#000;">
+                                <video id="player" playsinline webkit-playsinline controls poster="<?php echo htmlspecialchars($ep_poster); ?>" style="width:100%;height:100%;display:block;object-fit:contain;background:#000;" x-webkit-airplay="allow">
                                     <source src="<?php echo htmlspecialchars($video_url); ?>" type="video/mp4" />
                                 </video>
-                                <source src="<?php echo htmlspecialchars($video_url); ?>" type="video/mp4" />
-                            </video>
                         </div>
                         <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
                         <script>
@@ -562,12 +593,10 @@ if ($ep_img_from_get) {
                         </script>
                     <?php else: ?>
                         <div class="video-player-container" style="margin:32px auto 0 auto; max-width:1100px; width:100%; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden;">
-                        <video id="player" playsinline controls poster="<?php echo htmlspecialchars($ep_poster); ?>" style="width:100%;height:100%;display:block;object-fit:contain;background:#000;">
-                            <source src="<?php echo htmlspecialchars($video_url); ?>" type="video/mp4" />
-                        </video>      
-                          <source src="<?php echo htmlspecialchars($video_url); ?>" type="video/<?php echo htmlspecialchars($ep_ext); ?>">
-                                Tu navegador no soporta la reproducción de este formato.
-                            </video>
+                        <video id="player" playsinline webkit-playsinline controls poster="<?php echo htmlspecialchars($ep_poster); ?>" style="width:100%;height:100%;display:block;object-fit:contain;background:#000;" x-webkit-airplay="allow">
+                            <source src="<?php echo htmlspecialchars($video_url); ?>" type="video/<?php echo htmlspecialchars($ep_ext); ?>" />
+                            Tu navegador no soporta la reproducción de este formato.
+                        </video>
                         </div>
                     <?php endif; ?>
                     <?php
@@ -1100,6 +1129,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 video.play();
             });
         }
+    }
+});
+</script>
+
+<script>
+// Fix para iOS - Manejo de pantalla completa
+document.addEventListener('DOMContentLoaded', function() {
+    const header = document.querySelector('.header');
+    const navbarOverlay = document.querySelector('.navbar-overlay');
+    
+    // Detectar si es iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    
+    if (isIOS) {
+        // Función para ocultar/mostrar header
+        function toggleHeaderVisibility(isFullscreen) {
+            if (isFullscreen) {
+                if (header) header.style.display = 'none';
+                if (navbarOverlay) navbarOverlay.style.display = 'none';
+            } else {
+                if (header) header.style.display = 'block';
+                if (navbarOverlay) navbarOverlay.style.display = 'block';
+            }
+        }
+        
+        // Escuchar eventos de pantalla completa para video nativo
+        document.addEventListener('webkitfullscreenchange', function() {
+            toggleHeaderVisibility(!!document.webkitFullscreenElement);
+        });
+        
+        document.addEventListener('fullscreenchange', function() {
+            toggleHeaderVisibility(!!document.fullscreenElement);
+        });
+        
+        // Para Plyr player
+        if (window.player && typeof window.player.on === "function") {
+            window.player.on('enterfullscreen', function() {
+                toggleHeaderVisibility(true);
+            });
+            
+            window.player.on('exitfullscreen', function() {
+                toggleHeaderVisibility(false);
+            });
+        }
+        
+        // Para video HTML5 nativo
+        const videos = document.querySelectorAll('video');
+        videos.forEach(video => {
+            video.addEventListener('webkitbeginfullscreen', function() {
+                toggleHeaderVisibility(true);
+            });
+            
+            video.addEventListener('webkitendfullscreen', function() {
+                toggleHeaderVisibility(false);
+            });
+        });
     }
 });
 </script>
