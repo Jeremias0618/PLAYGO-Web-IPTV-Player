@@ -275,14 +275,47 @@ $nota = $output['info']['rating'];
         word-break: break-word;
     }
 
-        @media (max-width: 600px) {
-            .header__logo {
-                margin-left: 0 !important;
-                padding-left: 0 !important;
-            }
-            .header__content {
-                padding-left: 4px !important;
-            }
+            @media (max-width: 600px) {
+        .header__logo {
+            margin-left: 0 !important;
+            padding-left: 0 !important;
+        }
+        .header__content {
+            padding-left: 4px !important;
+        }
+    }
+
+    /* Fix para iOS - Ocultar header en pantalla completa */
+    @supports (-webkit-touch-callout: none) {
+        /* Solo para dispositivos iOS */
+        video::-webkit-media-controls-fullscreen-button {
+            display: block !important;
+        }
+        
+        /* Ocultar header cuando el video está en pantalla completa */
+        video:fullscreen ~ .header,
+        video:fullscreen ~ .navbar-overlay,
+        video:-webkit-full-screen ~ .header,
+        video:-webkit-full-screen ~ .navbar-overlay,
+        video:-moz-full-screen ~ .header,
+        video:-moz-full-screen ~ .navbar-overlay {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+        
+        /* También ocultar cuando el body está en pantalla completa */
+        :fullscreen .header,
+        :fullscreen .navbar-overlay,
+        :-webkit-full-screen .header,
+        :-webkit-full-screen .navbar-overlay,
+        :-moz-full-screen .header,
+        :-moz-full-screen .navbar-overlay {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+    }
     
     /* Solo para móviles (Android, iOS, etc.) */
 @media (max-width: 600px) {
@@ -625,10 +658,12 @@ $nota = $output['info']['rating'];
                                 <video
                                     id="plyr-video"
                                     playsinline
+                                    webkit-playsinline
                                     controls
                                     width="100%"
                                     height="450"
                                     poster="<?php echo $wallpaper_tmdb ?: $repro_img; ?>"
+                                    x-webkit-airplay="allow"
                             >
                                     <source src="<?php echo IP; ?>/<?php echo $tipo; ?>/<?php echo $user; ?>/<?php echo $pwd; ?>/<?php echo $id; ?>.mp4" type="video/mp4" />
                                 </video>
@@ -648,8 +683,11 @@ $nota = $output['info']['rating'];
                                 <div style="width:100%;max-width:1100px;margin:auto;">
                                     <video
                                         controls
+                                        playsinline
+                                        webkit-playsinline
                                         poster="<?php echo $wallpaper_tmdb ?: $repro_img; ?>"
                                         style="background:#000;display:block;margin:auto;width:100%;max-width:1100px;height:600px;object-fit:contain;"
+                                        x-webkit-airplay="allow"
                                     >
                                         <source src="<?php echo IP; ?>/<?php echo $tipo; ?>/<?php echo $user; ?>/<?php echo $pwd; ?>/<?php echo $id; ?>.<?php echo $exts; ?>" type="video/<?php echo htmlspecialchars($exts); ?>" />
                                         <source src="<?php echo IP; ?>/<?php echo $tipo; ?>/<?php echo $user; ?>/<?php echo $pwd; ?>/<?php echo $id; ?>.<?php echo $exts; ?>" />
@@ -930,6 +968,63 @@ document.addEventListener('DOMContentLoaded', function() {
             trailerIframe.src = "";
         }
     });
+});
+</script>
+
+<script>
+// Fix para iOS - Manejo de pantalla completa
+document.addEventListener('DOMContentLoaded', function() {
+    const header = document.querySelector('.header');
+    const navbarOverlay = document.querySelector('.navbar-overlay');
+    
+    // Detectar si es iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    
+    if (isIOS) {
+        // Función para ocultar/mostrar header
+        function toggleHeaderVisibility(isFullscreen) {
+            if (isFullscreen) {
+                if (header) header.style.display = 'none';
+                if (navbarOverlay) navbarOverlay.style.display = 'none';
+            } else {
+                if (header) header.style.display = 'block';
+                if (navbarOverlay) navbarOverlay.style.display = 'block';
+            }
+        }
+        
+        // Escuchar eventos de pantalla completa para video nativo
+        document.addEventListener('webkitfullscreenchange', function() {
+            toggleHeaderVisibility(!!document.webkitFullscreenElement);
+        });
+        
+        document.addEventListener('fullscreenchange', function() {
+            toggleHeaderVisibility(!!document.fullscreenElement);
+        });
+        
+        // Para Plyr player
+        if (window.player && typeof window.player.on === "function") {
+            window.player.on('enterfullscreen', function() {
+                toggleHeaderVisibility(true);
+            });
+            
+            window.player.on('exitfullscreen', function() {
+                toggleHeaderVisibility(false);
+            });
+        }
+        
+        // Para video HTML5 nativo
+        const videos = document.querySelectorAll('video');
+        videos.forEach(video => {
+            video.addEventListener('webkitbeginfullscreen', function() {
+                toggleHeaderVisibility(true);
+            });
+            
+            video.addEventListener('webkitendfullscreen', function() {
+                toggleHeaderVisibility(false);
+            });
+        });
+    }
 });
 </script>
 
