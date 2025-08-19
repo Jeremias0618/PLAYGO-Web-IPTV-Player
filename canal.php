@@ -814,6 +814,74 @@ if (!empty($canal_data['plot'])) {
             }
         }
 
+        /* Estilos específicos para iOS */
+        @supports (-webkit-touch-callout: none) {
+            #livevideo video {
+                -webkit-appearance: none;
+                border-radius: 0;
+                background: #000;
+            }
+            
+            #livevideo video::-webkit-media-controls {
+                display: none !important;
+            }
+            
+            #livevideo video::-webkit-media-controls-panel {
+                display: none !important;
+            }
+            
+            #livevideo video::-webkit-media-controls-play-button {
+                display: none !important;
+            }
+            
+            #livevideo video::-webkit-media-controls-start-playback-button {
+                display: none !important;
+            }
+        }
+
+        /* Mejoras para video nativo en iOS */
+        #nativeVideo, #fallbackVideo {
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            border: none;
+            background: #000;
+        }
+
+        /* Estilos para controles personalizados en iOS si es necesario */
+        .ios-video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .ios-play-button {
+            background: rgba(229,9,20,0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .ios-play-button:hover {
+            background: rgba(229,9,20,1);
+            transform: scale(1.1);
+        }
+
         @media (max-width: 600px) {
             .header__logo {
                 margin-left: 0 !important;
@@ -1328,17 +1396,276 @@ if (!empty($canal_data['plot'])) {
     });
     </script>
 <script>
-    // JWPlayer para el canal en vivo
-    jwplayer.key = "";
-    jwplayer("livevideo").setup({
-        file: "<?php echo IP; ?>/<?php echo $tipo; ?>/<?php echo $user; ?>/<?php echo $pwd; ?>/<?php echo $id; ?>.m3u8",
-        image: "<?php echo $img; ?>",
-        width: "100%",
-        aspectratio: "16:9",
-        autostart: true,
-        mute: false,
-        stretching: "fill"
-    });
+    // Detectar si es dispositivo iOS
+    function isIOS() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    }
+
+    // Detectar si es Safari en iOS
+    function isSafariIOS() {
+        return isIOS() && /Safari/.test(navigator.userAgent) && !/CriOS|FxiOS|OPiOS|mercury/.test(navigator.userAgent);
+    }
+
+    // Detectar versión de iOS
+    function getIOSVersion() {
+        var match = navigator.userAgent.match(/OS (\d+)_(\d+)_?(\d+)?/);
+        if (match) {
+            return parseInt(match[1]);
+        }
+        return 0;
+    }
+
+    // URL del stream
+    var streamUrl = "<?php echo IP; ?>/<?php echo $tipo; ?>/<?php echo $user; ?>/<?php echo $pwd; ?>/<?php echo $id; ?>.m3u8";
+    var posterImage = "<?php echo $img; ?>";
+    var iosVersion = getIOSVersion();
+
+    // Configuración específica para iOS
+    if (isIOS()) {
+        console.log('Dispositivo iOS detectado, versión:', iosVersion);
+        
+        // Para iOS, usar video nativo HTML5 con HLS.js como fallback
+        var videoElement = document.getElementById('livevideo');
+        videoElement.innerHTML = `
+            <video 
+                id="nativeVideo" 
+                controls 
+                autoplay 
+                muted 
+                playsinline 
+                webkit-playsinline
+                x-webkit-airplay="allow"
+                style="width: 100%; height: 100%; background: #000;"
+                poster="${posterImage}"
+                preload="metadata"
+            >
+                <source src="${streamUrl}" type="application/x-mpegURL">
+                Tu navegador no soporta el elemento de video.
+            </video>
+        `;
+
+        var video = document.getElementById('nativeVideo');
+        
+        // Configuraciones específicas para diferentes versiones de iOS
+        if (iosVersion >= 10) {
+            video.setAttribute('webkit-playsinline', 'true');
+            video.setAttribute('playsinline', 'true');
+        }
+        
+        // Intentar reproducir automáticamente
+        video.addEventListener('loadedmetadata', function() {
+            console.log('Metadata cargado, intentando autoplay...');
+            video.play().catch(function(error) {
+                console.log('Autoplay falló:', error);
+                // Para iOS, intentar con muted
+                video.muted = true;
+                video.play().catch(function(e) {
+                    console.log('Muted autoplay también falló:', e);
+                    // Mostrar botón de play manual
+                    showManualPlayButton();
+                });
+            });
+        });
+
+        // Manejar errores de carga
+        video.addEventListener('error', function(e) {
+            console.error('Error en video nativo:', e);
+            var errorCode = video.error ? video.error.code : 'unknown';
+            console.log('Código de error:', errorCode);
+            
+            // Intentar diferentes estrategias según el error
+            if (errorCode === 4 || errorCode === 'MEDIA_ELEMENT_ERROR') {
+                // Error de formato no soportado, intentar con HLS.js
+                console.log('Formato no soportado, intentando con HLS.js...');
+                tryHLSJS();
+            } else {
+                // Otros errores, fallback a JWPlayer
+                fallbackToJWPlayer();
+            }
+        });
+
+        // Si es Safari en iOS, intentar usar HLS.js como fallback
+        if (isSafariIOS()) {
+            console.log('Safari iOS detectado, cargando HLS.js...');
+            tryHLSJS();
+        }
+
+    } else {
+        // Para Android y otros dispositivos, usar JWPlayer
+        console.log('Dispositivo no-iOS detectado, usando JWPlayer');
+        setupJWPlayer();
+    }
+
+    // Función para intentar con HLS.js
+    function tryHLSJS() {
+        // Cargar HLS.js dinámicamente
+        var hlsScript = document.createElement('script');
+        hlsScript.src = 'https://cdn.jsdelivr.net/npm/hls.js@latest';
+        hlsScript.onload = function() {
+            if (Hls.isSupported()) {
+                console.log('HLS.js soportado, configurando...');
+                var video = document.getElementById('nativeVideo');
+                var hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 90,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 600,
+                    maxBufferSize: 60 * 1000 * 1000,
+                    maxBufferHole: 0.5,
+                    highBufferWatchdogPeriod: 2,
+                    nudgeOffset: 0.2,
+                    nudgeMaxRetry: 5,
+                    maxFragLookUpTolerance: 0.25,
+                    liveSyncDurationCount: 3,
+                    liveMaxLatencyDurationCount: 10
+                });
+                
+                hls.loadSource(streamUrl);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    console.log('HLS.js manifest parseado, intentando reproducir...');
+                    video.play().catch(function(e) {
+                        console.log('HLS.js autoplay falló:', e);
+                        showManualPlayButton();
+                    });
+                });
+                
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    console.error('HLS.js error:', data);
+                    if (data.fatal) {
+                        console.log('Error fatal en HLS.js, cambiando a JWPlayer...');
+                        fallbackToJWPlayer();
+                    }
+                });
+            } else {
+                console.log('HLS.js no soportado, cambiando a JWPlayer...');
+                fallbackToJWPlayer();
+            }
+        };
+        
+        hlsScript.onerror = function() {
+            console.log('Error cargando HLS.js, cambiando a JWPlayer...');
+            fallbackToJWPlayer();
+        };
+        
+        document.head.appendChild(hlsScript);
+    }
+
+    // Función para mostrar botón de play manual
+    function showManualPlayButton() {
+        var videoElement = document.getElementById('livevideo');
+        if (videoElement.querySelector('.ios-video-controls')) return; // Ya existe
+        
+        var controls = document.createElement('div');
+        controls.className = 'ios-video-controls';
+        controls.innerHTML = `
+            <button class="ios-play-button" onclick="playVideo()">
+                <i class="fas fa-play"></i>
+            </button>
+        `;
+        videoElement.appendChild(controls);
+    }
+
+    // Función global para reproducir video
+    function playVideo() {
+        var video = document.getElementById('nativeVideo') || document.getElementById('fallbackVideo');
+        if (video) {
+            video.play().catch(function(e) {
+                console.log('Play manual falló:', e);
+            });
+        }
+        // Remover controles manuales
+        var controls = document.querySelector('.ios-video-controls');
+        if (controls) controls.remove();
+    }
+
+    // Función de fallback a JWPlayer
+    function fallbackToJWPlayer() {
+        console.log('Cambiando a JWPlayer...');
+        var videoElement = document.getElementById('livevideo');
+        videoElement.innerHTML = '<div id="jwplayerContainer"></div>';
+        
+        // Configurar JWPlayer
+        jwplayer.key = "";
+        jwplayer("jwplayerContainer").setup({
+            file: streamUrl,
+            image: posterImage,
+            width: "100%",
+            aspectratio: "16:9",
+            autostart: true,
+            mute: false,
+            stretching: "fill",
+            hlshtml: true,
+            primary: "html5",
+            fallback: true,
+            // Configuraciones específicas para iOS
+            preload: "metadata",
+            ga: {},
+            // Configuraciones específicas para HLS
+            hls: {
+                lowLatencyMode: true,
+                backBufferLength: 90
+            }
+        });
+    }
+
+    // Configuración estándar de JWPlayer para dispositivos no-iOS
+    function setupJWPlayer() {
+        jwplayer.key = "";
+        jwplayer("livevideo").setup({
+            file: streamUrl,
+            image: posterImage,
+            width: "100%",
+            aspectratio: "16:9",
+            autostart: true,
+            mute: false,
+            stretching: "fill",
+            hlshtml: true,
+            primary: "html5",
+            fallback: true,
+            // Configuraciones adicionales para mejor compatibilidad
+            preload: "metadata",
+            ga: {},
+            // Configuraciones específicas para HLS
+            hls: {
+                lowLatencyMode: true,
+                backBufferLength: 90
+            }
+        });
+
+        // Manejar errores de JWPlayer
+        jwplayer("livevideo").on('error', function(e) {
+            console.error('JWPlayer error:', e);
+            // Si hay error en JWPlayer, intentar con video nativo
+            if (e.code === 101104 || e.code === 101104) {
+                console.log('Error 101104 detectado, intentando con video nativo...');
+                var videoElement = document.getElementById('livevideo');
+                videoElement.innerHTML = `
+                    <video 
+                        id="fallbackVideo" 
+                        controls 
+                        autoplay 
+                        muted 
+                        playsinline 
+                        webkit-playsinline
+                        style="width: 100%; height: 100%; background: #000;"
+                        poster="${posterImage}"
+                    >
+                        <source src="${streamUrl}" type="application/x-mpegURL">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                `;
+                
+                var fallbackVideo = document.getElementById('fallbackVideo');
+                fallbackVideo.play().catch(function(error) {
+                    console.log('Fallback video autoplay falló:', error);
+                });
+            }
+        });
+    }
 
     // Si no hay info, buscar en Wikipedia y mostrar solo el primer párrafo
     <?php if(!$info): ?>
@@ -1402,6 +1729,6 @@ if (!empty($canal_data['plot'])) {
             });
     });
     <?php endif; ?>
-</script>
+    </script>
 </body>
 </html>
