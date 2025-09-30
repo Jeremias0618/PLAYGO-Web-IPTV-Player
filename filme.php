@@ -530,6 +530,25 @@ $nota = $output['info']['rating'];
             padding-left: 4px !important;
         }
     }
+    
+    /* Estilos del logo para mantener proporciones correctas */
+    @media (min-width: 601px) {
+        .header__logo img {
+            width: 240px !important;
+            height: 80px !important;
+            max-width: none !important;
+            object-fit: contain;
+        }
+    }
+    
+    @media (max-width: 600px) {
+        .header__logo img {
+            width: 240px !important;
+            height: 60px !important;
+            max-width: 100% !important;
+            object-fit: contain;
+        }
+    }
 
     /* Fix para iOS - Ocultar header en pantalla completa */
     @supports (-webkit-touch-callout: none) {
