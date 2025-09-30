@@ -164,110 +164,337 @@ $series_pagina = ($output && is_array($output)) ? array_slice(array_values($outp
         0% { background-position: 0% 50%; }
         100% { background-position: 100% 50%; }
     }
-    /* MODAL BUSCADOR */
+    /* MODAL BUSCADOR MEJORADO */
     .modal-buscador-bg {
         display: none;
         position: fixed;
-        z-index: 9999;
+        z-index: 999999 !important;
         left: 0; top: 0;
         width: 100vw; height: 100vh;
-        background: rgba(0,0,0,0.85);
+        background: linear-gradient(135deg, rgba(15,32,39,0.95) 0%, rgba(44,83,100,0.95) 100%);
         align-items: center;
         justify-content: center;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
     .modal-buscador-bg.active {
         display: flex;
+        opacity: 1;
     }
     .modal-buscador {
-        background: #181818;
-        border-radius: 18px;
-        padding: 32px 24px 24px 24px;
-        max-width: 900px;
-        width: 98vw;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 8px 32px #000a;
+        background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
+        border-radius: 20px;
+        padding: 0;
+        max-width: 800px;
+        width: 90vw;
+        max-height: 85vh;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.8);
         position: relative;
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+        border: 1px solid rgba(229,9,20,0.3);
+    }
+    .modal-buscador-bg.active .modal-buscador {
+        transform: scale(1);
+    }
+    
+    /* Asegurar que el modal esté por encima de todo */
+    .modal-buscador-bg,
+    .modal-buscador-bg * {
+        z-index: 999999 !important;
+    }
+    
+    /* Forzar que el modal esté por encima del header */
+    .modal-buscador-bg {
+        z-index: 999999 !important;
+    }
+    
+    .modal-buscador {
+        z-index: 999999 !important;
+    }
+    .modal-buscador-header {
+        background: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+        padding: 20px 24px;
+        border-radius: 20px 20px 0 0;
+        position: relative;
+        overflow: hidden;
+    }
+    .modal-buscador-header::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+    }
+    .modal-buscador-title {
+        color: #fff;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0;
+        text-align: center;
+        position: relative;
+        z-index: 1;
     }
     .modal-buscador-close {
         position: absolute;
-        top: 16px;
-        right: 18px;
-        font-size: 1.8rem;
-        color: #fff;
-        background: none;
+        top: 20px;
+        right: 24px;
+        width: 36px;
+        height: 36px;
+        background: rgba(255,255,255,0.2);
         border: none;
+        border-radius: 50%;
+        color: #fff;
+        font-size: 1.2rem;
         cursor: pointer;
         z-index: 2;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .modal-buscador-close:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.1);
+    }
+    .modal-buscador-body {
+        padding: 24px;
+        max-height: calc(85vh - 100px);
+        overflow-y: auto;
     }
     .modal-buscador-inputbox {
         display: flex;
         align-items: center;
         margin-bottom: 24px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 4px;
+        border: 1px solid rgba(255,255,255,0.1);
     }
     .modal-buscador-inputbox input {
         flex: 1;
-        background: #232027;
+        background: transparent;
         border: none;
         color: #fff;
-        border-radius: 8px;
-        padding: 12px 18px;
-        font-size: 1.2rem;
-        margin-right: 12px;
+        border-radius: 12px;
+        padding: 16px 20px;
+        font-size: 1.1rem;
+        margin: 0;
+        outline: none;
     }
     .modal-buscador-inputbox input::placeholder {
-        color: #aaa;
+        color: rgba(255,255,255,0.6);
     }
     .modal-buscador-inputbox button {
-        background: #e50914;
+        background: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
         border: none;
         color: #fff;
-        border-radius: 8px;
-        padding: 10px 22px;
-        font-size: 1.1rem;
+        border-radius: 12px;
+        padding: 16px 24px;
+        font-size: 1rem;
+        font-weight: 600;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: all 0.2s ease;
+        margin-left: 4px;
+        white-space: nowrap;
     }
     .modal-buscador-inputbox button:hover {
-        background: #fff;
-        color: #e50914;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(229,9,20,0.4);
+    }
+    .modal-buscador-inputbox button:active {
+        transform: translateY(0);
     }
     .modal-buscador-section {
         margin-bottom: 32px;
     }
     .modal-buscador-section h3 {
         color: #e50914;
-        font-size: 1.25rem;
-        margin-bottom: 16px;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
         margin-top: 0;
         font-weight: 700;
-        letter-spacing: 1px;
+        text-align: left;
+        padding-left: 8px;
+        border-left: 4px solid #e50914;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .modal-buscador-section h3::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: #e50914;
+        border-radius: 50%;
     }
     .modal-buscador-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 18px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 16px;
+        justify-content: start;
     }
     .modal-buscador-card {
-        width: 110px;
         text-align: center;
+        transition: transform 0.2s ease;
+    }
+    .modal-buscador-card:hover {
+        transform: translateY(-4px);
+    }
+    .modal-buscador-card a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
     }
     .modal-buscador-card img {
         width: 100%;
-        height: 140px;
+        height: 160px;
         object-fit: cover;
-        border-radius: 10px;
+        border-radius: 12px;
         background: #232027;
-        margin-bottom: 7px;
-        box-shadow: 0 2px 8px #0005;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        transition: all 0.2s ease;
+        border: 2px solid transparent;
+    }
+    .modal-buscador-card:hover img {
+        border-color: #e50914;
+        box-shadow: 0 8px 24px rgba(229,9,20,0.3);
     }
     .modal-buscador-card span {
         color: #fff;
-        font-size: 0.98rem;
+        font-size: 0.9rem;
+        display: block;
+        font-weight: 500;
+        line-height: 1.3;
+        padding: 0 4px;
+        word-break: break-word;
+    }
         display: block;
         margin-top: 2px;
         word-break: break-word;
     }
+    .modal-buscador-empty {
+        text-align: center;
+        padding: 40px 20px;
+        color: rgba(255,255,255,0.7);
+    }
+    .modal-buscador-empty i {
+        font-size: 3rem;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+    .modal-buscador-empty p {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+    .modal-buscador-filters {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .filter-btn {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .filter-btn.active {
+        background: #e50914;
+        border-color: #e50914;
+    }
+    .filter-btn:hover {
+        background: rgba(255,255,255,0.2);
+    }
+    .filter-btn.active:hover {
+        background: #c8008f;
+    }
+    
+    /* Estilos específicos para desktop del buscador */
+    @media (min-width: 1200px) {
+        .modal-buscador {
+            max-width: 700px !important;
+            width: 700px !important;
+        }
+    }
+    
+    @media (min-width: 768px) and (max-width: 1199px) {
+        .modal-buscador {
+            max-width: 750px !important;
+            width: 85vw !important;
+        }
+    }
+    
+    /* Estilos específicos para móviles del buscador */
+    @media (max-width: 600px) {
+        .modal-buscador {
+            width: 98vw !important;
+            max-width: 98vw !important;
+            border-radius: 16px !important;
+            margin: 10px;
+        }
+        .modal-buscador-header {
+            padding: 16px 20px;
+            border-radius: 16px 16px 0 0;
+        }
+        .modal-buscador-title {
+            font-size: 1.2rem;
+        }
+        .modal-buscador-body {
+            padding: 20px 16px;
+        }
+        .modal-buscador-inputbox {
+            flex-direction: column;
+            gap: 12px;
+            padding: 8px;
+        }
+        .modal-buscador-inputbox input {
+            width: 100%;
+            font-size: 1rem;
+            padding: 14px 16px;
+        }
+        .modal-buscador-inputbox button {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 1rem;
+        }
+        .modal-buscador-filters {
+            justify-content: center;
+            gap: 8px;
+        }
+        .filter-btn {
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            min-width: 80px;
+        }
+        .modal-buscador-grid {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+        }
+        .modal-buscador-card img {
+            height: 140px;
+        }
+        .modal-buscador-card span {
+            font-size: 0.85rem;
+            line-height: 1.2;
+        }
+        .modal-buscador-close {
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            font-size: 1rem;
+        }
+    }
+    
     #bg-overlay {
         position: fixed;
         top: 0; left: 0; width: 100vw; height: 100vh;
@@ -319,7 +546,22 @@ $series_pagina = ($output && is_array($output)) ? array_slice(array_values($outp
   }
 }
 
-            @media (max-width: 600px) {
+            /* Estilos específicos para desktop del buscador */
+        @media (min-width: 1200px) {
+            .modal-buscador {
+                max-width: 700px !important;
+                width: 700px !important;
+            }
+        }
+        
+        @media (min-width: 768px) and (max-width: 1199px) {
+            .modal-buscador {
+                max-width: 750px !important;
+                width: 85vw !important;
+            }
+        }
+        
+        @media (max-width: 600px) {
             .header__logo {
                 margin-left: 0 !important;
                 padding-left: 0 !important;
@@ -385,6 +627,21 @@ $series_pagina = ($output && is_array($output)) ? array_slice(array_values($outp
     font-size: 0.93rem !important;
   }
 }
+        
+        /* FORZAR Z-INDEX MÁXIMO PARA EL MODAL */
+        .modal-buscador-bg {
+            z-index: 999999 !important;
+            position: fixed !important;
+        }
+        
+        .modal-buscador-bg * {
+            z-index: 999999 !important;
+        }
+        
+        .modal-buscador {
+            z-index: 999999 !important;
+            position: relative !important;
+        }
     </style>
 <?php if($backdrop_fondo): ?>
 <style>
@@ -458,17 +715,45 @@ html > body > * {
 </header>
 <div id="bg-overlay"></div>
 
-<!-- MODAL BUSCADOR -->
+<!-- MODAL BUSCADOR MEJORADO -->
 <div class="modal-buscador-bg" id="modalBuscador">
     <div class="modal-buscador">
-        <button class="modal-buscador-close" id="closeSearchModal" title="Cerrar">&times;</button>
-        <form id="modalBuscadorForm" autocomplete="off" onsubmit="return false;">
-            <div class="modal-buscador-inputbox">
-                <input type="text" id="modalBuscadorInput" placeholder="Buscar películas, series o canales en vivo..." autofocus>
-                <button type="button" id="modalBuscadorBtn">Buscar</button>
+        <div class="modal-buscador-header">
+            <h2 class="modal-buscador-title">
+                <i class="fas fa-search"></i> Buscador PLAYGO
+            </h2>
+            <button class="modal-buscador-close" id="closeSearchModal" title="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-buscador-body">
+            <form id="modalBuscadorForm" autocomplete="off" onsubmit="return false;">
+                <div class="modal-buscador-inputbox">
+                    <input type="text" id="modalBuscadorInput" placeholder="Buscar películas, series o canales..." autofocus>
+                    <button type="button" id="modalBuscadorBtn">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Filtros de búsqueda -->
+            <div class="modal-buscador-filters" id="searchFilters">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-th-large"></i> Todo
+                </button>
+                <button class="filter-btn" data-filter="movies">
+                    <i class="fas fa-film"></i> Películas
+                </button>
+                <button class="filter-btn" data-filter="series">
+                    <i class="fas fa-tv"></i> Series
+                </button>
+                <button class="filter-btn" data-filter="channels">
+                    <i class="fas fa-broadcast-tower"></i> TV
+                </button>
             </div>
-        </form>
-        <div id="modalBuscadorResults"></div>
+            
+            <div id="modalBuscadorResults"></div>
+        </div>
     </div>
 </div>
 
@@ -648,56 +933,112 @@ echo "var canales = ".json_encode(array_map(function($c){
     ];
 },$canales)).";\n";
 ?>
+
+// Función para normalizar texto (remover tildes y caracteres especiales)
+function normalizarTexto(texto) {
+    return texto
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remover diacríticos (tildes, diéresis, etc.)
+        .replace(/[^a-z0-9\s]/g, ' ') // Remover caracteres especiales, mantener solo letras, números y espacios
+        .replace(/\s+/g, ' ') // Normalizar espacios múltiples
+        .trim();
+}
+
 // Función para renderizar resultados del buscador
 function renderBuscadorResults(query) {
-    query = query.trim().toLowerCase();
+    query = query.trim();
+    let queryNormalizado = normalizarTexto(query);
     let html = '';
+    let totalResults = 0;
+    
+    // Aplicar filtro
+    let showMovies = currentFilter === 'all' || currentFilter === 'movies';
+    let showSeries = currentFilter === 'all' || currentFilter === 'series';
+    let showChannels = currentFilter === 'all' || currentFilter === 'channels';
+    
     // Películas
-    let pelis = peliculas.filter(p => p.nombre.toLowerCase().includes(query));
-    if (pelis.length > 0) {
-        html += `<div class="modal-buscador-section"><h3>PELICULAS</h3><div class="modal-buscador-grid">`;
-        pelis.slice(0,12).forEach(p => {
-            html += `<div class="modal-buscador-card">
-                <a href="filme.php?stream=${p.id}&streamtipo=movie">
-                    <img src="${p.img}" alt="${p.nombre}">
-                    <span>${p.nombre}</span>
-                </a>
-            </div>`;
+    if (showMovies) {
+        let pelis = peliculas.filter(p => {
+            let nombreNormalizado = normalizarTexto(p.nombre);
+            return nombreNormalizado.includes(queryNormalizado) || 
+                   p.nombre.toLowerCase().includes(query.toLowerCase());
         });
-        html += `</div></div>`;
+        if (pelis.length > 0) {
+            html += `<div class="modal-buscador-section">
+                <h3><i class="fas fa-film"></i> PELÍCULAS (${pelis.length})</h3>
+                <div class="modal-buscador-grid">`;
+            pelis.slice(0,12).forEach(p => {
+                html += `<div class="modal-buscador-card">
+                    <a href="filme.php?stream=${p.id}&streamtipo=movie">
+                        <img src="${p.img}" alt="${p.nombre}" onerror="this.src='img/logo.png'">
+                        <span>${p.nombre}</span>
+                    </a>
+                </div>`;
+            });
+            html += `</div></div>`;
+            totalResults += pelis.length;
+        }
     }
     // Series
-    let sers = series.filter(s => s.nombre.toLowerCase().includes(query));
-    if (sers.length > 0) {
-        html += `<div class="modal-buscador-section"><h3>SERIES</h3><div class="modal-buscador-grid">`;
-        sers.slice(0,12).forEach(s => {
-            html += `<div class="modal-buscador-card">
-                <a href="serie.php?stream=${s.id}&streamtipo=serie">
-                    <img src="${s.img}" alt="${s.nombre}">
-                    <span>${s.nombre}</span>
-                </a>
-            </div>`;
+    if (showSeries) {
+        let sers = series.filter(s => {
+            let nombreNormalizado = normalizarTexto(s.nombre);
+            return nombreNormalizado.includes(queryNormalizado) || 
+                   s.nombre.toLowerCase().includes(query.toLowerCase());
         });
-        html += `</div></div>`;
+        if (sers.length > 0) {
+            html += `<div class="modal-buscador-section">
+                <h3><i class="fas fa-tv"></i> SERIES (${sers.length})</h3>
+                <div class="modal-buscador-grid">`;
+            sers.slice(0,12).forEach(s => {
+                html += `<div class="modal-buscador-card">
+                    <a href="serie.php?stream=${s.id}&streamtipo=serie">
+                        <img src="${s.img}" alt="${s.nombre}" onerror="this.src='img/logo.png'">
+                        <span>${s.nombre}</span>
+                    </a>
+                </div>`;
+            });
+            html += `</div></div>`;
+            totalResults += sers.length;
+        }
     }
     // Canales
-    let chans = canales.filter(c => c.nombre.toLowerCase().includes(query));
-    if (chans.length > 0) {
-        html += `<div class="modal-buscador-section"><h3>TV EN VIVO</h3><div class="modal-buscador-grid">`;
-        chans.slice(0,12).forEach(c => {
-            html += `<div class="modal-buscador-card">
-                <a href="canal.php?stream=${c.id}">
-                    <img src="${c.img}" alt="${c.nombre}">
-                    <span>${c.nombre}</span>
-                </a>
-            </div>`;
+    if (showChannels) {
+        let chans = canales.filter(c => {
+            let nombreNormalizado = normalizarTexto(c.nombre);
+            return nombreNormalizado.includes(queryNormalizado) || 
+                   c.nombre.toLowerCase().includes(query.toLowerCase());
         });
-        html += `</div></div>`;
+        if (chans.length > 0) {
+            html += `<div class="modal-buscador-section">
+                <h3><i class="fas fa-broadcast-tower"></i> TV EN VIVO (${chans.length})</h3>
+                <div class="modal-buscador-grid">`;
+            chans.slice(0,12).forEach(c => {
+                html += `<div class="modal-buscador-card">
+                    <a href="canal.php?stream=${c.id}">
+                        <img src="${c.img}" alt="${c.nombre}" onerror="this.src='img/logo.png'">
+                        <span>${c.nombre}</span>
+                    </a>
+                </div>`;
+            });
+            html += `</div></div>`;
+            totalResults += chans.length;
+        }
     }
     if (!html && query.length > 0) {
-        html = `<div style="color:#fff;text-align:center;margin-top:30px;">Sin resultados.</div>`;
+        html = `<div class="modal-buscador-empty">
+            <i class="fas fa-search"></i>
+            <p>No se encontraron resultados para "${query}"</p>
+            <p style="font-size: 0.9rem; margin-top: 8px;">Intenta con otros términos o cambia el filtro</p>
+        </div>`;
+    } else if (query.length > 0) {
+        html = `<div style="text-align: center; margin-bottom: 20px; color: rgba(255,255,255,0.7);">
+            <i class="fas fa-info-circle"></i> Se encontraron ${totalResults} resultados
+        </div>` + html;
     }
-    document.getElementById('modalBuscadorResults').innerHTML = html;
+    
+    modalBuscadorResults.innerHTML = html;
 }
 
 // Lógica del modal buscador
@@ -707,15 +1048,34 @@ const modalBuscador = document.getElementById('modalBuscador');
 const modalBuscadorInput = document.getElementById('modalBuscadorInput');
 const modalBuscadorBtn = document.getElementById('modalBuscadorBtn');
 const modalBuscadorResults = document.getElementById('modalBuscadorResults');
+const searchFilters = document.getElementById('searchFilters');
+
+let currentFilter = 'all';
+let searchTimeout;
 
 function showModalBuscador() {
     modalBuscador.classList.add('active');
-    setTimeout(() => { modalBuscadorInput.focus(); }, 200);
+    setTimeout(() => { 
+        modalBuscadorInput.focus();
+        modalBuscadorInput.select();
+    }, 300);
 }
+
 function hideModalBuscador() {
     modalBuscador.classList.remove('active');
-    modalBuscadorInput.value = '';
-    modalBuscadorResults.innerHTML = '';
+    setTimeout(() => {
+        modalBuscadorInput.value = '';
+        modalBuscadorResults.innerHTML = '';
+        resetFilters();
+    }, 300);
+}
+
+function resetFilters() {
+    currentFilter = 'all';
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector('[data-filter="all"]').classList.add('active');
 }
 if(openSearchModal) openSearchModal.onclick = showModalBuscador;
 if(closeSearchModal) closeSearchModal.onclick = hideModalBuscador;
@@ -726,11 +1086,35 @@ modalBuscador.addEventListener('click', function(e) {
     if (e.target === modalBuscador) hideModalBuscador();
 });
 
-// Buscar al escribir
+// Filtros de búsqueda
+searchFilters.addEventListener('click', function(e) {
+    if (e.target.classList.contains('filter-btn')) {
+        // Remover clase active de todos los botones
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        // Agregar clase active al botón clickeado
+        e.target.classList.add('active');
+        currentFilter = e.target.getAttribute('data-filter');
+        
+        // Re-renderizar resultados si hay una búsqueda activa
+        let query = modalBuscadorInput.value.trim();
+        if (query.length > 1) {
+            renderBuscadorResults(query);
+        }
+    }
+});
+
+// Buscar con debounce para mejor performance
 modalBuscadorInput.addEventListener('input', function() {
+    clearTimeout(searchTimeout);
     let q = this.value;
-    if (q.length > 1) renderBuscadorResults(q);
-    else modalBuscadorResults.innerHTML = '';
+    
+    if (q.length > 1) {
+        searchTimeout = setTimeout(() => {
+            renderBuscadorResults(q);
+        }, 300);
+    } else {
+        modalBuscadorResults.innerHTML = '';
+    }
 });
 // Buscar al hacer clic en botón
 modalBuscadorBtn.addEventListener('click', function() {

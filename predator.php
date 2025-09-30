@@ -185,17 +185,45 @@ foreach ($saga_predator_ids as $id) {
         </div>
     </div>
 </header>
-<!-- MODAL BUSCADOR -->
+<!-- MODAL BUSCADOR MEJORADO -->
 <div class="modal-buscador-bg" id="modalBuscador">
     <div class="modal-buscador">
-        <button class="modal-buscador-close" id="closeSearchModal" title="Cerrar">&times;</button>
-        <form id="modalBuscadorForm" autocomplete="off" onsubmit="return false;">
-            <div class="modal-buscador-inputbox">
-                <input type="text" id="modalBuscadorInput" placeholder="Buscar películas, series o canales en vivo..." autofocus>
-                <button type="button" id="modalBuscadorBtn">Buscar</button>
+        <div class="modal-buscador-header">
+            <h2 class="modal-buscador-title">
+                <i class="fas fa-search"></i> Buscador PLAYGO
+            </h2>
+            <button class="modal-buscador-close" id="closeSearchModal" title="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-buscador-body">
+            <form id="modalBuscadorForm" autocomplete="off" onsubmit="return false;">
+                <div class="modal-buscador-inputbox">
+                    <input type="text" id="modalBuscadorInput" placeholder="Buscar películas, series o canales..." autofocus>
+                    <button type="button" id="modalBuscadorBtn">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Filtros de búsqueda -->
+            <div class="modal-buscador-filters" id="searchFilters">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-th-large"></i> Todo
+                </button>
+                <button class="filter-btn" data-filter="movies">
+                    <i class="fas fa-film"></i> Películas
+                </button>
+                <button class="filter-btn" data-filter="series">
+                    <i class="fas fa-tv"></i> Series
+                </button>
+                <button class="filter-btn" data-filter="channels">
+                    <i class="fas fa-broadcast-tower"></i> TV
+                </button>
             </div>
-        </form>
-        <div id="modalBuscadorResults"></div>
+            
+            <div id="modalBuscadorResults"></div>
+        </div>
     </div>
 </div>
 <!-- FIN HEADER -->
@@ -305,11 +333,27 @@ foreach ($saga_predator_ids as $id) {
         },$canales)).";\n";
         ?>
 
+        // Función para normalizar texto (remover tildes y caracteres especiales)
+        function normalizarTexto(texto) {
+            return texto
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '') // Remover diacríticos (tildes, diéresis, etc.)
+                .replace(/[^a-z0-9\s]/g, ' ') // Remover caracteres especiales, mantener solo letras, números y espacios
+                .replace(/\s+/g, ' ') // Normalizar espacios múltiples
+                .trim();
+        }
+
         function renderBuscadorResults(query) {
-            query = query.trim().toLowerCase();
+            query = query.trim();
+            let queryNormalizado = normalizarTexto(query);
             let html = '';
             // Películas
-            let pelis = peliculas.filter(p => p.nombre.toLowerCase().includes(query));
+            let pelis = peliculas.filter(p => {
+                let nombreNormalizado = normalizarTexto(p.nombre);
+                return nombreNormalizado.includes(queryNormalizado) || 
+                       p.nombre.toLowerCase().includes(query.toLowerCase());
+            });
             if (pelis.length > 0) {
                 html += `<div class="modal-buscador-section"><h3>PELICULAS</h3><div class="modal-buscador-grid">`;
                 pelis.slice(0,12).forEach(p => {
@@ -323,7 +367,11 @@ foreach ($saga_predator_ids as $id) {
                 html += `</div></div>`;
             }
             // Series
-            let sers = series.filter(s => s.nombre.toLowerCase().includes(query));
+            let sers = series.filter(s => {
+                let nombreNormalizado = normalizarTexto(s.nombre);
+                return nombreNormalizado.includes(queryNormalizado) || 
+                       s.nombre.toLowerCase().includes(query.toLowerCase());
+            });
             if (sers.length > 0) {
                 html += `<div class="modal-buscador-section"><h3>SERIES</h3><div class="modal-buscador-grid">`;
                 sers.slice(0,12).forEach(s => {
@@ -337,7 +385,11 @@ foreach ($saga_predator_ids as $id) {
                 html += `</div></div>`;
             }
             // Canales
-            let chans = canales.filter(c => c.nombre.toLowerCase().includes(query));
+            let chans = canales.filter(c => {
+                let nombreNormalizado = normalizarTexto(c.nombre);
+                return nombreNormalizado.includes(queryNormalizado) || 
+                       c.nombre.toLowerCase().includes(query.toLowerCase());
+            });
             if (chans.length > 0) {
                 html += `<div class="modal-buscador-section"><h3>TV EN VIVO</h3><div class="modal-buscador-grid">`;
                 chans.slice(0,12).forEach(c => {
