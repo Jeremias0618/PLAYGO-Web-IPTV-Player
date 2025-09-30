@@ -1,21 +1,111 @@
 <?php 
 include("Xtream_api.php"); 
 
+// Función para verificar si el usuario está bloqueado
+function verificar_bloqueo($ip) {
+    $archivo_bloqueo = 'bloqueos.json';
+    if (!file_exists($archivo_bloqueo)) {
+        return false;
+    }
+    
+    $bloqueos = json_decode(file_get_contents($archivo_bloqueo), true);
+    if (!isset($bloqueos[$ip])) {
+        return false;
+    }
+    
+    $bloqueo = $bloqueos[$ip];
+    $tiempo_actual = time();
+    
+    // Si el bloqueo ha expirado, eliminarlo
+    if ($tiempo_actual > $bloqueo['expira']) {
+        unset($bloqueos[$ip]);
+        file_put_contents($archivo_bloqueo, json_encode($bloqueos));
+        return false;
+    }
+    
+    return $bloqueo;
+}
+
+// Función para registrar intento fallido
+function registrar_intento_fallido($ip) {
+    $archivo_bloqueo = 'bloqueos.json';
+    $bloqueos = [];
+    
+    if (file_exists($archivo_bloqueo)) {
+        $bloqueos = json_decode(file_get_contents($archivo_bloqueo), true) ?: [];
+    }
+    
+    $tiempo_actual = time();
+    
+    if (!isset($bloqueos[$ip])) {
+        $bloqueos[$ip] = [
+            'intentos' => 1,
+            'primer_intento' => $tiempo_actual,
+            'ultimo_intento' => $tiempo_actual,
+            'expira' => $tiempo_actual + 300 // 5 minutos
+        ];
+    } else {
+        $bloqueos[$ip]['intentos']++;
+        $bloqueos[$ip]['ultimo_intento'] = $tiempo_actual;
+        
+        // Bloqueo progresivo: más intentos = más tiempo bloqueado
+        if ($bloqueos[$ip]['intentos'] >= 5) {
+            $bloqueos[$ip]['expira'] = $tiempo_actual + 1800; // 30 minutos
+        } elseif ($bloqueos[$ip]['intentos'] >= 3) {
+            $bloqueos[$ip]['expira'] = $tiempo_actual + 900; // 15 minutos
+        } else {
+            $bloqueos[$ip]['expira'] = $tiempo_actual + 300; // 5 minutos
+        }
+    }
+    
+    file_put_contents($archivo_bloqueo, json_encode($bloqueos));
+}
+
+// Función para limpiar intentos exitosos
+function limpiar_intentos($ip) {
+    $archivo_bloqueo = 'bloqueos.json';
+    if (!file_exists($archivo_bloqueo)) {
+        return;
+    }
+    
+    $bloqueos = json_decode(file_get_contents($archivo_bloqueo), true) ?: [];
+    if (isset($bloqueos[$ip])) {
+        unset($bloqueos[$ip]);
+        file_put_contents($archivo_bloqueo, json_encode($bloqueos));
+    }
+}
+
+// Obtener IP del usuario
+$ip_usuario = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+
 if (isset($_COOKIE['xuserm']) && isset($_COOKIE['xpwdm'])) {
     header("Location: painel.php");
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['op'] === 'login') {
+    // Verificar si está bloqueado
+    $bloqueo = verificar_bloqueo($ip_usuario);
+    if ($bloqueo) {
+        $tiempo_restante = $bloqueo['expira'] - time();
+        $minutos_restantes = ceil($tiempo_restante / 60);
+        header("Location: index.php?sess=blocked&time=" . $minutos_restantes);
+        exit;
+    }
+    
     $usuario = trim($_POST['usuario']);
     $senha = trim($_POST['senha']);
 
     if (validar_usuario($usuario, $senha)) {
+        // Login exitoso - limpiar intentos fallidos
+        limpiar_intentos($ip_usuario);
         setcookie('xuserm', $usuario, time() + (7 * 24 * 60 * 60), "/");
         setcookie('xpwdm', $senha, time() + (7 * 24 * 60 * 60), "/");
         header("Location: painel.php");
         exit;
     } else {
+        // Login fallido - registrar intento
+        registrar_intento_fallido($ip_usuario);
         header("Location: index.php?sess=erro");
         exit;
     }
@@ -26,16 +116,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['op'] === 'login') {
 <head>
     <meta charset="UTF-8">
     <title>PLAYGO</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#e50914">
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
     <style>
         body {
             background: url('img/wallpaper.jpg') no-repeat center center fixed;
             background-size: cover;
-            min-height: 100vh;
+            height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile */
             margin: 0;
             font-family: 'Segoe UI', Arial, sans-serif;
             position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            /* Prevent zoom on input focus on iOS */
+            -webkit-text-size-adjust: 100%;
+            /* Improve touch scrolling on Android */
+            -webkit-overflow-scrolling: touch;
+            /* Prevent scroll when content fits */
+            overflow: hidden;
         }
         .overlay {
             position: fixed;
@@ -45,7 +148,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['op'] === 'login') {
             z-index: 1;
         }
         .login-container {
-            min-height: 100vh;
+            height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -120,6 +224,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['op'] === 'login') {
             font-size: 1.08rem;
             transition: border 0.2s, box-shadow 0.2s;
             box-shadow: 0 2px 8px 0 rgba(229,9,20,0.07);
+            /* Improve touch targets for Android */
+            min-height: 48px;
+            /* Prevent zoom on focus */
+            font-size: 16px;
+            /* Better touch interaction */
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
         }
         .form-control:focus {
             background: rgba(40,40,40,0.95);
@@ -141,6 +252,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['op'] === 'login') {
             box-shadow: 0 2px 12px 0 #e5091440;
             transition: background 0.2s, transform 0.2s;
             margin-top: 10px;
+            /* Improve touch targets for Android */
+            min-height: 48px;
+            /* Better touch interaction */
+            -webkit-tap-highlight-color: transparent;
+            cursor: pointer;
+            /* Prevent text selection on touch */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         .login-btn:hover {
             background: linear-gradient(90deg, #ff2e63 0%, #e50914 100%);
@@ -157,53 +278,238 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['op'] === 'login') {
             box-shadow: 0 2px 8px #e5091440;
             text-align: center;
         }
-@media (max-width: 600px) {
+        
+        .alert-blocked {
+            background: rgba(255, 87, 34, 0.9) !important;
+            border: 2px solid #ff5722;
+            animation: pulse 2s infinite;
+        }
+        
+        .alert-blocked b {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fff 0%, #ffeb3b 100%);
+            border-radius: 2px;
+            transition: width 1s linear;
+            animation: progress-animation 1s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes progress-animation {
+            0% { width: 100%; }
+            100% { width: 0%; }
+        }
+/* Android and Mobile Optimizations */
+@media (max-width: 768px) {
+    body {
+        /* Prevent horizontal scroll on Android */
+        overflow-x: hidden;
+        /* Better viewport handling */
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+    
     .login-container {
         align-items: center !important;
         justify-content: center !important;
-        padding-top: 0 !important;
-        min-height: 100vh !important;
+        padding: 20px 16px !important;
+        height: 100vh !important;
+        height: 100dvh !important;
         display: flex !important;
     }
+    
+    .login-box {
+        max-width: 90vw !important;
+        width: 90vw !important;
+        padding: 24px 20px !important;
+        border-radius: 16px !important;
+        margin: 0 auto !important;
+        box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3) !important;
+        /* Better spacing for touch */
+        margin-bottom: 20px !important;
+    }
+    
+    .login-logo img {
+        height: 60px !important;
+        max-height: 60px !important;
+        min-height: 50px !important;
+    }
+    
+    .login-title {
+        font-size: 2rem !important;
+        margin-bottom: 16px !important;
+        line-height: 1.2 !important;
+    }
+    
+    .login-desc {
+        font-size: 1rem !important;
+        margin-bottom: 20px !important;
+        line-height: 1.4 !important;
+    }
+    
+    .form-group {
+        margin-bottom: 20px !important;
+    }
+    
+    .form-label {
+        font-size: 1rem !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .form-control {
+        padding: 14px 16px !important;
+        font-size: 16px !important; /* Prevent zoom on Android */
+        min-height: 52px !important;
+        border-radius: 10px !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .login-btn {
+        padding: 16px !important;
+        font-size: 1.1rem !important;
+        margin-top: 8px !important;
+        min-height: 52px !important;
+        border-radius: 10px !important;
+        /* Better touch feedback */
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .alert {
+        font-size: 0.95rem !important;
+        padding: 12px 16px !important;
+        border-radius: 8px !important;
+        margin-bottom: 16px !important;
+        line-height: 1.4 !important;
+    }
+}
+
+/* Small Android phones (320px - 480px) */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 16px 12px !important;
+    }
+    
+    .login-box {
+        max-width: 95vw !important;
+        width: 95vw !important;
+        padding: 20px 16px !important;
+    }
+    
+    .login-title {
+        font-size: 1.8rem !important;
+        margin-bottom: 12px !important;
+    }
+    
+    .login-desc {
+        font-size: 0.95rem !important;
+        margin-bottom: 16px !important;
+    }
+    
+    .form-control {
+        padding: 12px 14px !important;
+        min-height: 48px !important;
+    }
+    
+    .login-btn {
+        padding: 14px !important;
+        min-height: 48px !important;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .login-container {
+        padding: 10px 16px !important;
+        align-items: center !important;
+    }
+    
     .login-box {
         max-width: 80vw !important;
         width: 80vw !important;
-        padding: 6vw 3vw 6vw 3vw !important;
-        border-radius: 14px !important;
-        font-size: 1rem !important;
-        margin: 0 auto !important;
-        box-shadow: 0 4px 18px 0 rgba(0,0,0,0.18) !important;
+        padding: 20px !important;
     }
+    
     .login-logo img {
-        height: 14vw !important;
-        max-height: 60px !important;
-        min-height: 36px !important;
+        height: 50px !important;
     }
+    
     .login-title {
-        font-size: 1.3rem !important;
-        margin-bottom: 10px !important;
+        font-size: 1.6rem !important;
+        margin-bottom: 12px !important;
     }
+    
     .login-desc {
-        font-size: 0.95rem !important;
-        margin-bottom: 14px !important;
+        margin-bottom: 16px !important;
     }
-    .form-label,
-    .form-control,
-    .login-btn {
-        font-size: 0.95rem !important;
+    
+    .form-group {
+        margin-bottom: 16px !important;
     }
+}
+
+/* High DPI Android devices */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .login-box {
+        border-width: 0.5px !important;
+    }
+    
     .form-control {
-        padding: 8px !important;
+        border-width: 1px !important;
+    }
+}
+
+/* When virtual keyboard is open (shorter viewport) */
+@media (max-height: 500px) and (max-width: 768px) {
+    body {
+        overflow: auto !important;
+    }
+    
+    .login-container {
+        align-items: flex-start !important;
+        padding-top: 5vh !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+    }
+    
+    .login-box {
+        margin-top: 0 !important;
+    }
+    
+    .login-logo img {
+        height: 40px !important;
+    }
+    
+    .login-title {
+        font-size: 1.5rem !important;
         margin-bottom: 10px !important;
     }
-    .login-btn {
-        padding: 10px !important;
-        font-size: 1rem !important;
-        margin-top: 6px !important;
+    
+    .login-desc {
+        margin-bottom: 12px !important;
     }
-    .alert {
-        font-size: 0.95rem !important;
-        padding: 8px 10px !important;
+    
+    .form-group {
+        margin-bottom: 12px !important;
     }
 }
     </style>
@@ -222,23 +528,95 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['op'] === 'login') {
             <?php if(isset($_GET['sess']) && $_GET['sess'] == 'block') { ?>
                 <div class="alert"><b>USUARIO BLOQUEADO</b> Lo sentimos, tu usuario está bloqueado o vencido. Contacta al soporte.</div>
             <?php } ?>
+            <?php if(isset($_GET['sess']) && $_GET['sess'] == 'blocked') { 
+                $tiempo = isset($_GET['time']) ? (int)$_GET['time'] : 5;
+            ?>
+                <div class="alert alert-blocked">
+                    <b>🔒 ACCESO TEMPORALMENTE BLOQUEADO</b><br>
+                    Demasiados intentos fallidos. Intenta nuevamente en <span id="countdown"><?php echo $tiempo; ?></span> minutos.
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+            <?php } ?>
             <?php if(isset($_GET['sess']) && $_GET['sess'] == 'erro') { ?>
-                <div class="alert"><b>DATOS INVÁLIDOS</b> No fue posible iniciar sesión, datos no encontrados en el sistema.</div>
+                <div class="alert"><b>⚠️ DATOS INVÁLIDOS</b> No fue posible iniciar sesión, datos no encontrados en el sistema.</div>
             <?php } ?>
             <form method="POST" action="">
                 <input type="hidden" name="op" value="login"/>
                 <div class="form-group">
                     <label class="form-label" for="usuario">Usuario</label>
-                    <input type="text" class="form-control" id="usuario" name="usuario" required autocomplete="username">
+                    <input type="text" class="form-control" id="usuario" name="usuario" required autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false">
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="senha">Contraseña</label>
-                    <input type="password" class="form-control" id="senha" name="senha" required autocomplete="current-password">
+                    <input type="password" class="form-control" id="senha" name="senha" required autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
                 </div>
                 <button class="login-btn" type="submit">Entrar</button>
             </form>
         </div>
     </div>
     <?php include("inc/scripts.php"); ?>
+    
+    <script>
+    // Sistema de bloqueo y countdown
+    document.addEventListener('DOMContentLoaded', function() {
+        const blockedAlert = document.querySelector('.alert-blocked');
+        const form = document.querySelector('form');
+        const inputs = document.querySelectorAll('.form-control');
+        const submitBtn = document.querySelector('.login-btn');
+        
+        if (blockedAlert) {
+            // Deshabilitar formulario cuando está bloqueado
+            if (form) {
+                form.style.pointerEvents = 'none';
+                form.style.opacity = '0.5';
+            }
+            
+            inputs.forEach(input => {
+                input.disabled = true;
+                input.style.cursor = 'not-allowed';
+            });
+            
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.style.cursor = 'not-allowed';
+                submitBtn.textContent = 'BLOQUEADO';
+            }
+            
+            // Countdown timer
+            const countdownElement = document.getElementById('countdown');
+            if (countdownElement) {
+                let timeLeft = parseInt(countdownElement.textContent);
+                const countdownInterval = setInterval(() => {
+                    timeLeft--;
+                    countdownElement.textContent = timeLeft;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(countdownInterval);
+                        // Recargar página cuando expire el bloqueo
+                        setTimeout(() => {
+                            window.location.href = 'index.php';
+                        }, 1000);
+                    }
+                }, 60000); // Actualizar cada minuto
+            }
+        }
+        
+        // Prevenir múltiples envíos del formulario
+        if (form && !blockedAlert) {
+            let isSubmitting = false;
+            form.addEventListener('submit', function(e) {
+                if (isSubmitting) {
+                    e.preventDefault();
+                    return false;
+                }
+                isSubmitting = true;
+                submitBtn.textContent = 'VERIFICANDO...';
+                submitBtn.disabled = true;
+            });
+        }
+    });
+    </script>
 </body>
 </html>
