@@ -2,7 +2,7 @@
 
 
 // URL DNS
-define('IP','https://playgo.pe'); 
+define('IP','https://IP'); 
 
 //pink, aqua, orange or blue themes
 $template = 'blue'; 
