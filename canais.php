@@ -741,7 +741,7 @@ $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
                     <div class="col-12">
                         <div class="header__content d-flex align-items-center justify-content-between">
                             <a class="header__logo" href="index.php">
-                                <img src="img/logo.png" alt="" height="48px">
+                                <img src="img/logo.png" alt="">
                             </a>
                             <ul class="header__nav d-flex align-items-center mb-0">
                                 <li class="header__nav-item">

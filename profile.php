@@ -97,6 +97,36 @@ $recomendados = array_slice($recomendados, 0, 8);
         #mobileMenuOverlay {
         display: none;
         }
+        
+        /* Estilos del header exactamente como en painel.php */
+        .header__content {
+            background: #000 !important;
+            border-radius: 12px;
+            padding: 12px 24px;
+        }
+        .header__wrap {
+            background: #000 !important;
+        }
+        .navbar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 80px;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(90deg, #0f2027 0%, #2c5364 100%);
+            opacity: 0.85;
+            transition: opacity 0.4s;
+        }
+        .bg-animate {
+            animation: navbarBgMove 8s linear infinite alternate;
+            background-size: 200% 100%;
+        }
+        @keyframes navbarBgMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
         body {
             min-height: 100vh;
@@ -113,10 +143,14 @@ $recomendados = array_slice($recomendados, 0, 8);
             z-index: 2;
             max-width: 1200px;
             margin: 0 auto;
-            padding-bottom: 40px;
+            padding: 0 20px 40px 20px;
         }
         .main-content {
-            padding-top: 140px;
+            padding-top: 450px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 20px;
+            padding-right: 20px;
         }
         .profile-section {
             display: flex;
@@ -127,102 +161,508 @@ $recomendados = array_slice($recomendados, 0, 8);
             margin-bottom: 40px;
         }
 
-        /* NUEVO DISEÑO HORIZONTAL */
-        .profile-card-horizontal {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            background: rgba(24,26,32,0.92);
-            border-radius: 32px;
-            box-shadow: 0 8px 40px #e5091440, 0 2px 24px #000a;
-            max-width: 1110px;
-            margin: 0 auto 36px auto;
-            padding: 38px 60px 28px 60px; 
-            border: 2.5px solid rgba(255,255,255,0.10);
-            backdrop-filter: blur(18px);
+        /* NUEVO DISEÑO MODERNO DEL PERFIL */
+        .profile-card-modern {
+            background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(229,9,20,0.2);
+            max-width: 1200px;
+            margin: 100px auto 40px auto;
+            padding: 0;
             position: relative;
-            gap: 38px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
         }
-        .profile-avatar-horizontal {
-            min-width: 130px;
-            min-height: 130px;
-            width: 130px;
-            height: 130px;
+        
+        .profile-header {
+            background: linear-gradient(135deg, #e50914 0%, #c8008f 50%, #ff6a00 100%);
+            padding: 30px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .profile-header-content {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .profile-avatar-modern {
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            background: radial-gradient(circle at 50% 40%, #e50914 60%, #fff 100%);
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4.2rem;
-            color: #fff;
-            box-shadow: 0 0 40px 10px #e5091480, 0 2px 24px #000a;
-            border: 7px solid #fff2;
-            margin-right: 0;
-        }
-        .profile-info-horizontal {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .profile-info-row {
-            display: grid;
-            grid-template-columns: 160px 1fr 160px 1fr;
-            align-items: center;
-            gap: 18px 32px;
-            margin-bottom: 2px;
-        }
-        .profile-label-h {
+            font-size: 3rem;
             color: #e50914;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 4px rgba(255,255,255,0.2);
+            border: 3px solid rgba(255,255,255,0.3);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .profile-avatar-modern::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .profile-welcome {
+            flex: 1;
+        }
+        
+        .profile-welcome h2 {
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .profile-welcome p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 500;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 30px 40px;
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-item:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229,9,20,0.2);
+        }
+        
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, #e50914, #c8008f, #ff6a00);
+        }
+        
+        .stat-label {
+            color: #e50914;
+            font-size: 0.9rem;
             font-weight: 700;
-            font-size: 1.08rem;
+            text-transform: uppercase;
             letter-spacing: 1px;
-            text-align: right;
-            opacity: 0.95;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stat-value {
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+        
+        .profile-actions-modern {
+            display: flex;
+            gap: 20px;
+            padding: 30px 40px;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+        }
+        
+        .profile-btn-modern {
+            background: linear-gradient(135deg, #e50914 0%, #c8008f 100%);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(229,9,20,0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .profile-btn-modern:hover::before {
+            left: 100%;
+        }
+        
+        .profile-btn-modern:hover {
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            color: #e50914;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(229,9,20,0.6);
+        }
+        
+        .profile-btn-modern i {
+            font-size: 1.2rem;
+        }
+        
+        /* Información compacta para móviles - Solo visible en móviles */
+        .profile-compact-info {
+            display: none;
+            background: rgba(0,0,0,0.1);
+            padding: 15px;
+            border-radius: 0 0 24px 24px;
+        }
+        
+        /* Asegurar que desktop mantenga el diseño original */
+        @media (min-width: 769px) {
+            .container {
+                max-width: 1200px !important;
+                margin: 0 auto !important;
+                padding: 0 20px 40px 20px !important;
+            }
+            
+            .profile-stats {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 20px !important;
+                padding: 30px 40px !important;
+                background: rgba(0,0,0,0.2) !important;
+            }
+            
+            .profile-compact-info {
+                display: none !important;
+            }
+            
+            .profile-header-content {
+                flex-direction: row !important;
+                text-align: left !important;
+                gap: 30px !important;
+                align-items: center !important;
+            }
+            
+            .profile-avatar-modern {
+                width: 100px !important;
+                height: 100px !important;
+                font-size: 3rem !important;
+            }
+            
+            .profile-welcome h2 {
+                font-size: 1.8rem !important;
+                margin-bottom: 8px !important;
+            }
+            
+            .profile-welcome p {
+                display: block !important;
+                font-size: 1rem !important;
+            }
+            
+            .stat-item {
+                padding: 20px !important;
+                border-radius: 16px !important;
+            }
+            
+            .stat-label {
+                font-size: 0.9rem !important;
+                margin-bottom: 8px !important;
+            }
+            
+            .stat-value {
+                font-size: 1.8rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            .profile-actions-modern {
+                flex-direction: row !important;
+                gap: 20px !important;
+                padding: 30px 40px !important;
+            }
+            
+            .profile-btn-modern {
+                padding: 16px 32px !important;
+                font-size: 1.1rem !important;
+            }
+            
+            .section-title-row {
+                max-width: 1200px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                padding: 0 20px !important;
+            }
+            
+            .carousel-wrapper {
+                max-width: 1200px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                padding: 0 20px !important;
+            }
+        }
+        
+        .compact-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .compact-row:last-child {
+            border-bottom: none;
+        }
+        
+        .compact-label {
+            color: #e50914;
+            font-size: 0.8rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 6px;
-            justify-content: flex-end;
         }
-        .profile-value-h {
+        
+        .compact-label i {
+            font-size: 0.7rem;
+        }
+        
+        .compact-value {
             color: #fff;
-            font-weight: 900;
-            font-size: 1.45rem;
-            background: rgba(30,30,36,0.92);
-            padding: 8px 18px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px #0003;
-            text-align: left;
-            font-family: 'Montserrat', Arial, sans-serif;
-            letter-spacing: 1px;
-            min-width: 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: right;
+            max-width: 60%;
             word-break: break-all;
         }
-        .profile-actions-horizontal {
-            display: flex;
-            gap: 22px;
-            justify-content: flex-end;
-            margin-top: 18px;
+        
+        /* Responsive para móviles - Diseño compacto para Android */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px 40px 10px !important;
+            }
+            
+            .main-content {
+                padding-top: 280px !important;
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+            
+            .profile-card-modern {
+                margin: 0 0 20px 0;
+                border-radius: 16px;
+            }
+            
+            .profile-header {
+                padding: 15px 20px;
+            }
+            
+            .profile-header-content {
+                flex-direction: row;
+                text-align: left;
+                gap: 15px;
+                align-items: center;
+            }
+            
+            .profile-avatar-modern {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+                flex-shrink: 0;
+            }
+            
+            .profile-welcome h2 {
+                font-size: 1.2rem;
+                margin-bottom: 4px;
+            }
+            
+            .profile-welcome p {
+                font-size: 0.8rem;
+                display: none; /* Ocultar descripción en móviles */
+            }
+            
+            /* Ocultar tarjetas grandes en móviles */
+            .profile-stats {
+                display: none !important;
+            }
+            
+            /* Mostrar información compacta en móviles */
+            .profile-compact-info {
+                display: block !important;
+            }
+            
+            .profile-actions-modern {
+                flex-direction: row;
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .profile-btn-modern {
+                flex: 1;
+                justify-content: center;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
         }
-        .profile-btn-h {
-            background: linear-gradient(90deg, #e50914 60%, #ff6a00 100%);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            padding: 13px 32px;
-            font-size: 1.15rem;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 2px 12px #e5091440;
-            transition: background 0.2s, transform 0.2s, color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        
+        /* Diseño ultra compacto para Android */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 5px 40px 5px !important;
+            }
+            
+            .main-content {
+                padding-top: 250px !important;
+                padding-left: 5px !important;
+                padding-right: 5px !important;
+            }
+            
+            .profile-card-modern {
+                margin: 0 0 15px 0;
+                border-radius: 12px;
+            }
+            
+            .profile-header {
+                padding: 12px 15px;
+            }
+            
+            .profile-header-content {
+                gap: 12px;
+            }
+            
+            .profile-avatar-modern {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .profile-welcome h2 {
+                font-size: 1rem;
+                margin-bottom: 2px;
+            }
+            
+            .profile-stats {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 12px;
+                gap: 6px;
+            }
+            
+            .stat-item {
+                padding: 8px;
+                border-radius: 8px;
+            }
+            
+            .stat-label {
+                font-size: 0.65rem;
+                margin-bottom: 2px;
+            }
+            
+            .stat-value {
+                font-size: 0.85rem;
+                line-height: 1.1;
+            }
+            
+            .profile-actions-modern {
+                flex-direction: row;
+                gap: 8px;
+                padding: 12px;
+            }
+            
+            .profile-btn-modern {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .profile-btn-modern i {
+                font-size: 0.9rem;
+            }
         }
-        .profile-btn-h:hover {
-            background: #fff;
-            color: #e50914;
-            transform: scale(1.07);
+        
+        /* Diseño para pantallas muy pequeñas (Android landscape) */
+        @media (max-width: 600px) and (orientation: landscape) {
+            .profile-card-modern {
+                margin: 0 5px 10px 5px;
+            }
+            
+            .profile-header {
+                padding: 10px 15px;
+            }
+            
+            .profile-avatar-modern {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+            
+            .profile-welcome h2 {
+                font-size: 0.9rem;
+            }
+            
+            .profile-stats {
+                grid-template-columns: repeat(3, 1fr);
+                padding: 10px;
+                gap: 5px;
+            }
+            
+            .stat-item {
+                padding: 6px;
+            }
+            
+            .stat-label {
+                font-size: 0.6rem;
+            }
+            
+            .stat-value {
+                font-size: 0.75rem;
+            }
+            
+            .profile-actions-modern {
+                padding: 10px;
+            }
+            
+            .profile-btn-modern {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
         }
 
         /* MODAL BUSCADOR MEJORADO */
@@ -897,6 +1337,10 @@ $recomendados = array_slice($recomendados, 0, 8);
             margin-top: 18px !important;
             margin-bottom: 8px !important;
             text-align: center !important;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
         }
         .section-title {
             font-size: 1.1rem !important;
@@ -905,6 +1349,10 @@ $recomendados = array_slice($recomendados, 0, 8);
         .carousel-wrapper {
             margin-bottom: 18px !important;
             padding: 0 !important;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
         }
         .movie-card, .movie-poster-wrap {
             width: 110px !important;
@@ -1140,6 +1588,42 @@ $recomendados = array_slice($recomendados, 0, 8);
                 height: 60px !important;
                 max-width: 100% !important;
                 object-fit: contain;
+            }
+        }
+        
+        /* Estilos adicionales para el logo como en painel.php */
+        .header__logo {
+            margin-left: 0 !important;
+            padding-left: 0 !important;
+        }
+        .header__content {
+            padding-left: 4px !important;
+        }
+        
+        /* Estilos del logo exactamente como en painel.php */
+        @media (min-width: 601px) {
+            .header__logo img {
+                width: 240px !important;
+                height: 80px !important;
+                max-width: none !important;
+                object-fit: contain;
+            }
+        }
+        @media (max-width: 600px) {
+            .header__logo img {
+                width: 240px !important;
+                height: 60px !important;
+                max-width: 100% !important;
+                object-fit: contain;
+            }
+        }
+        @media (max-width: 600px) {
+            .header__logo {
+                margin-left: 0 !important;
+                padding-left: 0 !important;
+            }
+            .header__content {
+                padding-left: 4px !important;
             }
         }
 
@@ -1481,7 +1965,7 @@ $recomendados = array_slice($recomendados, 0, 8);
     </style>
 </head>
 <body>
-<!-- HEADER (idéntico a painel.php) -->
+<!-- HEADER (copiado exactamente de painel.php) -->
 <header class="header">
     <div class="navbar-overlay bg-animate"></div>
     <div class="header__wrap">
@@ -1490,7 +1974,7 @@ $recomendados = array_slice($recomendados, 0, 8);
                 <div class="col-12">
                     <div class="header__content d-flex align-items-center justify-content-between">
                         <a class="header__logo" href="index.php">
-                            <img src="img/logo.png" alt="" height="48px">
+                            <img src="img/logo.png" alt="">
                         </a>
                         <ul class="header__nav d-flex align-items-center mb-0">
                             <li class="header__nav-item">
@@ -1586,33 +2070,111 @@ $recomendados = array_slice($recomendados, 0, 8);
 <!-- CONTENIDO PRINCIPAL -->
 <div class="container main-content">
     <div class="profile-section" style="justify-content:center;">
-        <div class="profile-card-horizontal">
-            <div class="profile-avatar-horizontal">
+        <div class="profile-card-modern">
+            <!-- Header del perfil -->
+            <div class="profile-header">
+                <div class="profile-header-content">
+                    <div class="profile-avatar-modern">
                 <i class="fas fa-user"></i>
             </div>
-            <div class="profile-info-horizontal">
-                <div class="profile-info-row">
-                    <div class="profile-label-h">Usuario:</div>
-                    <div class="profile-value-h"><?php echo htmlspecialchars($user); ?></div>
-                    <div class="profile-label-h"><i class="fas fa-history"></i> Historial:</div>
-                    <div class="profile-value-h" id="historial-count">0</div>
+                    <div class="profile-welcome">
+                        <h2>¡Bienvenido, <?php echo htmlspecialchars($user); ?>!</h2>
+                        <p>Gestiona tu cuenta y disfruta del mejor contenido</p>
                 </div>
-                <div class="profile-info-row">
-                    <div class="profile-label-h">Clave:</div>
-                    <div class="profile-value-h"><?php echo str_repeat('*', strlen($pwd)); ?></div>
-                    <div class="profile-label-h"><i class="fas fa-heart"></i> Favoritos:</div>
-                    <div class="profile-value-h" id="favoritos-count">0</div>
                 </div>
-                <div class="profile-info-row">
-                    <div class="profile-label-h">Vencimiento:</div>
-                    <div class="profile-value-h"><?php echo isset($expira) ? htmlspecialchars($expira) : 'Desconocida'; ?></div>
-                    <div class="profile-label-h"><i class="fas fa-calendar-day"></i> Fecha:</div>
-                    <div class="profile-value-h" id="fecha-actual"></div>
                 </div>
-                <div class="profile-actions-horizontal">
-                    <button class="profile-btn-h" onclick="location.href='painel.php'"><i class="fas fa-home"></i> Inicio</button>
-                    <button class="profile-btn-h" onclick="location.href='painel.php?acao=sair'"><i class="fas fa-sign-out-alt"></i> Salir</button>
+            
+            <!-- Estadísticas del usuario -->
+            <div class="profile-stats">
+                <!-- Primera fila -->
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <i class="fas fa-user"></i>
+                        Usuario
                 </div>
+                    <div class="stat-value"><?php echo htmlspecialchars($user); ?></div>
+            </div>
+                
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <i class="fas fa-key"></i>
+                        Contraseña
+                    </div>
+                    <div class="stat-value"><?php echo str_repeat('*', strlen($pwd)); ?></div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <i class="fas fa-calendar-alt"></i>
+                        Vencimiento
+                    </div>
+                    <div class="stat-value"><?php echo isset($expira) ? htmlspecialchars($expira) : 'Desconocida'; ?></div>
+                </div>
+                
+                <!-- Segunda fila -->
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <i class="fas fa-history"></i>
+                        Historial
+                    </div>
+                    <div class="stat-value" id="historial-count">0</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <i class="fas fa-heart"></i>
+                        Favoritos
+                    </div>
+                    <div class="stat-value" id="favoritos-count">0</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <i class="fas fa-clock"></i>
+                        Fecha Actual
+                    </div>
+                    <div class="stat-value" id="fecha-actual"></div>
+                </div>
+            </div>
+            
+            <!-- Información compacta para móviles -->
+            <div class="profile-compact-info">
+                <div class="compact-row">
+                    <span class="compact-label"><i class="fas fa-user"></i> Usuario:</span>
+                    <span class="compact-value"><?php echo htmlspecialchars($user); ?></span>
+                </div>
+                <div class="compact-row">
+                    <span class="compact-label"><i class="fas fa-key"></i> Clave:</span>
+                    <span class="compact-value"><?php echo str_repeat('*', strlen($pwd)); ?></span>
+                </div>
+                <div class="compact-row">
+                    <span class="compact-label"><i class="fas fa-calendar-alt"></i> Vence:</span>
+                    <span class="compact-value"><?php echo isset($expira) ? htmlspecialchars($expira) : 'Desconocida'; ?></span>
+                </div>
+                <div class="compact-row">
+                    <span class="compact-label"><i class="fas fa-history"></i> Historial:</span>
+                    <span class="compact-value" id="historial-count-compact">0</span>
+                </div>
+                <div class="compact-row">
+                    <span class="compact-label"><i class="fas fa-heart"></i> Favoritos:</span>
+                    <span class="compact-value" id="favoritos-count-compact">0</span>
+                </div>
+                <div class="compact-row">
+                    <span class="compact-label"><i class="fas fa-clock"></i> Fecha:</span>
+                    <span class="compact-value" id="fecha-actual-compact"></div>
+                </div>
+            </div>
+            
+            <!-- Botones de acción -->
+            <div class="profile-actions-modern">
+                <button class="profile-btn-modern" onclick="location.href='painel.php'">
+                    <i class="fas fa-home"></i>
+                    Ir al Inicio
+                </button>
+                <button class="profile-btn-modern" onclick="location.href='painel.php?acao=sair'">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Cerrar Sesión
+                </button>
             </div>
         </div>
     </div>
@@ -1840,16 +2402,20 @@ $(document).ready(function(){
 function actualizarFecha() {
     const fecha = new Date();
     const opciones = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute:'2-digit', second:'2-digit' };
-    document.getElementById('fecha-actual').textContent = fecha.toLocaleString('es-ES', opciones);
+    const fechaFormateada = fecha.toLocaleString('es-ES', opciones);
+    document.getElementById('fecha-actual').textContent = fechaFormateada;
+    document.getElementById('fecha-actual-compact').textContent = fechaFormateada;
 }
 setInterval(actualizarFecha, 1000);
 actualizarFecha();
 
 function setHistorialCount(n) {
     document.getElementById('historial-count').textContent = n;
+    document.getElementById('historial-count-compact').textContent = n;
 }
 function setFavoritosCount(n) {
     document.getElementById('favoritos-count').textContent = n;
+    document.getElementById('favoritos-count-compact').textContent = n;
 }
 </script>
 

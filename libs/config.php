@@ -2,7 +2,7 @@
 
 
 // URL DNS
-define('IP','https://IP'); 
+define('IP','https://URL'); 
 
 //pink, aqua, orange or blue themes
 $template = 'blue'; 
