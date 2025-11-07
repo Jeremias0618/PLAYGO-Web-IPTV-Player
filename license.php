@@ -1,3 +1,0 @@
-<?php
-$key = 'M0Z4TVJVbHplVmhhbzBKLzZDQSs4NnVvaUJYQ0FqSmM0NlVKMzU3LzlsYW5MTEt1RUd3Q0NIU2ZZNW9naGdaSg==';
-?>

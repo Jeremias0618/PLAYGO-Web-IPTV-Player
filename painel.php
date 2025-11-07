@@ -970,11 +970,350 @@ foreach(array_slice($output,0,16) as $row) {
             .trim();
     }
 
+    const baseTokenTranslations = {
+        'spider': ['arana'],
+        'man': ['hombre', 'varon'],
+        'men': ['hombres'],
+        'woman': ['mujer'],
+        'women': ['mujeres'],
+        'girl': ['chica', 'nina'],
+        'boy': ['chico', 'nino'],
+        'kid': ['nino', 'nina'],
+        'kids': ['ninos', 'ninas'],
+        'child': ['nino', 'nina'],
+        'children': ['ninos', 'ninas'],
+        'hero': ['heroe'],
+        'heroes': ['heroes'],
+        'villain': ['villano'],
+        'villains': ['villanos'],
+        'king': ['rey'],
+        'queen': ['reina'],
+        'lord': ['senor'],
+        'lady': ['dama', 'senora'],
+        'ring': ['anillo'],
+        'rings': ['anillos'],
+        'throne': ['trono'],
+        'thrones': ['tronos'],
+        'game': ['juego'],
+        'games': ['juegos'],
+        'house': ['casa', 'hogar'],
+        'home': ['casa', 'hogar'],
+        'war': ['guerra'],
+        'world': ['mundo'],
+        'planet': ['planeta'],
+        'star': ['estrella'],
+        'stars': ['estrellas'],
+        'galaxy': ['galaxia'],
+        'guardians': ['guardianes'],
+        'guardian': ['guardian'],
+        'fast': ['rapido', 'rapidos'],
+        'furious': ['furioso', 'furiosos'],
+        'black': ['negro', 'negra', 'negros', 'negras'],
+        'white': ['blanco', 'blanca', 'blancos', 'blancas'],
+        'red': ['rojo', 'roja', 'rojos', 'rojas'],
+        'blue': ['azul', 'azules'],
+        'green': ['verde', 'verdes'],
+        'yellow': ['amarillo', 'amarilla', 'amarillos', 'amarillas'],
+        'purple': ['morado', 'morada', 'morados', 'moradas'],
+        'pink': ['rosa', 'rosado', 'rosada'],
+        'night': ['noche'],
+        'day': ['dia'],
+        'light': ['luz'],
+        'dark': ['oscuro', 'oscura', 'oscuros', 'oscuras'],
+        'shadow': ['sombra'],
+        'shadows': ['sombras'],
+        'sun': ['sol'],
+        'moon': ['luna'],
+        'sea': ['mar'],
+        'ocean': ['oceano'],
+        'pirate': ['pirata'],
+        'pirates': ['piratas'],
+        'caribbean': ['caribe'],
+        'captain': ['capitan'],
+        'america': ['america'],
+        'iron': ['hierro'],
+        'panther': ['pantera'],
+        'witch': ['bruja'],
+        'witches': ['brujas'],
+        'wizard': ['mago'],
+        'wizards': ['magos'],
+        'witcher': ['brujo'],
+        'devil': ['diablo'],
+        'angel': ['angel'],
+        'angels': ['angeles'],
+        'demon': ['demonio'],
+        'demons': ['demonios'],
+        'dragon': ['dragon'],
+        'dragons': ['dragones'],
+        'fire': ['fuego'],
+        'ice': ['hielo'],
+        'blood': ['sangre'],
+        'stone': ['piedra'],
+        'stones': ['piedras'],
+        'sword': ['espada'],
+        'swords': ['espadas'],
+        'shield': ['escudo'],
+        'shields': ['escudos'],
+        'love': ['amor'],
+        'hate': ['odio'],
+        'death': ['muerte'],
+        'dead': ['muerto', 'muerta', 'muertos', 'muertas'],
+        'alive': ['vivo', 'viva', 'vivos', 'vivas'],
+        'life': ['vida'],
+        'future': ['futuro'],
+        'past': ['pasado'],
+        'present': ['presente'],
+        'legend': ['leyenda'],
+        'legends': ['leyendas'],
+        'hunt': ['caza'],
+        'hunter': ['cazador'],
+        'hunters': ['cazadores'],
+        'ghost': ['fantasma'],
+        'ghosts': ['fantasmas'],
+        'spirit': ['espiritu'],
+        'spirits': ['espiritus'],
+        'dream': ['sueno'],
+        'dreams': ['suenos'],
+        'judge': ['juez'],
+        'justice': ['justicia'],
+        'league': ['liga'],
+        'thief': ['ladron'],
+        'thieves': ['ladrones'],
+        'heist': ['atraco', 'robo'],
+        'money': ['dinero'],
+        'paper': ['papel'],
+        'train': ['tren'],
+        'bus': ['autobus'],
+        'car': ['auto', 'carro', 'coche'],
+        'cars': ['autos', 'carros', 'coches'],
+        'road': ['carretera'],
+        'street': ['calle'],
+        'city': ['ciudad'],
+        'town': ['pueblo'],
+        'village': ['aldea'],
+        'forest': ['bosque'],
+        'mountain': ['montana'],
+        'mountains': ['montanas'],
+        'river': ['rio'],
+        'valley': ['valle'],
+        'desert': ['desierto'],
+        'island': ['isla'],
+        'islands': ['islas'],
+        'kingdom': ['reino'],
+        'empire': ['imperio'],
+        'rebel': ['rebelde'],
+        'rebels': ['rebeldes'],
+        'revolution': ['revolucion'],
+        'freedom': ['libertad'],
+        'future': ['futuro'],
+        'planet': ['planeta'],
+        'galaxy': ['galaxia'],
+        'universe': ['universo'],
+        'space': ['espacio'],
+        'alien': ['alienigena'],
+        'aliens': ['alienigenas'],
+        'robot': ['robot'],
+        'robots': ['robots'],
+        'machine': ['maquina'],
+        'machines': ['maquinas'],
+        'code': ['codigo'],
+        'matrix': ['matriz'],
+        'mission': ['mision'],
+        'impossible': ['imposible'],
+        'spy': ['espia'],
+        'agent': ['agente'],
+        'agents': ['agentes'],
+        'police': ['policia'],
+        'cop': ['policia'],
+        'detective': ['detective'],
+        'case': ['caso'],
+        'files': ['expedientes'],
+        'story': ['historia'],
+        'stories': ['historias'],
+        'chapter': ['capitulo'],
+        'chapters': ['capitulos'],
+        'season': ['temporada'],
+        'seasons': ['temporadas'],
+        'episode': ['episodio'],
+        'episodes': ['episodios'],
+        'part': ['parte'],
+        'parts': ['partes'],
+        'return': ['regreso'],
+        'rise': ['ascenso'],
+        'fall': ['caida'],
+        'awakening': ['despertar'],
+        'revenge': ['venganza'],
+        'avenger': ['vengador'],
+        'avengers': ['vengadores'],
+        'soldier': ['soldado'],
+        'soldiers': ['soldados'],
+        'warrior': ['guerrero'],
+        'warriors': ['guerreros'],
+        'legendary': ['legendario', 'legendaria'],
+        'eternal': ['eterno', 'eterna'],
+        'eternals': ['eternos', 'eternas'],
+        'eternity': ['eternidad'],
+        'clown': ['payaso'],
+        'bear': ['oso'],
+        'wolf': ['lobo'],
+        'wolves': ['lobos'],
+        'lion': ['leon'],
+        'lions': ['leones'],
+        'tiger': ['tigre'],
+        'tigers': ['tigres'],
+        'shark': ['tiburon'],
+        'sharks': ['tiburones'],
+        'monster': ['monstruo'],
+        'monsters': ['monstruos'],
+        'giant': ['gigante'],
+        'giants': ['gigantes'],
+        'tiny': ['pequeno', 'pequena', 'pequenos', 'pequenas'],
+        'small': ['pequeno', 'pequena'],
+        'big': ['grande'],
+        'great': ['gran', 'grande'],
+        'incredible': ['increible'],
+        'amazing': ['asombroso', 'asombrosa'],
+        'fantastic': ['fantastico', 'fantastica'],
+        'infinity': ['infinito', 'infinita'],
+        'eternity': ['eternidad'],
+        'battle': ['batalla'],
+        'battles': ['batallas'],
+        'fight': ['pelea'],
+        'fighter': ['luchador'],
+        'fighters': ['luchadores'],
+        'ring': ['anillo'],
+        'guard': ['guardia'],
+        'guards': ['guardias']
+    };
+
+    const rawTokenTranslations = Object.assign(
+        {},
+        baseTokenTranslations,
+        (typeof window !== 'undefined' && window.PLAYGO_SEARCH_DICTIONARY) || {}
+    );
+
+    function buildTokenSynonymMap(rawMap) {
+        const map = {};
+        Object.entries(rawMap).forEach(([key, values]) => {
+            const normalizedKey = normalizarTexto(key);
+            if (!normalizedKey) {
+                return;
+            }
+            const normalizedValues = (Array.isArray(values) ? values : [values])
+                .map(value => normalizarTexto(value))
+                .filter(Boolean);
+
+            if (!map[normalizedKey]) {
+                map[normalizedKey] = new Set();
+            }
+
+            normalizedValues.forEach(val => {
+                if (!map[normalizedKey].has(val) && val !== normalizedKey) {
+                    map[normalizedKey].add(val);
+                }
+                if (!map[val]) {
+                    map[val] = new Set();
+                }
+                if (val !== normalizedKey) {
+                    map[val].add(normalizedKey);
+                }
+            });
+        });
+
+        return Object.fromEntries(
+            Object.entries(map).map(([token, set]) => [token, Array.from(set)])
+        );
+    }
+
+    const tokenSynonymMap = buildTokenSynonymMap(rawTokenTranslations);
+
+    function getTokenVariants(token, enableSynonyms) {
+        const normalizedToken = normalizarTexto(token);
+        if (!normalizedToken) {
+            return [];
+        }
+        const variants = new Set([normalizedToken]);
+        if (enableSynonyms && tokenSynonymMap[normalizedToken]) {
+            tokenSynonymMap[normalizedToken].forEach(variant => variants.add(variant));
+        }
+        return Array.from(variants);
+    }
+
+    function buildSearchTokens(nombre) {
+        if (!nombre) {
+            return [];
+        }
+        const tokens = normalizarTexto(nombre)
+            .split(' ')
+            .map(token => token.trim())
+            .filter(token => token.length >= 3);
+
+        const result = new Set(tokens);
+        tokens.forEach(token => {
+            (tokenSynonymMap[token] || []).forEach(variant => {
+                if (variant.length >= 3) {
+                    result.add(variant);
+                }
+            });
+        });
+
+        return Array.from(result);
+    }
+
+    function enrichSearchItems(items) {
+        return items.map(item => {
+            const nombre = item.nombre || '';
+            const nombreLower = nombre.toLowerCase();
+            const nombreNormalizado = normalizarTexto(nombre);
+            const searchTokens = buildSearchTokens(nombre);
+            return Object.assign({}, item, {
+                nombreLower,
+                nombreNormalizado,
+                searchTokens,
+                searchTokenSet: new Set(searchTokens)
+            });
+        });
+    }
+
+    peliculas = enrichSearchItems(peliculas || []);
+    series = enrichSearchItems(series || []);
+    canales = enrichSearchItems(canales || []);
+
+    function matchesSearchItem(item, queryLower, queryNormalizado, queryTokenVariants) {
+        if (!item || !item.nombre) {
+            return false;
+        }
+
+        if (queryLower && item.nombreLower.includes(queryLower)) {
+            return true;
+        }
+
+        if (queryNormalizado && item.nombreNormalizado.includes(queryNormalizado)) {
+            return true;
+        }
+
+        if (!queryTokenVariants.length) {
+            return false;
+        }
+
+        const tokenSet = item.searchTokenSet;
+        return queryTokenVariants.every(variants =>
+            variants.some(variant => tokenSet.has(variant))
+        );
+    }
+
     function renderBuscadorResults(query) {
         query = query.trim();
         let queryNormalizado = normalizarTexto(query);
         let html = '';
         let totalResults = 0;
+        const queryLower = query.toLowerCase();
+        const queryTokens = queryNormalizado
+            .split(' ')
+            .map(token => token.trim())
+            .filter(token => token.length >= 3);
+        const enableSynonyms = queryTokens.some(token => token.length >= 4);
+        const queryTokenVariants = queryTokens.map(token => getTokenVariants(token, enableSynonyms));
         
         // Aplicar filtro
         let showMovies = currentFilter === 'all' || currentFilter === 'movies';
@@ -983,11 +1322,7 @@ foreach(array_slice($output,0,16) as $row) {
         
         // Películas
         if (showMovies) {
-            let pelis = peliculas.filter(p => {
-                let nombreNormalizado = normalizarTexto(p.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       p.nombre.toLowerCase().includes(query.toLowerCase());
-            });
+            let pelis = peliculas.filter(p => matchesSearchItem(p, queryLower, queryNormalizado, queryTokenVariants));
             if (pelis.length > 0) {
                 html += `<div class="modal-buscador-section">
                     <h3><i class="fas fa-film"></i> PELÍCULAS (${pelis.length})</h3>
@@ -1007,11 +1342,7 @@ foreach(array_slice($output,0,16) as $row) {
         
         // Series
         if (showSeries) {
-            let sers = series.filter(s => {
-                let nombreNormalizado = normalizarTexto(s.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       s.nombre.toLowerCase().includes(query.toLowerCase());
-            });
+            let sers = series.filter(s => matchesSearchItem(s, queryLower, queryNormalizado, queryTokenVariants));
             if (sers.length > 0) {
                 html += `<div class="modal-buscador-section">
                     <h3><i class="fas fa-tv"></i> SERIES (${sers.length})</h3>
@@ -1031,11 +1362,7 @@ foreach(array_slice($output,0,16) as $row) {
         
         // Canales
         if (showChannels) {
-            let chans = canales.filter(c => {
-                let nombreNormalizado = normalizarTexto(c.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       c.nombre.toLowerCase().includes(query.toLowerCase());
-            });
+            let chans = canales.filter(c => matchesSearchItem(c, queryLower, queryNormalizado, queryTokenVariants));
             if (chans.length > 0) {
                 html += `<div class="modal-buscador-section">
                     <h3><i class="fas fa-broadcast-tower"></i> TV EN VIVO (${chans.length})</h3>
