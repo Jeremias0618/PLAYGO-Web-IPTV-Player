@@ -319,10 +319,6 @@ $pwd = $_COOKIE['xpwdm'];
         .filter-btn.active:hover {
             background: #c8008f;
         }
-
-        body.modal-open {
-            overflow: hidden;
-        }
         
         /* Estilos específicos para desktop del buscador */
         @media (min-width: 1200px) {
@@ -527,6 +523,9 @@ $pwd = $_COOKIE['xpwdm'];
                 max-width: 100% !important;
                 object-fit: contain;
             }
+        }
+        body.modal-open {
+            overflow: hidden;
         }
     </style>
 </head>
