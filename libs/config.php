@@ -11,7 +11,7 @@ $template = 'blue';
 define("WHATSAPP", ''); //Numero WhatsApp
 
 // Website 
-define("NOME_IPTV", 'MAXGO'); 
+define("NOME_IPTV", 'PLAYGO'); 
 
 // MercadoPago Integration
 // Create payment links in your account and put them here
