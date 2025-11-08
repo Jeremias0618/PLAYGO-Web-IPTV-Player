@@ -1,7 +1,6 @@
 <?php
 require_once("libs/lib.php");
 
-// Redirigir si no hay sesión iniciada
 if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['xuserm']) || empty($_COOKIE['xpwdm'])) {
     header("Location: index.php");
     exit;

@@ -55,6 +55,30 @@ foreach ($saga_predator_ids as $id) {
         .header__wrap, .header__content {
             background: #000 !important;
         }
+        @media (min-width: 601px) {
+            .header__logo img {
+                width: 240px !important;
+                height: 80px !important;
+                max-width: none !important;
+                object-fit: contain;
+            }
+        }
+        @media (max-width: 600px) {
+            .header__logo img {
+                width: 240px !important;
+                height: 60px !important;
+                max-width: 100% !important;
+                object-fit: contain;
+            }
+            .header__logo {
+                margin-left: 0 !important;
+                padding-left: 0 !important;
+                margin-right: auto !important;
+            }
+            .header__content {
+                padding-left: 4px !important;
+            }
+        }
         .saga-title {
             color: #ffd700;
             text-shadow: 0 2px 16px #000a;
@@ -119,22 +143,6 @@ foreach ($saga_predator_ids as $id) {
         .audio-player {
             display: none;
         }
-        /* MODAL BUSCADOR ... (igual que antes) */
-        .modal-buscador-bg { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
-        .modal-buscador-bg.active { display: flex; }
-        .modal-buscador { background: #181818; border-radius: 18px; padding: 32px 24px 24px 24px; max-width: 900px; width: 98vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 32px #000a; position: relative; }
-        .modal-buscador-close { position: absolute; top: 16px; right: 18px; font-size: 1.8rem; color: #fff; background: none; border: none; cursor: pointer; z-index: 2; }
-        .modal-buscador-inputbox { display: flex; align-items: center; margin-bottom: 24px; }
-        .modal-buscador-inputbox input { flex: 1; background: #232027; border: none; color: #fff; border-radius: 8px; padding: 12px 18px; font-size: 1.2rem; margin-right: 12px; }
-        .modal-buscador-inputbox input::placeholder { color: #aaa; }
-        .modal-buscador-inputbox button { background: #e50914; border: none; color: #fff; border-radius: 8px; padding: 10px 22px; font-size: 1.1rem; cursor: pointer; transition: background 0.2s; }
-        .modal-buscador-inputbox button:hover { background: #fff; color: #e50914; }
-        .modal-buscador-section { margin-bottom: 32px; }
-        .modal-buscador-section h3 { color: #e50914; font-size: 1.25rem; margin-bottom: 16px; margin-top: 0; font-weight: 700; letter-spacing: 1px; }
-        .modal-buscador-grid { display: flex; flex-wrap: wrap; gap: 18px; }
-        .modal-buscador-card { width: 110px; text-align: center; }
-        .modal-buscador-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; background: #232027; margin-bottom: 7px; box-shadow: 0 2px 8px #0005; }
-        .modal-buscador-card span { color: #fff; font-size: 0.98rem; display: block; margin-top: 2px; word-break: break-word; }
     </style>
 </head>
 <body>
@@ -148,7 +156,7 @@ foreach ($saga_predator_ids as $id) {
                 <div class="col-12">
                     <div class="header__content d-flex align-items-center justify-content-between">
                         <a class="header__logo" href="index.php">
-                            <img src="img/logo.png" alt="" height="48px">
+                            <img src="img/logo.png" alt="">
                         </a>
                         <ul class="header__nav d-flex align-items-center mb-0">
                             <li class="header__nav-item">
@@ -185,47 +193,7 @@ foreach ($saga_predator_ids as $id) {
         </div>
     </div>
 </header>
-<!-- MODAL BUSCADOR MEJORADO -->
-<div class="modal-buscador-bg" id="modalBuscador">
-    <div class="modal-buscador">
-        <div class="modal-buscador-header">
-            <h2 class="modal-buscador-title">
-                <i class="fas fa-search"></i> Buscador PLAYGO
-            </h2>
-            <button class="modal-buscador-close" id="closeSearchModal" title="Cerrar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="modal-buscador-body">
-            <form id="modalBuscadorForm" autocomplete="off" onsubmit="return false;">
-                <div class="modal-buscador-inputbox">
-                    <input type="text" id="modalBuscadorInput" placeholder="Buscar películas, series o canales..." autofocus>
-                    <button type="button" id="modalBuscadorBtn">
-                        <i class="fas fa-search"></i> Buscar
-                    </button>
-                </div>
-            </form>
-            
-            <!-- Filtros de búsqueda -->
-            <div class="modal-buscador-filters" id="searchFilters">
-                <button class="filter-btn active" data-filter="all">
-                    <i class="fas fa-th-large"></i> Todo
-                </button>
-                <button class="filter-btn" data-filter="movies">
-                    <i class="fas fa-film"></i> Películas
-                </button>
-                <button class="filter-btn" data-filter="series">
-                    <i class="fas fa-tv"></i> Series
-                </button>
-                <button class="filter-btn" data-filter="channels">
-                    <i class="fas fa-broadcast-tower"></i> TV
-                </button>
-            </div>
-            
-            <div id="modalBuscadorResults"></div>
-        </div>
-    </div>
-</div>
+<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
 <!-- FIN HEADER -->
 
 <main>
@@ -252,184 +220,14 @@ foreach ($saga_predator_ids as $id) {
 
 <audio id="predatorAudio" class="audio-player" src="collection/audio/predator.mp3" autoplay loop></audio>
 <script>
-    // Forzar autoplay en algunos navegadores móviles
     window.addEventListener('DOMContentLoaded', function() {
         var audio = document.getElementById('predatorAudio');
+        if (!audio) return;
         audio.volume = 0.5;
         audio.play().catch(function(){});
         document.body.addEventListener('click', function() {
             if (audio.paused) audio.play().catch(function(){});
         }, {once:true});
-    });
-
-    // MODAL BUSCADOR igual que filme.php
-    document.addEventListener('DOMContentLoaded', function() {
-        const openSearchModal = document.getElementById('openSearchModal');
-        const closeSearchModal = document.getElementById('closeSearchModal');
-        const modalBuscador = document.getElementById('modalBuscador');
-        const modalBuscadorInput = document.getElementById('modalBuscadorInput');
-        const modalBuscadorBtn = document.getElementById('modalBuscadorBtn');
-        const modalBuscadorResults = document.getElementById('modalBuscadorResults');
-
-        function showModalBuscador() {
-            modalBuscador.classList.add('active');
-            setTimeout(() => { modalBuscadorInput.focus(); }, 200);
-        }
-        function hideModalBuscador() {
-            modalBuscador.classList.remove('active');
-            modalBuscadorInput.value = '';
-            modalBuscadorResults.innerHTML = '';
-        }
-        if(openSearchModal) openSearchModal.onclick = showModalBuscador;
-        if(closeSearchModal) closeSearchModal.onclick = hideModalBuscador;
-        window.addEventListener('keydown', function(e) {
-            if (e.key === "Escape") hideModalBuscador();
-        });
-        if(modalBuscador) {
-            modalBuscador.addEventListener('click', function(e) {
-                if (e.target === modalBuscador) hideModalBuscador();
-            });
-        }
-
-        // Cargar datos para búsqueda (películas, series, canales)
-        let peliculas = [];
-        let series = [];
-        let canales = [];
-        <?php
-        // Películas
-        $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams";
-        $resposta = apixtream($url);
-        $peliculas = json_decode($resposta,true);
-        echo "peliculas = ".json_encode(array_map(function($p){
-            return [
-                'id'=>$p['stream_id'],
-                'nombre'=>$p['name'],
-                'img'=>$p['stream_icon'],
-                'tipo'=>$p['stream_type']
-            ];
-        },$peliculas)).";\n";
-        // Series
-        $url = IP."/player_api.php?username=$user&password=$pwd&action=get_series";
-        $resposta = apixtream($url);
-        $series = json_decode($resposta,true);
-        echo "series = ".json_encode(array_map(function($s){
-            return [
-                'id'=>$s['series_id'],
-                'nombre'=>$s['name'],
-                'img'=>$s['cover']
-            ];
-        },$series)).";\n";
-        // Canales
-        $url = IP."/player_api.php?username=$user&password=$pwd&action=get_live_streams";
-        $resposta = apixtream($url);
-        $canales = json_decode($resposta,true);
-        echo "canales = ".json_encode(array_map(function($c){
-            return [
-                'id'=>$c['stream_id'],
-                'nombre'=>$c['name'],
-                'img'=>$c['stream_icon'],
-                'tipo'=>$c['stream_type']
-            ];
-        },$canales)).";\n";
-        ?>
-
-        // Función para normalizar texto (remover tildes y caracteres especiales)
-        function normalizarTexto(texto) {
-            return texto
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '') // Remover diacríticos (tildes, diéresis, etc.)
-                .replace(/[^a-z0-9\s]/g, ' ') // Remover caracteres especiales, mantener solo letras, números y espacios
-                .replace(/\s+/g, ' ') // Normalizar espacios múltiples
-                .trim();
-        }
-
-        function renderBuscadorResults(query) {
-            query = query.trim();
-            let queryNormalizado = normalizarTexto(query);
-            let html = '';
-            // Películas
-            let pelis = peliculas.filter(p => {
-                let nombreNormalizado = normalizarTexto(p.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       p.nombre.toLowerCase().includes(query.toLowerCase());
-            });
-            if (pelis.length > 0) {
-                html += `<div class="modal-buscador-section"><h3>PELICULAS</h3><div class="modal-buscador-grid">`;
-                pelis.slice(0,12).forEach(p => {
-                    html += `<div class="modal-buscador-card">
-                        <a href="filme.php?stream=${p.id}&streamtipo=movie">
-                            <img src="${p.img}" alt="${p.nombre}">
-                            <span>${p.nombre}</span>
-                        </a>
-                    </div>`;
-                });
-                html += `</div></div>`;
-            }
-            // Series
-            let sers = series.filter(s => {
-                let nombreNormalizado = normalizarTexto(s.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       s.nombre.toLowerCase().includes(query.toLowerCase());
-            });
-            if (sers.length > 0) {
-                html += `<div class="modal-buscador-section"><h3>SERIES</h3><div class="modal-buscador-grid">`;
-                sers.slice(0,12).forEach(s => {
-                    html += `<div class="modal-buscador-card">
-                        <a href="serie.php?stream=${s.id}&serie=${encodeURIComponent(s.nombre)}&img=${encodeURIComponent(s.img)}">
-                            <img src="${s.img}" alt="${s.nombre}">
-                            <span>${s.nombre}</span>
-                        </a>
-                    </div>`;
-                });
-                html += `</div></div>`;
-            }
-            // Canales
-            let chans = canales.filter(c => {
-                let nombreNormalizado = normalizarTexto(c.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       c.nombre.toLowerCase().includes(query.toLowerCase());
-            });
-            if (chans.length > 0) {
-                html += `<div class="modal-buscador-section"><h3>TV EN VIVO</h3><div class="modal-buscador-grid">`;
-                chans.slice(0,12).forEach(c => {
-                    html += `<div class="modal-buscador-card">
-                        <a href="canal.php?stream=${c.id}&streamtipo=${c.tipo}&canal=${encodeURIComponent(c.nombre)}&img=${encodeURIComponent(c.img)}">
-                            <img src="${c.img}" alt="${c.nombre}">
-                            <span>${c.nombre}</span>
-                        </a>
-                    </div>`;
-                });
-                html += `</div></div>`;
-            }
-            if (!html && query.length > 0) {
-                html = `<div style="color:#fff;text-align:center;margin-top:30px;">Sin resultados.</div>`;
-            }
-            modalBuscadorResults.innerHTML = html;
-        }
-
-        if(modalBuscadorInput) {
-            modalBuscadorInput.addEventListener('input', function() {
-                let q = this.value;
-                if (q.length > 1) renderBuscadorResults(q);
-                else modalBuscadorResults.innerHTML = '';
-            });
-        }
-        if(modalBuscadorBtn) {
-            modalBuscadorBtn.addEventListener('click', function() {
-                let q = modalBuscadorInput.value;
-                if (q.length > 1) renderBuscadorResults(q);
-            });
-        }
-        if(modalBuscadorInput) {
-            modalBuscadorInput.addEventListener('keydown', function(e){
-                if(e.key === "Enter") {
-                    e.preventDefault();
-                    let q = modalBuscadorInput.value;
-                    if (q.length > 1) renderBuscadorResults(q);
-                }
-            });
-        }
     });
 </script>
 </body>

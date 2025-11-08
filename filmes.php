@@ -1,7 +1,6 @@
 <?php
 require_once("libs/lib.php");
 
-// Redirigir si no hay sesión iniciada
 if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['xuserm']) || empty($_COOKIE['xpwdm'])) {
     header("Location: index.php");
     exit;
@@ -15,23 +14,18 @@ $id = isset($_REQUEST['id']) ? trim($_REQUEST['id']) : '';
 $adulto = isset($_REQUEST['adulto']) ? trim($_REQUEST['adulto']) : '';
 $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
 
-// --- Paginación ---
 $peliculas_por_pagina = 48;
 $pagina_actual = isset($_GET['pagina']) ? max(1, intval($_GET['pagina'])) : 1;
 $inicio = ($pagina_actual - 1) * $peliculas_por_pagina;
 
-// Obtener películas
 $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams".($id ? "&category_id=$id" : "");
 $resposta = apixtream($url);
 $output = json_decode($resposta,true);
 
-// --- FONDO ALEATORIO ---
 $backdrop_fondo = '';
 if ($output && is_array($output) && count($output) > 0) {
-    // Elegir una película aleatoria del listado
     $pelicula_aleatoria = $output[array_rand($output)];
     $vod_id = $pelicula_aleatoria['stream_id'];
-    // Llamar a get_vod_info para obtener el backdrop_path (array de URLs)
     $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$vod_id";
     $res_info = apixtream($url_info);
     $data_info = json_decode($res_info, true);
@@ -40,7 +34,6 @@ if ($output && is_array($output) && count($output) > 0) {
         is_array($data_info['info']['backdrop_path']) &&
         count($data_info['info']['backdrop_path']) > 0
     ) {
-        // Usar el primer backdrop disponible
         $backdrop_fondo = $data_info['info']['backdrop_path'][0];
     }
 }

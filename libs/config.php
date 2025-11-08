@@ -4,33 +4,27 @@
 // URL DNS
 define('IP','https://URL'); 
 
-//pink, aqua, orange or blue themes
 $template = 'blue'; 
 
-// WhatsApp Number
-define("WHATSAPP", ''); //Numero WhatsApp
+define("WHATSAPP", ''); 
 
 // Website 
 define("NOME_IPTV", 'PLAYGO'); 
 
-// MercadoPago Integration
-// Create payment links in your account and put them here
-
-define("LINK_PAGAR1", ''); // Link 1
-define("LINK_PAGAR2", ''); // Link 2
-define("LINK_PAGAR3", ''); // Link 3
-define("LINK_PAGAR4", ''); // Link 4
+define("LINK_PAGAR1", '');
+define("LINK_PAGAR2", '');
+define("LINK_PAGAR3", '');
+define("LINK_PAGAR4", '');
 
 $nome1 = "Mensal";
-$valor1 = "29.90"; // Valor Mensal
+$valor1 = "29.90";
 $nome2 = "Trimestral";
-$valor2 = "79.90"; // Valor Mensal
+$valor2 = "79.90";
 $nome3 = "Semestral";
-$valor3 = "129.90"; // Valor Mensal
+$valor3 = "129.90";
 $nome4 = "Anual";
-$valor4 = "199.90"; // Valor Mensal
+$valor4 = "199.90";
 
-// Settings Xtream-Codes CMS 
 
 define("ATIVAR_TESTE", '0');  // 1 = YES / 0 = NO
 define("HORAS", '2');  // Trial Duration in hours

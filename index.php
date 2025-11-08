@@ -1,7 +1,6 @@
 <?php 
 include("Xtream_api.php"); 
 
-// Función para verificar si el usuario está bloqueado
 function verificar_bloqueo($ip) {
     $archivo_bloqueo = 'bloqueos.json';
     if (!file_exists($archivo_bloqueo)) {
@@ -16,7 +15,6 @@ function verificar_bloqueo($ip) {
     $bloqueo = $bloqueos[$ip];
     $tiempo_actual = time();
     
-    // Si el bloqueo ha expirado, eliminarlo
     if ($tiempo_actual > $bloqueo['expira']) {
         unset($bloqueos[$ip]);
         file_put_contents($archivo_bloqueo, json_encode($bloqueos));
@@ -26,7 +24,6 @@ function verificar_bloqueo($ip) {
     return $bloqueo;
 }
 
-// Función para registrar intento fallido
 function registrar_intento_fallido($ip) {
     $archivo_bloqueo = 'bloqueos.json';
     $bloqueos = [];
@@ -48,7 +45,6 @@ function registrar_intento_fallido($ip) {
         $bloqueos[$ip]['intentos']++;
         $bloqueos[$ip]['ultimo_intento'] = $tiempo_actual;
         
-        // Bloqueo progresivo: más intentos = más tiempo bloqueado
         if ($bloqueos[$ip]['intentos'] >= 5) {
             $bloqueos[$ip]['expira'] = $tiempo_actual + 1800; // 30 minutos
         } elseif ($bloqueos[$ip]['intentos'] >= 3) {
@@ -61,7 +57,6 @@ function registrar_intento_fallido($ip) {
     file_put_contents($archivo_bloqueo, json_encode($bloqueos));
 }
 
-// Función para limpiar intentos exitosos
 function limpiar_intentos($ip) {
     $archivo_bloqueo = 'bloqueos.json';
     if (!file_exists($archivo_bloqueo)) {
@@ -75,7 +70,6 @@ function limpiar_intentos($ip) {
     }
 }
 
-// Obtener IP del usuario
 $ip_usuario = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 
 if (isset($_COOKIE['xuserm']) && isset($_COOKIE['xpwdm'])) {
@@ -84,7 +78,6 @@ if (isset($_COOKIE['xuserm']) && isset($_COOKIE['xpwdm'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['op'] === 'login') {
-    // Verificar si está bloqueado
     $bloqueo = verificar_bloqueo($ip_usuario);
     if ($bloqueo) {
         $tiempo_restante = $bloqueo['expira'] - time();
@@ -97,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['op'] === 'login') {
     $senha = trim($_POST['senha']);
 
     if (validar_usuario($usuario, $senha)) {
-        // Login exitoso - limpiar intentos fallidos
         limpiar_intentos($ip_usuario);
         setcookie('xuserm', $usuario, time() + (7 * 24 * 60 * 60), "/");
         setcookie('xpwdm', $senha, time() + (7 * 24 * 60 * 60), "/");

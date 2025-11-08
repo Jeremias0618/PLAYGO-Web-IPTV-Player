@@ -396,8 +396,10 @@ if (!defined('PLAYGO_SEARCH_MODAL_LOADED')) {
                     from { transform: rotate(0deg); }
                     to { transform: rotate(360deg); }
                 }
-                body.modal-open {
-                    overflow: hidden;
+                body.modal-open,
+                html.modal-open {
+                    overflow: hidden !important;
+                    height: 100%;
                 }
             </style>
             <div class="modal-buscador-bg" id="modalBuscador">
@@ -461,6 +463,7 @@ if (!defined('PLAYGO_SEARCH_MODAL_LOADED')) {
                 function showModalBuscador() {
                     modalBuscador.classList.add('active');
                     document.body.classList.add('modal-open');
+                    document.documentElement.classList.add('modal-open');
                     setTimeout(() => {
                         modalBuscadorInput.focus();
                         modalBuscadorInput.select();
@@ -470,6 +473,7 @@ if (!defined('PLAYGO_SEARCH_MODAL_LOADED')) {
                 function hideModalBuscador() {
                     modalBuscador.classList.remove('active');
                     document.body.classList.remove('modal-open');
+                    document.documentElement.classList.remove('modal-open');
                     setTimeout(() => {
                         modalBuscadorInput.value = '';
                         modalBuscadorResults.innerHTML = '';

@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_set("America/Lima"); // Timezone
+date_default_timezone_set("America/Lima");
 ini_set("allow_url_fopen", 1);
 ini_set("display_errors", 0);
 error_reporting(0);
@@ -12,9 +12,6 @@ $vl1 = explode(".",$valor1);
 $vl2 = explode(".",$valor2);
 $vl3 = explode(".",$valor3);
 $vl4 = explode(".",$valor4);
-// END
-
-// Funções do Sistema
 
 function apixtream($url_api){	
 $ch = curl_init();	
@@ -124,10 +121,8 @@ function thor($action, $string) {
     $encrypt_method = "AES-256-CBC";
     $secret_key = '9991';
     $secret_iv = '1119';
-    // hash
     $key = hash('sha256', $secret_key);
     
-    // iv - método de criptografia AES-256-CBC espera 16 bytes - senão você receberá um aviso
     $iv = substr(hash('sha256', $secret_iv), 0, 16);
     if ( $action == 'encode' ) {
         $output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);

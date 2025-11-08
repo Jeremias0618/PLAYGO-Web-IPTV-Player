@@ -701,6 +701,16 @@ if ($ep_img_from_get) {
                 object-fit: contain !important;
             }
         }
+        @media (max-width: 600px) {
+            .header__logo {
+                margin-left: 0 !important;
+                padding-left: 0 !important;
+                margin-right: auto !important;
+            }
+            .header__content {
+                padding-left: 4px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -756,47 +766,7 @@ if ($ep_img_from_get) {
 </nav>
 <div id="mobileMenuOverlay"></div>
 
-<!-- MODAL BUSCADOR MEJORADO -->
-<div class="modal-buscador-bg" id="modalBuscador">
-    <div class="modal-buscador">
-        <div class="modal-buscador-header">
-            <h2 class="modal-buscador-title">
-                <i class="fas fa-search"></i> Buscador PLAYGO
-            </h2>
-            <button class="modal-buscador-close" id="closeSearchModal" title="Cerrar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="modal-buscador-body">
-            <form id="modalBuscadorForm" autocomplete="off" onsubmit="return false;">
-                <div class="modal-buscador-inputbox">
-                    <input type="text" id="modalBuscadorInput" placeholder="Buscar películas, series o canales..." autofocus>
-                    <button type="button" id="modalBuscadorBtn">
-                        <i class="fas fa-search"></i> Buscar
-                    </button>
-                </div>
-            </form>
-            
-            <!-- Filtros de búsqueda -->
-            <div class="modal-buscador-filters" id="searchFilters">
-                <button class="filter-btn active" data-filter="all">
-                    <i class="fas fa-th-large"></i> Todo
-                </button>
-                <button class="filter-btn" data-filter="movies">
-                    <i class="fas fa-film"></i> Películas
-                </button>
-                <button class="filter-btn" data-filter="series">
-                    <i class="fas fa-tv"></i> Series
-                </button>
-                <button class="filter-btn" data-filter="channels">
-                    <i class="fas fa-broadcast-tower"></i> TV
-                </button>
-            </div>
-            
-            <div id="modalBuscadorResults"></div>
-        </div>
-    </div>
-</div>
+<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
 <section class="section details">
     <div class="container" style="margin-top: 80px;">
         <div class="row">
@@ -1143,292 +1113,41 @@ $next_url = $next_ep_id ? "serie_play.php?serie_id=" . urlencode($serie_id) . "&
     </div>
 </section>
 
-<!-- MODAL BUSCADOR MEJORADO -->
-<div class="modal-buscador-bg" id="modalBuscador">
-    <div class="modal-buscador">
-        <div class="modal-buscador-header">
-            <h2 class="modal-buscador-title">
-                <i class="fas fa-search"></i> Buscador PLAYGO
-            </h2>
-            <button class="modal-buscador-close" id="closeSearchModal" title="Cerrar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="modal-buscador-body">
-            <form id="modalBuscadorForm" autocomplete="off" onsubmit="return false;">
-                <div class="modal-buscador-inputbox">
-                    <input type="text" id="modalBuscadorInput" placeholder="Buscar películas, series o canales..." autofocus>
-                    <button type="button" id="modalBuscadorBtn">
-                        <i class="fas fa-search"></i> Buscar
-                    </button>
-                </div>
-            </form>
-            
-            <!-- Filtros de búsqueda -->
-            <div class="modal-buscador-filters" id="searchFilters">
-                <button class="filter-btn active" data-filter="all">
-                    <i class="fas fa-th-large"></i> Todo
-                </button>
-                <button class="filter-btn" data-filter="movies">
-                    <i class="fas fa-film"></i> Películas
-                </button>
-                <button class="filter-btn" data-filter="series">
-                    <i class="fas fa-tv"></i> Series
-                </button>
-                <button class="filter-btn" data-filter="channels">
-                    <i class="fas fa-broadcast-tower"></i> TV
-                </button>
-            </div>
-            
-            <div id="modalBuscadorResults"></div>
-        </div>
-    </div>
-</div>
-
 <script>
-        // MODAL BUSCADOR MEJORADO
-    const openSearchModal = document.getElementById('openSearchModal');
-    const closeSearchModal = document.getElementById('closeSearchModal');
-    const modalBuscador = document.getElementById('modalBuscador');
-    const modalBuscadorInput = document.getElementById('modalBuscadorInput');
-    const modalBuscadorBtn = document.getElementById('modalBuscadorBtn');
-    const modalBuscadorResults = document.getElementById('modalBuscadorResults');
-    const searchFilters = document.getElementById('searchFilters');
+document.addEventListener('DOMContentLoaded', function() {
+    const btnTrailer = document.getElementById('btnTrailer');
+    const trailerModal = document.getElementById('trailerModal');
+    const closeTrailerModal = document.getElementById('closeTrailerModal');
+    const trailerIframe = document.getElementById('trailerIframe');
+    const youtubeId = "<?php echo $youtube_id; ?>";
 
-    let currentFilter = 'all';
-    let searchTimeout;
-
-    function showModalBuscador() {
-        modalBuscador.classList.add('active');
-        setTimeout(() => { 
-            modalBuscadorInput.focus();
-            modalBuscadorInput.select();
-        }, 300);
-    }
-    
-    function hideModalBuscador() {
-        modalBuscador.classList.remove('active');
-        setTimeout(() => {
-            modalBuscadorInput.value = '';
-            modalBuscadorResults.innerHTML = '';
-            resetFilters();
-        }, 300);
-    }
-    
-    function resetFilters() {
-        currentFilter = 'all';
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.classList.remove('active');
+    if (btnTrailer && trailerModal && trailerIframe && youtubeId) {
+        btnTrailer.addEventListener('click', function() {
+            trailerIframe.src = "https://www.youtube.com/embed/" + youtubeId + "?autoplay=1";
+            trailerModal.style.display = "flex";
         });
-        document.querySelector('[data-filter="all"]').classList.add('active');
     }
-
-    openSearchModal.onclick = showModalBuscador;
-    closeSearchModal.onclick = hideModalBuscador;
-    
-    window.addEventListener('keydown', function(e) {
-        if (e.key === "Escape") hideModalBuscador();
-    });
-    
-    modalBuscador.addEventListener('click', function(e) {
-        if (e.target === modalBuscador) hideModalBuscador();
-    });
-
-    // Cargar datos para búsqueda (películas, series, canales)
-    let peliculas = [];
-    let series = [];
-    let canales = [];
-    <?php
-    // Películas
-    $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams";
-    $resposta = apixtream($url);
-    $peliculas = json_decode($resposta,true);
-    echo "peliculas = ".json_encode(array_map(function($p){
-        return [
-            'id'=>$p['stream_id'],
-            'nombre'=>$p['name'],
-            'img'=>$p['stream_icon']
-        ];
-    },$peliculas)).";\n";
-    // Series
-    $url = IP."/player_api.php?username=$user&password=$pwd&action=get_series";
-    $resposta = apixtream($url);
-    $series = json_decode($resposta,true);
-    echo "series = ".json_encode(array_map(function($s){
-        return [
-            'id'=>$s['series_id'],
-            'nombre'=>$s['name'],
-            'img'=>$s['cover']
-        ];
-    },$series)).";\n";
-    // Canales
-    $url = IP."/player_api.php?username=$user&password=$pwd&action=get_live_streams";
-    $resposta = apixtream($url);
-    $canales = json_decode($resposta,true);
-    echo "canales = ".json_encode(array_map(function($c){
-        return [
-            'id'=>$c['stream_id'],
-            'nombre'=>$c['name'],
-            'img'=>$c['stream_icon'],
-            'tipo'=>$c['stream_type']
-        ];
-    },$canales)).";\n";
-    ?>
-
-    // Función para normalizar texto (remover tildes y caracteres especiales)
-    function normalizarTexto(texto) {
-        return texto
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '') // Remover diacríticos (tildes, diéresis, etc.)
-            .replace(/[^a-z0-9\s]/g, ' ') // Remover caracteres especiales, mantener solo letras, números y espacios
-            .replace(/\s+/g, ' ') // Normalizar espacios múltiples
-            .trim();
+    if (closeTrailerModal && trailerModal && trailerIframe) {
+        closeTrailerModal.addEventListener('click', function() {
+            trailerModal.style.display = "none";
+            trailerIframe.src = "";
+        });
     }
-
-    function renderBuscadorResults(query) {
-        query = query.trim();
-        let queryNormalizado = normalizarTexto(query);
-        let html = '';
-        let totalResults = 0;
-        
-        // Aplicar filtro
-        let showMovies = currentFilter === 'all' || currentFilter === 'movies';
-        let showSeries = currentFilter === 'all' || currentFilter === 'series';
-        let showChannels = currentFilter === 'all' || currentFilter === 'channels';
-        
-        // Películas
-        if (showMovies) {
-            let pelis = peliculas.filter(p => {
-                let nombreNormalizado = normalizarTexto(p.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       p.nombre.toLowerCase().includes(query.toLowerCase());
-            });
-            if (pelis.length > 0) {
-                html += `<div class="modal-buscador-section">
-                    <h3><i class="fas fa-film"></i> PELÍCULAS (${pelis.length})</h3>
-                    <div class="modal-buscador-grid">`;
-                pelis.slice(0,12).forEach(p => {
-                    html += `<div class="modal-buscador-card">
-                        <a href="filme.php?stream=${p.id}&streamtipo=movie">
-                            <img src="${p.img}" alt="${p.nombre}" onerror="this.src='img/logo.png'">
-                            <span>${p.nombre}</span>
-                        </a>
-                    </div>`;
-                });
-                html += `</div></div>`;
-                totalResults += pelis.length;
+    if (trailerModal && trailerIframe) {
+        trailerModal.addEventListener('click', function(e) {
+            if (e.target === trailerModal) {
+                trailerModal.style.display = "none";
+                trailerIframe.src = "";
             }
-        }
-        
-        // Series
-        if (showSeries) {
-            let sers = series.filter(s => {
-                let nombreNormalizado = normalizarTexto(s.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       s.nombre.toLowerCase().includes(query.toLowerCase());
-            });
-            if (sers.length > 0) {
-                html += `<div class="modal-buscador-section">
-                    <h3><i class="fas fa-tv"></i> SERIES (${sers.length})</h3>
-                    <div class="modal-buscador-grid">`;
-                sers.slice(0,12).forEach(s => {
-                    html += `<div class="modal-buscador-card">
-                        <a href="serie.php?stream=${s.id}&streamtipo=serie">
-                            <img src="${s.img}" alt="${s.nombre}" onerror="this.src='img/logo.png'">
-                            <span>${s.nombre}</span>
-                        </a>
-                    </div>`;
-                });
-                html += `</div></div>`;
-                totalResults += sers.length;
-            }
-        }
-        
-        // Canales
-        if (showChannels) {
-            let chans = canales.filter(c => {
-                let nombreNormalizado = normalizarTexto(c.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       c.nombre.toLowerCase().includes(query.toLowerCase());
-            });
-            if (chans.length > 0) {
-                html += `<div class="modal-buscador-section">
-                    <h3><i class="fas fa-broadcast-tower"></i> TV EN VIVO (${chans.length})</h3>
-                    <div class="modal-buscador-grid">`;
-                chans.slice(0,12).forEach(c => {
-                    html += `<div class="modal-buscador-card">
-                        <a href="canal.php?stream=${c.id}">
-                            <img src="${c.img}" alt="${c.nombre}" onerror="this.src='img/logo.png'">
-                            <span>${c.nombre}</span>
-                        </a>
-                    </div>`;
-                });
-                html += `</div></div>`;
-                totalResults += chans.length;
-            }
-        }
-        
-        if (!html && query.length > 0) {
-            html = `<div class="modal-buscador-empty">
-                <i class="fas fa-search"></i>
-                <p>No se encontraron resultados para "${query}"</p>
-                <p style="font-size: 0.9rem; margin-top: 8px;">Intenta con otros términos o cambia el filtro</p>
-            </div>`;
-        } else if (query.length > 0) {
-            html = `<div style="text-align: center; margin-bottom: 20px; color: rgba(255,255,255,0.7);">
-                <i class="fas fa-info-circle"></i> Se encontraron ${totalResults} resultados
-            </div>` + html;
-        }
-        
-        modalBuscadorResults.innerHTML = html;
+        });
     }
-
-    // Filtros de búsqueda
-    searchFilters.addEventListener('click', function(e) {
-        if (e.target.classList.contains('filter-btn')) {
-            // Remover clase active de todos los botones
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            // Agregar clase active al botón clickeado
-            e.target.classList.add('active');
-            currentFilter = e.target.getAttribute('data-filter');
-            
-            // Re-renderizar resultados si hay una búsqueda activa
-            let query = modalBuscadorInput.value.trim();
-            if (query.length > 1) {
-                renderBuscadorResults(query);
-            }
+    window.addEventListener('keydown', function(e){
+        if (e.key === "Escape" && trailerModal && trailerModal.style.display === "flex") {
+            trailerModal.style.display = "none";
+            trailerIframe.src = "";
         }
     });
-
-    // Buscar con debounce para mejor performance
-    modalBuscadorInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        let q = this.value;
-        
-        if (q.length > 1) {
-            searchTimeout = setTimeout(() => {
-                renderBuscadorResults(q);
-            }, 300);
-        } else {
-            modalBuscadorResults.innerHTML = '';
-        }
-    });
-    
-    // Buscar al hacer clic en botón
-    modalBuscadorBtn.addEventListener('click', function() {
-        let q = modalBuscadorInput.value;
-        if (q.length > 1) renderBuscadorResults(q);
-    });
-    
-    // Enter en input
-    modalBuscadorInput.addEventListener('keydown', function(e){
-        if(e.key === "Enter") {
-            e.preventDefault();
-            let q = modalBuscadorInput.value;
-            if (q.length > 1) renderBuscadorResults(q);
-        }
-    });
+});
 </script>
 
 <script>

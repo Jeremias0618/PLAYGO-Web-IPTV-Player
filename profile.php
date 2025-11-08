@@ -9,7 +9,6 @@ if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['x
 $user = $_COOKIE['xuserm'];
 $pwd = $_COOKIE['xpwdm'];
 
-// Obtener info de cuenta para la fecha de vencimiento
 $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_account_info";
 $respuesta_info = apixtream($url_info);
 $info = json_decode($respuesta_info, true);
@@ -29,7 +28,6 @@ if ($peliculas && count($peliculas) > 0) {
     $wallpaper_url = isset($random['cover']) ? $random['cover'] : (isset($random['stream_icon']) ? $random['stream_icon'] : '');
 }
 
-// Generar recomendados aleatorios de películas y series
 $recomendados = [];
 if ($peliculas && count($peliculas) > 0) {
     foreach ($peliculas as $p) {
@@ -44,7 +42,6 @@ if ($peliculas && count($peliculas) > 0) {
     }
 }
 
-// Series
 $url_series = IP."/player_api.php?username=$user&password=$pwd&action=get_series";
 $respuesta_series = apixtream($url_series);
 $series = json_decode($respuesta_series, true);
@@ -62,11 +59,9 @@ if ($series && count($series) > 0) {
     }
 }
 
-// Mezclar y tomar 8 aleatorios
 shuffle($recomendados);
 $recomendados = array_slice($recomendados, 0, 8);
 
-// $expira = ...;
 ?>
 
 <!DOCTYPE html>
@@ -98,7 +93,6 @@ $recomendados = array_slice($recomendados, 0, 8);
         display: none;
         }
         
-        /* Estilos del header exactamente como en painel.php */
         .header__content {
             background: #000 !important;
             border-radius: 12px;
@@ -161,7 +155,6 @@ $recomendados = array_slice($recomendados, 0, 8);
             margin-bottom: 40px;
         }
 
-        /* NUEVO DISEÑO MODERNO DEL PERFIL */
         .profile-card-modern {
             background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
             border-radius: 24px;
@@ -246,7 +239,102 @@ $recomendados = array_slice($recomendados, 0, 8);
             margin: 0;
             font-weight: 500;
         }
-        
+
+        @media (min-width: 601px) {
+            .header__logo img {
+                width: 240px !important;
+                height: 80px !important;
+                max-width: none !important;
+                object-fit: contain;
+            }
+        }
+        @media (max-width: 600px) {
+            .header__logo img {
+                width: 240px !important;
+                height: 60px !important;
+                max-width: 100% !important;
+                object-fit: contain;
+            }
+            .header__logo {
+                margin-left: 0 !important;
+                padding-left: 0 !important;
+                margin-right: auto !important;
+            }
+            .header__content {
+                padding-left: 4px !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .profile-card-modern {
+                margin: 90px auto 20px auto !important;
+                max-width: 360px;
+                border-radius: 20px;
+                background: linear-gradient(160deg, #1c1c20 0%, #23232a 100%);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.05);
+                overflow: hidden;
+            }
+            .profile-header {
+                padding: 20px 18px;
+                border-radius: 20px 20px 0 0;
+                text-align: center;
+            }
+            .profile-header-content {
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 12px !important;
+                text-align: center !important;
+            }
+            .profile-avatar-modern {
+                width: 72px !important;
+                height: 72px !important;
+                font-size: 2.2rem !important;
+            }
+            .profile-welcome h2 {
+                font-size: 1.35rem !important;
+                margin-bottom: 4px !important;
+            }
+            .profile-welcome p {
+                display: block !important;
+                font-size: 0.85rem !important;
+                color: rgba(255,255,255,0.75);
+            }
+            .profile-compact-info {
+                display: flex !important;
+                flex-direction: column;
+                gap: 10px;
+                background: rgba(0,0,0,0.35);
+                padding: 18px 16px;
+            }
+            .compact-row {
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 12px;
+                padding: 10px 12px;
+                background: rgba(0,0,0,0.22);
+            }
+            .compact-label {
+                font-size: 0.82rem;
+                color: rgba(255,255,255,0.75);
+            }
+            .compact-value {
+                font-size: 0.95rem;
+                color: #fff;
+            }
+            .profile-actions-modern {
+                flex-direction: column !important;
+                padding: 18px !important;
+                gap: 12px !important;
+                background: rgba(0,0,0,0.25) !important;
+            }
+            .profile-btn-modern {
+                width: 100%;
+                justify-content: center;
+                padding: 14px 18px !important;
+                font-size: 1rem !important;
+                border-radius: 12px !important;
+            }
+        }
+
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -349,7 +437,6 @@ $recomendados = array_slice($recomendados, 0, 8);
             font-size: 1.2rem;
         }
         
-        /* Información compacta para móviles - Solo visible en móviles */
         .profile-compact-info {
             display: none;
             background: rgba(0,0,0,0.1);
@@ -357,7 +444,6 @@ $recomendados = array_slice($recomendados, 0, 8);
             border-radius: 0 0 24px 24px;
         }
         
-        /* Asegurar que desktop mantenga el diseño original */
         @media (min-width: 769px) {
             .container {
                 max-width: 1200px !important;
@@ -475,7 +561,6 @@ $recomendados = array_slice($recomendados, 0, 8);
             word-break: break-all;
         }
         
-        /* Responsive para móviles - Diseño compacto para Android */
         @media (max-width: 768px) {
             .container {
                 padding: 0 10px 40px 10px !important;
@@ -544,7 +629,6 @@ $recomendados = array_slice($recomendados, 0, 8);
             }
         }
         
-        /* Diseño ultra compacto para Android */
         @media (max-width: 480px) {
             .container {
                 padding: 0 5px 40px 5px !important;
@@ -2025,47 +2109,7 @@ $recomendados = array_slice($recomendados, 0, 8);
 </nav>
 <div id="mobileMenuOverlay"></div>
 
-<!-- MODAL BUSCADOR MEJORADO -->
-<div class="modal-buscador-bg" id="modalBuscador">
-    <div class="modal-buscador">
-        <div class="modal-buscador-header">
-            <h2 class="modal-buscador-title">
-                <i class="fas fa-search"></i> Buscador PLAYGO
-            </h2>
-            <button class="modal-buscador-close" id="closeSearchModal" title="Cerrar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="modal-buscador-body">
-            <form id="modalBuscadorForm" autocomplete="off" onsubmit="return false;">
-                <div class="modal-buscador-inputbox">
-                    <input type="text" id="modalBuscadorInput" placeholder="Buscar películas, series o canales..." autofocus>
-                    <button type="button" id="modalBuscadorBtn">
-                        <i class="fas fa-search"></i> Buscar
-                    </button>
-                </div>
-            </form>
-            
-            <!-- Filtros de búsqueda -->
-            <div class="modal-buscador-filters" id="searchFilters">
-                <button class="filter-btn active" data-filter="all">
-                    <i class="fas fa-th-large"></i> Todo
-                </button>
-                <button class="filter-btn" data-filter="movies">
-                    <i class="fas fa-film"></i> Películas
-                </button>
-                <button class="filter-btn" data-filter="series">
-                    <i class="fas fa-tv"></i> Series
-                </button>
-                <button class="filter-btn" data-filter="channels">
-                    <i class="fas fa-broadcast-tower"></i> TV
-                </button>
-            </div>
-            
-            <div id="modalBuscadorResults"></div>
-        </div>
-    </div>
-</div>
+<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
 
 <!-- CONTENIDO PRINCIPAL -->
 <div class="container main-content">
@@ -2417,249 +2461,6 @@ function setFavoritosCount(n) {
     document.getElementById('favoritos-count').textContent = n;
     document.getElementById('favoritos-count-compact').textContent = n;
 }
-</script>
-
-<!-- MODAL BUSCADOR JS (igual que painel.php) -->
-<script>
-let peliculas = [];
-let series = [];
-let canales = [];
-<?php
-// Películas
-$url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams";
-$resposta = apixtream($url);
-$peliculas = json_decode($resposta,true);
-echo "peliculas = ".json_encode(array_map(function($p){
-    return [
-        'id'=>$p['stream_id'],
-        'nombre'=>$p['name'],
-        'img'=>$p['stream_icon']
-    ];
-},$peliculas)).";\n";
-// Series
-$url = IP."/player_api.php?username=$user&password=$pwd&action=get_series";
-$resposta = apixtream($url);
-$series = json_decode($resposta,true);
-echo "series = ".json_encode(array_map(function($s){
-    return [
-        'id'=>$s['series_id'],
-        'nombre'=>$s['name'],
-        'img'=>$s['cover']
-    ];
-},$series)).";\n";
-// Canales
-$url = IP."/player_api.php?username=$user&password=$pwd&action=get_live_streams";
-$resposta = apixtream($url);
-$canales = json_decode($resposta,true);
-echo "canales = ".json_encode(array_map(function($c){
-    return [
-        'id'=>$c['stream_id'],
-        'nombre'=>$c['name'],
-        'img'=>$c['stream_icon'],
-        'tipo'=>$c['stream_type']
-    ];
-},$canales)).";\n";
-?>
-
-// Función para normalizar texto (remover tildes y caracteres especiales)
-function normalizarTexto(texto) {
-    return texto
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '') // Remover diacríticos (tildes, diéresis, etc.)
-        .replace(/[^a-z0-9\s]/g, ' ') // Remover caracteres especiales, mantener solo letras, números y espacios
-        .replace(/\s+/g, ' ') // Normalizar espacios múltiples
-        .trim();
-}
-
-function renderBuscadorResults(query) {
-    query = query.trim();
-    let queryNormalizado = normalizarTexto(query);
-    let html = '';
-    let totalResults = 0;
-    
-    // Aplicar filtro
-    let showMovies = currentFilter === 'all' || currentFilter === 'movies';
-    let showSeries = currentFilter === 'all' || currentFilter === 'series';
-    let showChannels = currentFilter === 'all' || currentFilter === 'channels';
-    
-    // Películas
-    if (showMovies) {
-        let pelis = peliculas.filter(p => {
-            let nombreNormalizado = normalizarTexto(p.nombre);
-            return nombreNormalizado.includes(queryNormalizado) || 
-                   p.nombre.toLowerCase().includes(query.toLowerCase());
-        });
-        if (pelis.length > 0) {
-            html += `<div class="modal-buscador-section">
-                <h3><i class="fas fa-film"></i> PELÍCULAS (${pelis.length})</h3>
-                <div class="modal-buscador-grid">`;
-            pelis.slice(0,12).forEach(p => {
-                html += `<div class="modal-buscador-card">
-                    <a href="filme.php?stream=${p.id}&streamtipo=movie">
-                        <img src="${p.img}" alt="${p.nombre}" onerror="this.src='img/logo.png'">
-                        <span>${p.nombre}</span>
-                    </a>
-                </div>`;
-            });
-            html += `</div></div>`;
-            totalResults += pelis.length;
-        }
-    }
-    
-    // Series
-    if (showSeries) {
-        let sers = series.filter(s => {
-            let nombreNormalizado = normalizarTexto(s.nombre);
-            return nombreNormalizado.includes(queryNormalizado) || 
-                   s.nombre.toLowerCase().includes(query.toLowerCase());
-        });
-        if (sers.length > 0) {
-            html += `<div class="modal-buscador-section">
-                <h3><i class="fas fa-tv"></i> SERIES (${sers.length})</h3>
-                <div class="modal-buscador-grid">`;
-            sers.slice(0,12).forEach(s => {
-                html += `<div class="modal-buscador-card">
-                    <a href="serie.php?stream=${s.id}&streamtipo=serie">
-                        <img src="${s.img}" alt="${s.nombre}" onerror="this.src='img/logo.png'">
-                        <span>${s.nombre}</span>
-                    </a>
-                </div>`;
-            });
-            html += `</div></div>`;
-            totalResults += sers.length;
-        }
-    }
-    
-    // Canales
-    if (showChannels) {
-        let chans = canales.filter(c => {
-            let nombreNormalizado = normalizarTexto(c.nombre);
-            return nombreNormalizado.includes(queryNormalizado) || 
-                   c.nombre.toLowerCase().includes(query.toLowerCase());
-        });
-        if (chans.length > 0) {
-            html += `<div class="modal-buscador-section">
-                <h3><i class="fas fa-broadcast-tower"></i> TV EN VIVO (${chans.length})</h3>
-                <div class="modal-buscador-grid">`;
-            chans.slice(0,12).forEach(c => {
-                html += `<div class="modal-buscador-card">
-                    <a href="canal.php?stream=${c.id}">
-                        <img src="${c.img}" alt="${c.nombre}" onerror="this.src='img/logo.png'">
-                        <span>${c.nombre}</span>
-                    </a>
-                </div>`;
-            });
-            html += `</div></div>`;
-            totalResults += chans.length;
-        }
-    }
-    
-    if (!html && query.length > 0) {
-        html = `<div class="modal-buscador-empty">
-            <i class="fas fa-search"></i>
-            <p>No se encontraron resultados para "${query}"</p>
-            <p style="font-size: 0.9rem; margin-top: 8px;">Intenta con otros términos o cambia el filtro</p>
-        </div>`;
-    } else if (query.length > 0) {
-        html = `<div style="text-align: center; margin-bottom: 20px; color: rgba(255,255,255,0.7);">
-            <i class="fas fa-info-circle"></i> Se encontraron ${totalResults} resultados
-        </div>` + html;
-    }
-    
-    modalBuscadorResults.innerHTML = html;
-}
-
-// MODAL BUSCADOR MEJORADO
-const openSearchModal = document.getElementById('openSearchModal');
-const closeSearchModal = document.getElementById('closeSearchModal');
-const modalBuscador = document.getElementById('modalBuscador');
-const modalBuscadorInput = document.getElementById('modalBuscadorInput');
-const modalBuscadorBtn = document.getElementById('modalBuscadorBtn');
-const modalBuscadorResults = document.getElementById('modalBuscadorResults');
-const searchFilters = document.getElementById('searchFilters');
-
-let currentFilter = 'all';
-let searchTimeout;
-
-function showModalBuscador() {
-    modalBuscador.classList.add('active');
-    setTimeout(() => { 
-        modalBuscadorInput.focus();
-        modalBuscadorInput.select();
-    }, 300);
-}
-
-function hideModalBuscador() {
-    modalBuscador.classList.remove('active');
-    setTimeout(() => {
-        modalBuscadorInput.value = '';
-        modalBuscadorResults.innerHTML = '';
-        resetFilters();
-    }, 300);
-}
-
-function resetFilters() {
-    currentFilter = 'all';
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.querySelector('[data-filter="all"]').classList.add('active');
-}
-openSearchModal.onclick = showModalBuscador;
-closeSearchModal.onclick = hideModalBuscador;
-window.addEventListener('keydown', function(e) {
-    if (e.key === "Escape") hideModalBuscador();
-});
-modalBuscador.addEventListener('click', function(e) {
-    if (e.target === modalBuscador) hideModalBuscador();
-});
-
-// Filtros de búsqueda
-searchFilters.addEventListener('click', function(e) {
-    if (e.target.classList.contains('filter-btn')) {
-        // Remover clase active de todos los botones
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-        // Agregar clase active al botón clickeado
-        e.target.classList.add('active');
-        currentFilter = e.target.getAttribute('data-filter');
-        
-        // Re-renderizar resultados si hay una búsqueda activa
-        let query = modalBuscadorInput.value.trim();
-        if (query.length > 1) {
-            renderBuscadorResults(query);
-        }
-    }
-});
-
-// Buscar con debounce para mejor performance
-modalBuscadorInput.addEventListener('input', function() {
-    clearTimeout(searchTimeout);
-    let q = this.value;
-    
-    if (q.length > 1) {
-        searchTimeout = setTimeout(() => {
-            renderBuscadorResults(q);
-        }, 300);
-    } else {
-        modalBuscadorResults.innerHTML = '';
-    }
-});
-
-// Buscar al hacer clic en botón
-modalBuscadorBtn.addEventListener('click', function() {
-    let q = modalBuscadorInput.value;
-    if (q.length > 1) renderBuscadorResults(q);
-});
-
-// Enter en input
-modalBuscadorInput.addEventListener('keydown', function(e){
-    if(e.key === "Enter") {
-        e.preventDefault();
-        let q = modalBuscadorInput.value;
-        if (q.length > 1) renderBuscadorResults(q);
-    }
-});
 </script>
 
 <script>
