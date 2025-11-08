@@ -14,6 +14,27 @@ $categoria = isset($_REQUEST['catg']) ? urldecode($_REQUEST['catg']) : 'TV en Vi
 $id = isset($_REQUEST['id']) ? trim($_REQUEST['id']) : '';
 $adulto = isset($_REQUEST['adulto']) ? trim($_REQUEST['adulto']) : '';
 $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
+
+$customChannelLogos = [
+    15   => 'channels/USMP_TV_2021.png',
+    248  => 'channels/ATV_Sur_2025_Web.png',
+    249  => 'channels/PBO.png',
+    252  => 'channels/RPP_2018.png',
+    1099 => 'channels/cropped-energeekbg-1.png',
+    1104 => 'channels/ESPN-Logo.png',
+    1105 => 'channels/ESPN2_2006.png',
+    1107 => 'channels/ESPN_4_logo.svg.png',
+    1110 => 'channels/ESPN_7_logo.svg.png',
+    1114 => 'channels/Gol_Peru.png',
+    1115 => 'channels/Karibena_tv.png',
+];
+
+$urlLiveCategories = IP."/player_api.php?username=$user&password=$pwd&action=get_live_categories";
+$resLiveCategories = apixtream($urlLiveCategories);
+$liveCategories = json_decode($resLiveCategories, true);
+if (!is_array($liveCategories)) {
+    $liveCategories = [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -587,9 +608,9 @@ $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
                 padding-left: 0 !important;
             }
             .header__content {
+                padding: 12px 24px;
                 padding-left: 4px !important;
             }
-
         }
         /* Mejoras para el buscador en móvil */
         @media (max-width: 600px) {
@@ -779,47 +800,7 @@ $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
         </div>
     </header>
 
-    <!-- MODAL BUSCADOR MEJORADO -->
-    <div class="modal-buscador-bg" id="modalBuscador">
-        <div class="modal-buscador">
-            <div class="modal-buscador-header">
-                <h2 class="modal-buscador-title">
-                    <i class="fas fa-search"></i> Buscador PLAYGO
-                </h2>
-                <button class="modal-buscador-close" id="closeSearchModal" title="Cerrar">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-buscador-body">
-                <form id="modalBuscadorForm" autocomplete="off" onsubmit="return false;">
-                    <div class="modal-buscador-inputbox">
-                        <input type="text" id="modalBuscadorInput" placeholder="Buscar películas, series o canales..." autofocus>
-                        <button type="button" id="modalBuscadorBtn">
-                            <i class="fas fa-search"></i> Buscar
-                        </button>
-                    </div>
-                </form>
-                
-                <!-- Filtros de búsqueda -->
-                <div class="modal-buscador-filters" id="searchFilters">
-                    <button class="filter-btn active" data-filter="all">
-                        <i class="fas fa-th-large"></i> Todo
-                    </button>
-                    <button class="filter-btn" data-filter="movies">
-                        <i class="fas fa-film"></i> Películas
-                    </button>
-                    <button class="filter-btn" data-filter="series">
-                        <i class="fas fa-tv"></i> Series
-                    </button>
-                    <button class="filter-btn" data-filter="channels">
-                        <i class="fas fa-broadcast-tower"></i> TV
-                    </button>
-                </div>
-                
-                <div id="modalBuscadorResults"></div>
-            </div>
-        </div>
-    </div>
+    <?php include_once __DIR__ . '/partials/search_modal.php'; ?>
 
     <section class="content" style="margin-top:30px;">
         <div class="container">
@@ -848,6 +829,12 @@ $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
                                 $canal_type = $index['stream_type'];
                                 $canal_id = $index['stream_id'];
                                 $canal_img = $index['stream_icon'];
+                                if (isset($customChannelLogos[$canal_id])) {
+                                    $customPath = __DIR__ . '/' . $customChannelLogos[$canal_id];
+                                    if (file_exists($customPath)) {
+                                        $canal_img = $customChannelLogos[$canal_id];
+                                    }
+                                }
                                 $cat_id = isset($index['category_id']) ? $index['category_id'] : '';
                         ?>
                         <div class="canal-card" style="position:relative;" data-cat="<?php echo $cat_id; ?>">
@@ -888,18 +875,18 @@ $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
                             <li>
                                 <a href="canais.php?sessao=<?php echo $sessao; ?>&id=&catg=TV%20en%20Vivo"<?php if($id=='') echo ' style="color:#f50b60;"'; ?>>Todos</a>
                             </li>
-                        <?php
-                        $url = IP."/player_api.php?username=$user&password=$pwd&action=get_live_categories";
-                        $resposta = apixtream($url);
-                        $output = json_decode($resposta,true);
-                        foreach($output as $res1) {
-                            $idcatcanal = $res1['category_id'];
-                            $catgcanal = $res1['category_name'];
-                            echo '<li><a href="canais.php?id='.$idcatcanal.'&catg='.urlencode($catgcanal).'"';
-                            if($id==$idcatcanal) echo ' style="color:#f50b60;"';
-                            echo '>'.$catgcanal.'</a></li>';
-                        }
-                        ?>
+                        <?php foreach ($liveCategories as $cat): ?>
+                            <?php
+                                $idcatcanal = $cat['category_id'];
+                                $catgcanal = $cat['category_name'];
+                            ?>
+                            <li>
+                                <a href="canais.php?id=<?php echo $idcatcanal; ?>&catg=<?php echo urlencode($catgcanal); ?>"
+                                   <?php if($id==$idcatcanal) echo ' style="color:#f50b60;"'; ?>>
+                                   <?php echo htmlspecialchars($catgcanal); ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
                         </ul>
                     </aside>
                 </div>
@@ -936,366 +923,131 @@ $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
     <script src="./js/provider.hlsjs.js"></script>
     <script src="./js/main.js"></script>
     <script>
-    // MODAL BUSCADOR MEJORADO
-    const openSearchModal = document.getElementById('openSearchModal');
-    const closeSearchModal = document.getElementById('closeSearchModal');
-    const modalBuscador = document.getElementById('modalBuscador');
-    const modalBuscadorInput = document.getElementById('modalBuscadorInput');
-    const modalBuscadorBtn = document.getElementById('modalBuscadorBtn');
-    const modalBuscadorResults = document.getElementById('modalBuscadorResults');
-    const searchFilters = document.getElementById('searchFilters');
+    (function() {
+        const categoriasCanales = <?php echo json_encode(array_map(function($c){
+            return [
+                'id' => $c['category_id'],
+                'nombre' => $c['category_name']
+            ];
+        }, $liveCategories), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 
-    let currentFilter = 'all';
-    let searchTimeout;
+        const canalesGrid = document.querySelector('.canales-grid');
+        if (!canalesGrid) {
+            return;
+        }
 
-    function showModalBuscador() {
-        modalBuscador.classList.add('active');
-        setTimeout(() => { 
-            modalBuscadorInput.focus();
-            modalBuscadorInput.select();
-        }, 300);
-    }
-    
-    function hideModalBuscador() {
-        modalBuscador.classList.remove('active');
-        setTimeout(() => {
-            modalBuscadorInput.value = '';
-            modalBuscadorResults.innerHTML = '';
-            resetFilters();
-        }, 300);
-    }
-    
-    function resetFilters() {
-        currentFilter = 'all';
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        document.querySelector('[data-filter="all"]').classList.add('active');
-    }
+        let categoriaSeleccionada = '';
+        const mobileCategoriasBtn = document.getElementById('mobileCategoriasBtn');
+        const mobileCategoriasDropdown = document.getElementById('mobileCategoriasDropdown');
+        const mobileCategoriasClear = document.getElementById('mobileCategoriasClear');
 
-    openSearchModal.onclick = showModalBuscador;
-    closeSearchModal.onclick = hideModalBuscador;
-    
-    window.addEventListener('keydown', function(e) {
-        if (e.key === "Escape") hideModalBuscador();
-    });
-    
-    modalBuscador.addEventListener('click', function(e) {
-        if (e.target === modalBuscador) hideModalBuscador();
-    });
-
-    // Cargar datos para búsqueda (películas, series, canales)
-    let peliculas = [];
-    let series = [];
-    let canales = [];
-    <?php
-    // Películas
-    $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams";
-    $resposta = apixtream($url);
-    $peliculas = json_decode($resposta,true);
-    echo "peliculas = ".json_encode(array_map(function($p){
-        return [
-            'id'=>$p['stream_id'],
-            'nombre'=>$p['name'],
-            'img'=>$p['stream_icon'],
-            'tipo'=>$p['stream_type']
-        ];
-    },$peliculas)).";\n";
-    // Series
-    $url = IP."/player_api.php?username=$user&password=$pwd&action=get_series";
-    $resposta = apixtream($url);
-    $series = json_decode($resposta,true);
-    echo "series = ".json_encode(array_map(function($s){
-        return [
-            'id'=>$s['series_id'],
-            'nombre'=>$s['name'],
-            'img'=>$s['cover']
-        ];
-    },$series)).";\n";
-    // Canales
-    $url = IP."/player_api.php?username=$user&password=$pwd&action=get_live_streams";
-    $resposta = apixtream($url);
-    $canales = json_decode($resposta,true);
-    echo "canales = ".json_encode(array_map(function($c){
-        return [
-            'id'=>$c['stream_id'],
-            'nombre'=>$c['name'],
-            'img'=>$c['stream_icon'],
-            'tipo'=>$c['stream_type'],
-            'cat'=>isset($c['category_id']) ? $c['category_id'] : ''
-        ];
-    },$canales)).";\n";
-    // Categorías para el filtro móvil
-    $url = IP."/player_api.php?username=$user&password=$pwd&action=get_live_categories";
-    $resposta = apixtream($url);
-    $output = json_decode($resposta,true);
-    echo "categoriasCanales = ".json_encode(array_map(function($c){
-        return [
-            'id'=>$c['category_id'],
-            'nombre'=>$c['category_name']
-        ];
-    },$output)).";\n";
-    ?>
-
-    // Función para normalizar texto (remover tildes y caracteres especiales)
-    function normalizarTexto(texto) {
-        return texto
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '') // Remover diacríticos (tildes, diéresis, etc.)
-            .replace(/[^a-z0-9\s]/g, ' ') // Remover caracteres especiales, mantener solo letras, números y espacios
-            .replace(/\s+/g, ' ') // Normalizar espacios múltiples
-            .trim();
-    }
-
-    function renderBuscadorResults(query) {
-        query = query.trim();
-        let queryNormalizado = normalizarTexto(query);
-        let html = '';
-        let totalResults = 0;
-        
-        // Aplicar filtro
-        let showMovies = currentFilter === 'all' || currentFilter === 'movies';
-        let showSeries = currentFilter === 'all' || currentFilter === 'series';
-        let showChannels = currentFilter === 'all' || currentFilter === 'channels';
-        
-        // Películas
-        if (showMovies) {
-            let pelis = peliculas.filter(p => {
-                let nombreNormalizado = normalizarTexto(p.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       p.nombre.toLowerCase().includes(query.toLowerCase());
+        function renderMobileCategoriasDropdown() {
+            if (!mobileCategoriasDropdown) return;
+            let html = `<div class="cat-option" data-id="">Todos</div>`;
+            categoriasCanales.forEach(cat => {
+                const selectedClass = cat.id === categoriaSeleccionada ? ' selected' : '';
+                html += `<div class="cat-option${selectedClass}" data-id="${cat.id}">${cat.nombre}</div>`;
             });
-            if (pelis.length > 0) {
-                html += `<div class="modal-buscador-section">
-                    <h3><i class="fas fa-film"></i> PELÍCULAS (${pelis.length})</h3>
-                    <div class="modal-buscador-grid">`;
-                pelis.slice(0,12).forEach(p => {
-                    html += `<div class="modal-buscador-card">
-                        <a href="filme.php?stream=${p.id}&streamtipo=movie">
-                            <img src="${p.img}" alt="${p.nombre}" onerror="this.src='img/logo.png'">
-                            <span>${p.nombre}</span>
-                        </a>
-                    </div>`;
-                });
-                html += `</div></div>`;
-                totalResults += pelis.length;
-            }
+            mobileCategoriasDropdown.innerHTML = html;
         }
-        
-        // Series
-        if (showSeries) {
-            let sers = series.filter(s => {
-                let nombreNormalizado = normalizarTexto(s.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       s.nombre.toLowerCase().includes(query.toLowerCase());
+
+        function filtrarCanalesPorCategoria() {
+            const cards = canalesGrid.querySelectorAll('.canal-card');
+            cards.forEach(card => {
+                const catId = card.getAttribute('data-cat');
+                if (!categoriaSeleccionada || categoriaSeleccionada === catId) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
             });
-            if (sers.length > 0) {
-                html += `<div class="modal-buscador-section">
-                    <h3><i class="fas fa-tv"></i> SERIES (${sers.length})</h3>
-                    <div class="modal-buscador-grid">`;
-                sers.slice(0,12).forEach(s => {
-                    html += `<div class="modal-buscador-card">
-                        <a href="serie.php?stream=${s.id}&streamtipo=serie">
-                            <img src="${s.img}" alt="${s.nombre}" onerror="this.src='img/logo.png'">
-                            <span>${s.nombre}</span>
-                        </a>
-                    </div>`;
-                });
-                html += `</div></div>`;
-                totalResults += sers.length;
+
+            let url = window.location.origin + window.location.pathname;
+            if (categoriaSeleccionada) {
+                const catObj = categoriasCanales.find(c => c.id === categoriaSeleccionada);
+                const catg = catObj ? encodeURIComponent(catObj.nombre) : '';
+                url += `?id=${categoriaSeleccionada}&catg=${catg}`;
             }
+            history.replaceState(null, '', url);
         }
-        
-        // Canales
-        if (showChannels) {
-            let chans = canales.filter(c => {
-                let nombreNormalizado = normalizarTexto(c.nombre);
-                return nombreNormalizado.includes(queryNormalizado) || 
-                       c.nombre.toLowerCase().includes(query.toLowerCase());
-            });
-            if (chans.length > 0) {
-                html += `<div class="modal-buscador-section">
-                    <h3><i class="fas fa-broadcast-tower"></i> TV EN VIVO (${chans.length})</h3>
-                    <div class="modal-buscador-grid">`;
-                chans.slice(0,12).forEach(c => {
-                    html += `<div class="modal-buscador-card">
-                        <a href="canal.php?stream=${c.id}">
-                            <img src="${c.img}" alt="${c.nombre}" onerror="this.src='img/logo.png'">
-                            <span>${c.nombre}</span>
-                        </a>
-                    </div>`;
-                });
-                html += `</div></div>`;
-                totalResults += chans.length;
+
+        function initMobileCategoriasFiltro() {
+            if (!mobileCategoriasBtn || !mobileCategoriasDropdown || window.innerWidth > 600) {
+                return;
             }
-        }
-        
-        if (!html && query.length > 0) {
-            html = `<div class="modal-buscador-empty">
-                <i class="fas fa-search"></i>
-                <p>No se encontraron resultados para "${query}"</p>
-                <p style="font-size: 0.9rem; margin-top: 8px;">Intenta con otros términos o cambia el filtro</p>
-            </div>`;
-        } else if (query.length > 0) {
-            html = `<div style="text-align: center; margin-bottom: 20px; color: rgba(255,255,255,0.7);">
-                <i class="fas fa-info-circle"></i> Se encontraron ${totalResults} resultados
-            </div>` + html;
-        }
-        
-        modalBuscadorResults.innerHTML = html;
-    }
 
-    // Filtros de búsqueda
-    searchFilters.addEventListener('click', function(e) {
-        if (e.target.classList.contains('filter-btn')) {
-            // Remover clase active de todos los botones
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            // Agregar clase active al botón clickeado
-            e.target.classList.add('active');
-            currentFilter = e.target.getAttribute('data-filter');
-            
-            // Re-renderizar resultados si hay una búsqueda activa
-            let query = modalBuscadorInput.value.trim();
-            if (query.length > 1) {
-                renderBuscadorResults(query);
-            }
-        }
-    });
+            renderMobileCategoriasDropdown();
 
-    // Buscar con debounce para mejor performance
-    modalBuscadorInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        let q = this.value;
-        
-        if (q.length > 1) {
-            searchTimeout = setTimeout(() => {
-                renderBuscadorResults(q);
-            }, 300);
-        } else {
-            modalBuscadorResults.innerHTML = '';
-        }
-    });
-    
-    // Buscar al hacer clic en botón
-    modalBuscadorBtn.addEventListener('click', function() {
-        let q = modalBuscadorInput.value;
-        if (q.length > 1) renderBuscadorResults(q);
-    });
-    
-    // Enter en input
-    modalBuscadorInput.addEventListener('keydown', function(e){
-        if(e.key === "Enter") {
-            e.preventDefault();
-            let q = modalBuscadorInput.value;
-            if (q.length > 1) renderBuscadorResults(q);
-        }
-    });
+            mobileCategoriasBtn.onclick = function() {
+                mobileCategoriasDropdown.classList.toggle('active');
+            };
 
-    // --- FILTRO DE CATEGORÍAS SOLO MÓVIL ---
-    let categoriaSeleccionada = '';
-    const mobileCategoriasBtn = document.getElementById('mobileCategoriasBtn');
-    const mobileCategoriasDropdown = document.getElementById('mobileCategoriasDropdown');
-    const mobileCategoriasClear = document.getElementById('mobileCategoriasClear');
-    const canalesGrid = document.querySelector('.canales-grid');
-
-    function renderMobileCategoriasDropdown() {
-        let html = `<div class="cat-option" data-id="">Todos</div>`;
-        categoriasCanales.forEach(cat => {
-            html += `<div class="cat-option${cat.id===categoriaSeleccionada?' selected':''}" data-id="${cat.id}">${cat.nombre}</div>`;
-        });
-        mobileCategoriasDropdown.innerHTML = html;
-    }
-
-    function filtrarCanalesPorCategoria() {
-        let cards = canalesGrid.querySelectorAll('.canal-card');
-        cards.forEach(card => {
-            let catId = card.getAttribute('data-cat');
-            if (!categoriaSeleccionada || categoriaSeleccionada === '' || categoriaSeleccionada === catId) {
-                card.style.display = '';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-        // Cambiar la URL al filtrar
-        let url = window.location.origin + window.location.pathname;
-        if (categoriaSeleccionada && categoriaSeleccionada !== '') {
-            let catObj = categoriasCanales.find(c => c.id === categoriaSeleccionada);
-            let catg = catObj ? encodeURIComponent(catObj.nombre) : '';
-            url += `?id=${categoriaSeleccionada}&catg=${catg}`;
-        }
-        history.replaceState(null, '', url);
-    }
-
-    function initMobileCategoriasFiltro() {
-        if (window.innerWidth > 600) return;
-        renderMobileCategoriasDropdown();
-
-        mobileCategoriasBtn.onclick = function() {
-            mobileCategoriasDropdown.classList.toggle('active');
-        };
-        mobileCategoriasDropdown.onclick = function(e) {
-            if (e.target.classList.contains('cat-option')) {
-                categoriaSeleccionada = e.target.getAttribute('data-id');
+            mobileCategoriasDropdown.onclick = function(e) {
+                const option = e.target.closest('.cat-option');
+                if (!option) return;
+                categoriaSeleccionada = option.getAttribute('data-id') || '';
                 renderMobileCategoriasDropdown();
                 filtrarCanalesPorCategoria();
                 mobileCategoriasDropdown.classList.remove('active');
-            }
-        };
-        mobileCategoriasClear.onclick = function() {
-            categoriaSeleccionada = '';
-            renderMobileCategoriasDropdown();
-            filtrarCanalesPorCategoria();
-        };
-        document.addEventListener('click', function(e){
-            if (!mobileCategoriasDropdown.contains(e.target) && !mobileCategoriasBtn.contains(e.target)) {
-                mobileCategoriasDropdown.classList.remove('active');
-            }
-        });
-    }
+            };
 
-function enableCanalTitleClick() {
-    if (window.innerWidth > 600) return;
-    canalesGrid.querySelectorAll('.canal-title').forEach(span => {
-        let card = span.closest('.canal-card');
-        if (!card) return;
-        let link = card.querySelector('.canal-play');
-        if (!link) return;
-        span.style.cursor = 'pointer';
-        span.onclick = function() {
-            window.location = link.href;
-        };
-    });
-    // Hace todo el card clickeable en móvil
-    canalesGrid.querySelectorAll('.canal-card').forEach(card => {
-        let link = card.querySelector('.canal-play');
-        if (!link) return;
-        card.onclick = function(e) {
-            // Evita doble click si ya es el título
-            if (e.target.classList.contains('canal-title')) return;
-            window.location = link.href;
-        };
-    });
-    // Cambia todos los enlaces de canal-play para que naveguen solo con ?stream=ID
-    canalesGrid.querySelectorAll('.canal-play').forEach(link => {
-        let href = link.getAttribute('href');
-        let match = href.match(/stream=(\d+)/);
-        if (match) {
-            link.setAttribute('href', 'canal.php?stream=' + match[1]);
-        }
-    });
-}
+            if (mobileCategoriasClear) {
+                mobileCategoriasClear.onclick = function() {
+                    categoriaSeleccionada = '';
+                    renderMobileCategoriasDropdown();
+                    filtrarCanalesPorCategoria();
+                };
+            }
 
-    window.addEventListener('DOMContentLoaded', function() {
-        initMobileCategoriasFiltro();
-        enableCanalTitleClick();
-    });
-    window.addEventListener('resize', function() {
-        if (window.innerWidth <= 600) {
-            initMobileCategoriasFiltro();
-            enableCanalTitleClick();
+            document.addEventListener('click', function(e){
+                if (!mobileCategoriasDropdown.contains(e.target) && !mobileCategoriasBtn.contains(e.target)) {
+                    mobileCategoriasDropdown.classList.remove('active');
+                }
+            });
         }
-    });
+
+        function enableCanalTitleClick() {
+            if (window.innerWidth > 600) return;
+
+            canalesGrid.querySelectorAll('.canal-title').forEach(span => {
+                const card = span.closest('.canal-card');
+                if (!card) return;
+                const link = card.querySelector('.canal-play');
+                if (!link) return;
+                span.style.cursor = 'pointer';
+                span.onclick = function() {
+                    window.location = link.href;
+                };
+            });
+
+            canalesGrid.querySelectorAll('.canal-card').forEach(card => {
+                const link = card.querySelector('.canal-play');
+                if (!link) return;
+                card.onclick = function(e) {
+                    if (e.target.classList.contains('canal-title')) return;
+                    window.location = link.href;
+                };
+            });
+
+            canalesGrid.querySelectorAll('.canal-play').forEach(link => {
+                const href = link.getAttribute('href');
+                const match = href.match(/stream=(\d+)/);
+                if (match) {
+                    link.setAttribute('href', 'canal.php?stream=' + match[1]);
+                }
+            });
+        }
+
+        function initialize() {
+            if (window.innerWidth <= 600) {
+                initMobileCategoriasFiltro();
+                enableCanalTitleClick();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initialize);
+        window.addEventListener('resize', initialize);
+    })();
     </script>
 </body>
 </html>

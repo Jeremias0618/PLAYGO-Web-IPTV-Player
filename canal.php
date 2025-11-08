@@ -14,6 +14,20 @@ $pwd = $_COOKIE['xpwdm'];
 $id = isset($_GET['stream']) ? trim($_GET['stream']) : '';
 $idcatg = isset($_GET['catg']) ? trim($_GET['catg']) : '';
 
+$customChannelLogos = [
+    15   => 'channels/USMP_TV_2021.png',
+    248  => 'channels/ATV_Sur_2025_Web.png',
+    249  => 'channels/PBO.png',
+    252  => 'channels/RPP_2018.png',
+    1099 => 'channels/cropped-energeekbg-1.png',
+    1104 => 'channels/ESPN-Logo.png',
+    1105 => 'channels/ESPN2_2006.png',
+    1107 => 'channels/ESPN_4_logo.svg.png',
+    1110 => 'channels/ESPN_7_logo.svg.png',
+    1114 => 'channels/Gol_Peru.png',
+    1115 => 'channels/Karibena_tv.png',
+];
+
 // Obtenemos los datos del canal por su id
 $url = IP."/player_api.php?username=$user&password=$pwd&action=get_live_streams";
 $resposta = apixtream($url);
@@ -30,6 +44,12 @@ if(!$canal_data) {
 }
 $canal = $canal_data['name'];
 $img = $canal_data['stream_icon'];
+if (isset($customChannelLogos[$id])) {
+    $customPath = __DIR__ . '/' . $customChannelLogos[$id];
+    if (file_exists($customPath)) {
+        $img = $customChannelLogos[$id];
+    }
+}
 $tipo = $canal_data['stream_type'];
 $info = '';
 if (!empty($canal_data['plot'])) {
@@ -1099,6 +1119,12 @@ if (!empty($canal_data['plot'])) {
                     $canal_nome = $row['name'];
                     $canal_id = $row['stream_id'];
                     $canal_img = $row['stream_icon'];
+                    if (isset($customChannelLogos[$canal_id])) {
+                        $customPath = __DIR__ . '/' . $customChannelLogos[$canal_id];
+                        if (file_exists($customPath)) {
+                            $canal_img = $customChannelLogos[$canal_id];
+                        }
+                    }
                 ?>
                 <div class="recomendado-card">
                     <div class="card__cover" style="position:relative;">

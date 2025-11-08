@@ -65,6 +65,20 @@ $pwd = $_COOKIE['xpwdm'];
             font-size: 1.02rem;
             display: block;
         }
+        .owl-carousel.home__carousel .card.card--big {
+            width: 230px;
+            min-width: 230px;
+            max-width: 100%;
+            margin: 0 22px;
+            display: inline-block;
+            vertical-align: top;
+            background: #181818;
+            border-radius: 12px;
+        }
+        .owl-carousel.home__carousel .owl-item {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
         .navbar-overlay {
             position: fixed;
             top: 0;
@@ -87,19 +101,22 @@ $pwd = $_COOKIE['xpwdm'];
         }
         @media (max-width: 600px) {
             .owl-carousel.home__carousel .card.card--big {
-            width: 240px;      /* Más ancho si lo deseas */
-            min-width: 240px;
-            max-width: 100%;
-            margin: 0;         /* Elimina el margen aquí */
-            display: inline-block;
-            vertical-align: top;
-            background: #181818;
-            border-radius: 12px;
-        }
-
+                width: 180px;
+                min-width: 180px;
+                margin: 0 16px;
+            }
             .owl-carousel.home__carousel .owl-item {
-                padding-left: 8px !important;
-                padding-right: 8px !important;
+                padding-left: 18px !important;
+                padding-right: 18px !important;
+            }
+            .header__content {
+                padding: 12px 24px;
+                padding-left: 4px !important;
+            }
+            .header__logo {
+                margin-left: 0 !important;
+                padding-left: 0 !important;
+                margin-right: auto;
             }
         }
         @media (min-width: 601px) {
