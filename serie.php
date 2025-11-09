@@ -1,7 +1,6 @@
 <?php
 require_once("libs/lib.php");
 
-// Redirigir si no hay sesión iniciada
 if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['xuserm']) || empty($_COOKIE['xpwdm'])) {
     header("Location: index.php");
     exit;
@@ -11,7 +10,6 @@ $user = $_COOKIE['xuserm'];
 $pwd = $_COOKIE['xpwdm'];
 $id = trim($_REQUEST['stream']);
 
-// Obtener info de la serie
 $url = IP."/player_api.php?username=$user&password=$pwd&action=get_series_info&series_id=$id";
 $resposta = apixtream($url);
 $output = json_decode($resposta,true);
@@ -62,7 +60,6 @@ if ($tmdb_id && is_array($episodios)) {
     if (!is_dir($cache_dir)) mkdir($cache_dir, 0777, true);
 
     foreach ($episodios as $season_num => $eps) {
-        // Obtener episodios de la temporada desde TMDb
         $tmdb_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$season_num?api_key=$tmdb_api_key&language=es-ES";
         $tmdb_json = @file_get_contents($tmdb_url);
         $tmdb_data = json_decode($tmdb_json, true);
@@ -72,12 +69,10 @@ if ($tmdb_id && is_array($episodios)) {
                     $img_url = "https://image.tmdb.org/t/p/w500" . $ep['still_path'];
                     $img_local = $cache_dir . "{$tmdb_id}_{$season_num}_{$ep['episode_number']}.jpg";
                     $img_local_url = "tmdb_cache/{$tmdb_id}_{$season_num}_{$ep['episode_number']}.jpg";
-                    // Descargar solo si no existe
                     if (!file_exists($img_local)) {
                         $img_data = @file_get_contents($img_url);
                         if ($img_data) file_put_contents($img_local, $img_data);
                     }
-                    // Guardar la ruta local para el HTML
                     if (file_exists($img_local)) {
                         $tmdb_episodios_imgs[$season_num][$ep['episode_number']] = $img_local_url;
                     } else {
@@ -89,7 +84,6 @@ if ($tmdb_id && is_array($episodios)) {
     }
 }
 
-// Cálculo de totales
 $total_temporadas = is_array($episodios) ? count($episodios) : 0;
 $total_episodios = 0;
 if (is_array($episodios)) {
@@ -163,7 +157,6 @@ if (is_array($episodios)) {
             0% { background-position: 0% 50%; }
             100% { background-position: 100% 50%; }
         }
-        /* MODAL BUSCADOR MEJORADO */
         .modal-buscador-bg {
             display: none;
             position: fixed;
@@ -398,7 +391,6 @@ if (is_array($episodios)) {
             background: #c8008f;
         }
         
-        /* Estilos específicos para móviles del buscador */
         @media (max-width: 600px) {
             .modal-buscador {
                 width: 98vw !important;
@@ -460,7 +452,6 @@ if (is_array($episodios)) {
             }
         }
         
-        /* Animaciones adicionales para el buscador */
         .modal-buscador-card {
             animation: fadeInUp 0.4s ease forwards;
             opacity: 0;
@@ -481,7 +472,6 @@ if (is_array($episodios)) {
             }
         }
         
-        /* Mejoras para el estado de carga */
         .modal-buscador-loading {
             text-align: center;
             padding: 40px 20px;
@@ -499,7 +489,6 @@ if (is_array($episodios)) {
             to { transform: rotate(360deg); }
         }
         
-        /* --- ESTILOS DE SERIE --- */
         .serie-hero {
             position: relative;
             min-height: 480px;
@@ -510,9 +499,9 @@ if (is_array($episodios)) {
             width: 220px;
             min-width: 180px;
             max-width: 90vw;
-            max-height: 420px;      /* Limita la altura máxima */
-            height: auto;           /* Permite que la altura se ajuste automáticamente */
-            object-fit: cover;      /* Mantiene la proporción y recorta si es necesario */
+            max-height: 420px;
+            height: auto;
+            object-fit: cover;
             border-radius: 18px;
             box-shadow: 0 8px 32px #000a;
         }
@@ -531,7 +520,7 @@ if (is_array($episodios)) {
             margin-bottom: 10px;
         }
         .serie-hero .rate {
-            color: #fff; /* Cambia el número a blanco */
+            color: #fff;
             font-weight: 700;
             margin-right: 18px;
         }
@@ -668,7 +657,6 @@ if (is_array($episodios)) {
             flex-direction: column;
         }
         }
-    /* MODAL BUSCADOR */
     .modal-buscador-bg {
         display: none;
         position: fixed;
@@ -789,11 +777,11 @@ if (is_array($episodios)) {
         color: #ccc;
         margin-bottom: 8px;
         display: -webkit-box;
-        -webkit-line-clamp: 3; /* Número de líneas que quieres mostrar */
+        -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: normal; /* Asegura que no sea solo una línea */
+        white-space: normal;
     }
     #btnFavorito.favorito-active {
         background: linear-gradient(90deg,#ffd700 60%,#e50914 100%) !important;
@@ -803,7 +791,7 @@ if (is_array($episodios)) {
 .season-tabs {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 18px; /* espacio entre filas y columnas */
+    gap: 10px 18px;
     justify-content: flex-start;
     margin-bottom: 24px;
     padding-left: 0;
@@ -839,7 +827,6 @@ if (is_array($episodios)) {
     }
 }
 
-/* MODAL BUSCADOR */
 .modal-buscador-bg {
     display: none;
     position: fixed;
@@ -944,7 +931,6 @@ if (is_array($episodios)) {
     word-break: break-word;
 }
 
-/* Menú lateral móvil mejorado */
 @media (max-width: 600px) {
   .mobile-menu {
     display: none;
@@ -1015,7 +1001,6 @@ if (is_array($episodios)) {
   }
 }
 
-        /* Mejoras para el buscador en móvil */
         @media (max-width: 600px) {
             .modal-buscador {
                 padding: 18px 6px 12px 6px;
@@ -1052,10 +1037,64 @@ if (is_array($episodios)) {
                 object-fit: contain;
             }
         }
+
+        #trailerModal .modal-dialog {
+            max-width: 900px;
+        }
+        #trailerModal .modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            border: none;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75);
+        }
+        #trailerModal .modal-header {
+            border: none;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: auto;
+            pointer-events: none;
+        }
+        #trailerModal .modal-body {
+            padding: 0;
+        }
+        #trailerModal .ratio {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+        }
+        #trailerModal .btn-close {
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            border-radius: 50%;
+            opacity: 1;
+            background-color: #e50914;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 16 16'%3e%3cpath d='M.293 1.707a1 1 0 0 1 1.414-1.414L8 6.586l6.293-6.293a1 1 0 0 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707Z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 16px 16px;
+            box-shadow: 0 8px 20px rgba(229, 9, 20, 0.45);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            pointer-events: auto;
+        }
+        #trailerModal .btn-close:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 28px rgba(229, 9, 20, 0.6);
+        }
+        #trailerModal .btn-close:focus {
+            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.35);
+        }
     </style>
 </head>
 <body>
-<!-- HEADER estilo painel.php -->
 <header class="header">
     <div class="navbar-overlay bg-animate"></div>
     <div class="header__wrap">
@@ -1103,7 +1142,6 @@ if (is_array($episodios)) {
 
 </header>
 
-<!-- Menú lateral móvil -->
 <nav class="mobile-menu" id="mobileMenu">
   <button class="close-menu" id="closeMobileMenu" aria-label="Cerrar menú">&times;</button>
   <ul>
@@ -1118,7 +1156,6 @@ if (is_array($episodios)) {
 
 
 <?php include_once __DIR__ . '/partials/search_modal.php'; ?>
-<!-- HERO SERIE -->
 <section class="serie-hero d-flex align-items-center">
   <div class="container">
     <div class="row align-items-center">
@@ -1164,18 +1201,15 @@ if (is_array($episodios)) {
   </div>
 </section>
 
-<!-- TEMPORADAS Y EPISODIOS -->
 <div class="container mt-5">
   <h2 class="mb-4" style="font-weight:700;letter-spacing:1px;">Capítulos</h2>
   <?php if ($episodios && is_array($episodios)): ?>
-    <!-- Tabs de temporadas -->
-<!-- Tabs de temporadas -->
 <ul class="nav season-tabs mb-3" id="seasonTab" role="tablist">
   <?php
     $i = 0;
     $total = count($episodios);
     foreach ($episodios as $num_temp => $eps):
-      if ($i < 7): // Las primeras 7 temporadas como tabs normales
+      if ($i < 7):
   ?>
     <li class="nav-item" role="presentation">
       <button class="nav-link<?php if($i==0) echo ' active'; ?>" id="season-<?php echo $num_temp; ?>-tab" data-bs-toggle="tab" data-bs-target="#season-<?php echo $num_temp; ?>" type="button" role="tab">
@@ -1183,7 +1217,7 @@ if (is_array($episodios)) {
       </button>
     </li>
   <?php
-      elseif ($i == 7): // El octavo botón será el select
+      elseif ($i == 7):
         $restantes = array_slice(array_keys($episodios), 7);
   ?>
     <li class="nav-item dropdown" role="presentation">
@@ -1201,7 +1235,7 @@ if (is_array($episodios)) {
       </ul>
     </li>
   <?php
-        break; // Salimos del foreach, el resto se maneja por el select
+        break;
       endif;
       $i++;
     endforeach;
@@ -1264,7 +1298,6 @@ if (is_array($episodios)) {
   <?php endif; ?>
 </div>
 
-<!-- Modal Trailer -->
 <div class="modal fade" id="trailerModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content bg-dark">
@@ -1311,7 +1344,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const favText = document.getElementById('favText');
     let isFav = false;
 
-    // Consultar estado inicial
     fetch('db/base.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -1347,26 +1379,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Dropdown de temporadas extra
     const dropdownItems = document.querySelectorAll('.season-dropdown-item');
     dropdownItems.forEach(function(item) {
         item.addEventListener('click', function(e) {
             e.preventDefault();
             const season = this.getAttribute('data-season');
-            // Desactivar todos los tabs y panes
             document.querySelectorAll('.season-tabs .nav-link').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('show', 'active'));
-            // Activar el tab y pane correspondiente
             document.getElementById('season-dropdown-tab').classList.add('active');
             const pane = document.getElementById('season-' + season);
             if (pane) {
                 pane.classList.add('show', 'active');
-                // Opcional: cambiar el texto del dropdown al seleccionado
                 document.getElementById('season-dropdown-tab').textContent = 'Temporada ' + season;
             }
         });
     });
-    // Si se cambia de tab normal, restaurar texto del dropdown
     document.querySelectorAll('.season-tabs .nav-link:not(.dropdown-toggle)').forEach(function(tabBtn) {
         tabBtn.addEventListener('click', function() {
             const dropdownTab = document.getElementById('season-dropdown-tab');

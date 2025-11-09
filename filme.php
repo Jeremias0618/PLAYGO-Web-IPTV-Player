@@ -1,7 +1,6 @@
 <?php
 require_once("libs/lib.php");
 
-// Redirigir si no hay sesión iniciada
 if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['xuserm']) || empty($_COOKIE['xpwdm'])) {
     header("Location: index.php");
     exit;
@@ -20,8 +19,8 @@ $backdrop = '';
 if (!empty($output['info']['backdrop_path']) && is_array($output['info']['backdrop_path'])) {
     $backdrop = $output['info']['backdrop_path'][0];
 }
-$poster_img = $output['info']['movie_image']; // Para portada principal y ficha
-$repro_img = $backdrop ?: $poster_img;        // Para el poster del reproductor
+$poster_img = $output['info']['movie_image'];
+$repro_img = $backdrop ?: $poster_img;
 $filme = $output['movie_data']['name'];
 $filme = preg_replace('/\s*\(\d{4}\)$/', '', $filme);
 
@@ -52,14 +51,12 @@ if ($tmdb_id) {
     $tmdb_images_json = @file_get_contents($tmdb_images_url);
     $tmdb_images_data = json_decode($tmdb_images_json, true);
 
-    // --- BACKDROPS (wallpapers) ---
     if (!empty($tmdb_images_data['backdrops'])) {
         foreach ($tmdb_images_data['backdrops'] as $img) {
             if (!empty($img['file_path']) && $img['iso_639_1'] === 'es') {
                 $tmdb_backdrops[] = "https://image.tmdb.org/t/p/original" . $img['file_path'];
             }
         }
-        // Si no hay en español, usa cualquiera
         if (empty($tmdb_backdrops)) {
             foreach ($tmdb_images_data['backdrops'] as $img) {
                 if (!empty($img['file_path'])) {
@@ -72,14 +69,12 @@ if ($tmdb_id) {
         $wallpaper_tmdb = $tmdb_backdrops[array_rand($tmdb_backdrops)];
     }
 
-    // --- POSTERS ---
     if (!empty($tmdb_images_data['posters'])) {
         foreach ($tmdb_images_data['posters'] as $img) {
             if (!empty($img['file_path']) && $img['iso_639_1'] === 'es') {
                 $tmdb_posters[] = "https://image.tmdb.org/t/p/w500" . $img['file_path'];
             }
         }
-        // Si no hay en español, usa cualquiera
         if (empty($tmdb_posters)) {
             foreach ($tmdb_images_data['posters'] as $img) {
                 if (!empty($img['file_path'])) {
@@ -98,7 +93,6 @@ $exts = $output['movie_data']['container_extension'];
 $trailer = $output['info']['youtube_trailer'];
 $youtube_id = '';
 if (!empty($trailer)) {
-    // Si es solo el ID (11 caracteres), úsalo directo
     if (preg_match('/^[A-Za-z0-9_\-]{11}$/', $trailer)) {
         $youtube_id = $trailer;
     } else if (preg_match('/(?:youtube\.com\/(?:embed\/|watch\?v=)|youtu\.be\/)([A-Za-z0-9_\-]+)/', $trailer, $matches)) {
@@ -120,6 +114,7 @@ $nota = $output['info']['rating'];
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="./css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="./css/bootstrap-grid.min.css">
@@ -136,7 +131,7 @@ $nota = $output['info']['rating'];
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="shortcut icon" href="img/favicon.ico">
-    <title>MAXGO - <?php echo htmlspecialchars($filme); ?></title>
+    <title>PLAYGO - <?php echo htmlspecialchars($filme); ?></title>
     <style>
     .seasons__cover, .details__bg, .home__bg {
         filter: blur(0px) !important;
@@ -170,7 +165,6 @@ $nota = $output['info']['rating'];
         0% { background-position: 0% 50%; }
         100% { background-position: 100% 50%; }
     }
-    /* MODAL BUSCADOR MEJORADO */
     .modal-buscador-bg {
         display: none;
         position: fixed;
@@ -405,7 +399,6 @@ $nota = $output['info']['rating'];
         background: #c8008f;
     }
     
-    /* Estilos específicos para desktop del buscador */
     @media (min-width: 1200px) {
         .modal-buscador {
             max-width: 700px !important;
@@ -420,7 +413,6 @@ $nota = $output['info']['rating'];
         }
     }
     
-    /* Estilos específicos para móviles del buscador */
     @media (max-width: 600px) {
         .modal-buscador {
             width: 98vw !important;
@@ -482,7 +474,6 @@ $nota = $output['info']['rating'];
         }
     }
     
-    /* Animaciones adicionales para el buscador */
     .modal-buscador-card {
         animation: fadeInUp 0.4s ease forwards;
         opacity: 0;
@@ -503,7 +494,6 @@ $nota = $output['info']['rating'];
         }
     }
     
-    /* Mejoras para el estado de carga */
     .modal-buscador-loading {
         text-align: center;
         padding: 40px 20px;
@@ -532,7 +522,6 @@ $nota = $output['info']['rating'];
         }
     }
     
-    /* Estilos del logo para mantener proporciones correctas */
     @media (min-width: 601px) {
         .header__logo img {
             width: 240px !important;
@@ -551,14 +540,87 @@ $nota = $output['info']['rating'];
         }
     }
 
-    /* Fix para iOS - Ocultar header en pantalla completa */
+    #trailerModal .modal-dialog {
+        max-width: 900px;
+    }
+    #trailerModal .modal-content {
+        background: rgba(0, 0, 0, 0.95);
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75);
+    }
+    #trailerModal .modal-header {
+        border: none;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        width: auto;
+    }
+    #trailerModal .modal-body {
+        padding: 0;
+    }
+    #trailerModal .ratio {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+    }
+    #trailerModal .btn-close {
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        border-radius: 50%;
+        opacity: 1;
+        background-color: #e50914;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 16 16'%3e%3cpath d='M.293 1.707a1 1 0 0 1 1.414-1.414L8 6.586l6.293-6.293a1 1 0 0 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707Z'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 16px 16px;
+        box-shadow: 0 8px 20px rgba(229, 9, 20, 0.45);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    #trailerModal .btn-close:hover {
+        transform: scale(1.08);
+        box-shadow: 0 12px 28px rgba(229, 9, 20, 0.6);
+    }
+    #trailerModal .btn-close:focus {
+        box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.35);
+    }
+
+    .card.card--details {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    .card.card--details .card__content,
+    .card.card--details .card__cover {
+        background: transparent !important;
+    }
+    .content .card {
+        background: #181818 !important;
+        border: none !important;
+        border-radius: 14px !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.45) !important;
+        overflow: hidden;
+    }
+    .content .card .card__content {
+        background: transparent !important;
+    }
+    .content .card .card__cover {
+        background: transparent !important;
+    }
+
     @supports (-webkit-touch-callout: none) {
-        /* Solo para dispositivos iOS */
         video::-webkit-media-controls-fullscreen-button {
             display: block !important;
         }
         
-        /* Ocultar header cuando el video está en pantalla completa */
         video:fullscreen ~ .header,
         video:fullscreen ~ .navbar-overlay,
         video:-webkit-full-screen ~ .header,
@@ -570,7 +632,6 @@ $nota = $output['info']['rating'];
             visibility: hidden !important;
         }
         
-        /* También ocultar cuando el body está en pantalla completa */
         :fullscreen .header,
         :fullscreen .navbar-overlay,
         :-webkit-full-screen .header,
@@ -583,7 +644,6 @@ $nota = $output['info']['rating'];
         }
     }
     
-    /* Solo para móviles (Android, iOS, etc.) */
 @media (max-width: 600px) {
     .modal-buscador {
         max-width: 98vw;
@@ -619,7 +679,6 @@ $nota = $output['info']['rating'];
     }
 }
 
-/* Mejor estilo responsive para botones Tráiler, Favoritos y Saga en móviles */
 @media (max-width: 600px) {
     .card__content > div[style*="display: flex"] {
         flex-direction: column !important;
@@ -675,13 +734,11 @@ $nota = $output['info']['rating'];
 }
 
     @media (max-width: 600px) {
-        /* Centrar título */
         .details__title {
             text-align: center !important;
             width: 100%;
             display: block;
         }
-        /* Centrar poster */
         .card__cover {
             display: flex;
             justify-content: center;
@@ -694,7 +751,6 @@ $nota = $output['info']['rating'];
             max-width: 90vw;
             height: auto;
         }
-        /* Centrar info debajo del poster */
         .card__content {
             text-align: center !important;
             align-items: center !important;
@@ -714,23 +770,21 @@ $nota = $output['info']['rating'];
     }
 
     @media (max-width: 600px) {
-        /* Solo mostrar Duración en móviles */
         .card__meta li:nth-child(2),
         .card__meta li:nth-child(3) {
             display: none !important;
         }
     }
     @media (max-width: 600px) {
-        /* Centrar título */
         .details__title {
             text-align: center !important;
             width: 100%;
             display: block;
-            font-weight: 700 !important; /* Hace la letra más gruesa */
+            font-weight: 700 !important;
         }
     @media (max-width: 600px) {
         .card__wrap {
-            margin-top: 4px !important; /* Reduce el espacio arriba del año/rating */
+            margin-top: 4px !important;
             margin-bottom: 0 !important;
         }
     }
@@ -744,11 +798,11 @@ $nota = $output['info']['rating'];
         }
         .content .card__title a {
             display: -webkit-box;
-            -webkit-line-clamp: 2;      /* Máximo 2 líneas */
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-            min-height: 2.3em;          /* Ajusta según tamaño de fuente */
+            min-height: 2.3em;
             font-size: 0.95rem;
             line-height: 1.2;
             color: #fff;
@@ -840,7 +894,6 @@ $nota = $output['info']['rating'];
                            <div class="card__wrap">
                               <span class="card__rate">
                                  <?php
-                                 // Mostrar solo el año, estrella y calificación
                                  echo ($ano ? substr($ano, 0, 4) : '');
                                  if ($nota !== '') {
                                        echo ' &nbsp; <i class="fa-solid fa-star"></i> ' . $nota;
@@ -879,15 +932,6 @@ $nota = $output['info']['rating'];
                             <span>Saga Predator</span>
                         </a>
                     <?php endif; ?>
-                    <!-- Modal Trailer -->
-<div id="trailerModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:99999;align-items:center;justify-content:center;">
-    <div style="position:relative;max-width:900px;width:95vw;">
-        <button id="closeTrailerModal" style="position:absolute;top:-38px;right:-8px;background:none;border:none;color:#fff;font-size:2.5rem;cursor:pointer;z-index:2;">&times;</button>
-        <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;box-shadow:0 8px 32px #000a;">
-            <iframe id="trailerIframe" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;"></iframe>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -904,7 +948,6 @@ $nota = $output['info']['rating'];
                     <div class="row">
                         <div class="col-12">
                             <?php
-                            // Detectar extensión y usar el reproductor adecuado
                             $ext = strtolower($exts);
                             if ($ext == 'mp4'): ?>
                                 <!-- Plyr CSS -->
@@ -957,6 +1000,22 @@ $nota = $output['info']['rating'];
         </div>
     </div>
 </section>
+<?php if (!empty($youtube_id)): ?>
+<div class="modal fade" id="trailerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="ratio ratio-16x9">
+                    <iframe id="trailerIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 <section class="content">
     <div class="container" style="margin-top: 30px;">
         <div class="row">
@@ -966,7 +1025,6 @@ $nota = $output['info']['rating'];
                         <h2 class="section__title section__title--sidebar">Usuarios también vieron</h2>
                     </div>
                     <?php
-                    // Sugerencias
                 $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams&category_id=$idcategoria";
                 $resposta = apixtream($url);
                 $output = json_decode($resposta,true);
@@ -1045,35 +1103,30 @@ $nota = $output['info']['rating'];
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const btnTrailer = document.getElementById('btnTrailer');
-    const trailerModal = document.getElementById('trailerModal');
-    const closeTrailerModal = document.getElementById('closeTrailerModal');
+    const trailerModalElement = document.getElementById('trailerModal');
     const trailerIframe = document.getElementById('trailerIframe');
+    const trailerCloseBtn = trailerModalElement ? trailerModalElement.querySelector('.btn-close') : null;
     const youtubeId = "<?php echo $youtube_id; ?>";
-    if(btnTrailer && youtubeId) {
-        btnTrailer.onclick = function() {
-            trailerIframe.src = "https://www.youtube.com/embed/" + youtubeId + "?autoplay=1";
-            trailerModal.style.display = "flex";
-        }
+
+    if (!btnTrailer || !trailerModalElement || !trailerIframe || !youtubeId) {
+        return;
     }
-    if(closeTrailerModal) {
-        closeTrailerModal.onclick = function() {
-            trailerModal.style.display = "none";
-            trailerIframe.src = "";
-        }
-    }
-    if(trailerModal) {
-        trailerModal.addEventListener('click', function(e){
-            if(e.target === trailerModal){
-                trailerModal.style.display = "none";
-                trailerIframe.src = "";
-            }
+
+    const trailerModal = new bootstrap.Modal(trailerModalElement);
+
+    btnTrailer.addEventListener('click', function() {
+        trailerIframe.src = "https://www.youtube.com/embed/" + youtubeId + "?autoplay=1";
+        trailerModal.show();
+    });
+
+    if (trailerCloseBtn) {
+        trailerCloseBtn.addEventListener('click', function() {
+            trailerModal.hide();
         });
     }
-    window.addEventListener('keydown', function(e){
-        if(e.key === "Escape" && trailerModal.style.display === "flex"){
-            trailerModal.style.display = "none";
-            trailerIframe.src = "";
-        }
+
+    trailerModalElement.addEventListener('hidden.bs.modal', function () {
+        trailerIframe.src = "";
     });
 });
 </script>

@@ -1,6 +1,5 @@
 <?php
 
-
 // URL DNS
 define('IP','https://URL'); 
 
@@ -28,13 +27,13 @@ $valor4 = "199.90";
 
 define("ATIVAR_TESTE", '0');  // 1 = YES / 0 = NO
 define("HORAS", '2');  // Trial Duration in hours
-define("XTREAM_URL", 'https://cms-eu.xtream-codes.com/'); //URL CMS do Xtream-Codes
-define("XTREAM_USER", ''); //Usuário do Xtream-Codes
-define("XTREAM_PWD", ''); //Senha do Xtream-Codes
-define("XTREAM_PLANO", '1'); //Número do Plano do Xtream-Codes em caso de dúvidas contate o suporte.
-define("ATIVA_BLOQUEIO_TESTE", '0'); // Se Ativado (1) = Bloqueia novos cadastros apartir do computador do usuário por 30 dias, evitar testes a todo momento
+define("XTREAM_URL", 'https://cms-eu.xtream-codes.com/'); // URL del CMS de Xtream-Codes
+define("XTREAM_USER", ''); // Usuario de Xtream-Codes
+define("XTREAM_PWD", ''); // Contraseña de Xtream-Codes
+define("XTREAM_PLANO", '1'); // Número del plan de Xtream-Codes; en caso de dudas contacta al soporte
+define("ATIVA_BLOQUEIO_TESTE", '0'); // Si está activado (1) bloquea nuevos registros desde el computador del usuario por 30 días, evitando pruebas constantes
 
-// CONFIGURAÇÕES DO EMAIL SMTP ENVIO DE TESTES:
+// Configuración del correo SMTP para envío de pruebas:
 define("SMTP_HOST", 'mail.revenda.com');
 define("SMTP_USER", '');
 define("SMTP_SENHA", '');
@@ -47,27 +46,27 @@ define("NOME_REVENDA", 'WebPlayer');
 // Adults categories
 define("AVISO_ADULTOS_CANAL", 'XXX: ADULTOS'); // Should be the same as XC
 define("AVISO_ADULTOS_FILME", 'FILMES: ADULTOS'); // Should be the same as XC
-// Você pode ver esta nome quando o sistema gerar as categorias
+// Puedes ver este nombre cuando el sistema genere las categorías
 
 
-// ATENÇÃO AO EDITAR O CORPO DO EMAIL
-// Dont change the variables
+// Atención al editar el cuerpo del correo
+// No cambies las variables
 //
 // %VENCIMENTO%, %NOME%, %USUARIO%, %SENHA%
 //
-// Ask a developer for help if needed.
+// Pide ayuda a un desarrollador si es necesario.
 
 
-define("CORPO_EMAIL", "Olá %NOME%, seu teste foi criado com sucesso.<br><br>
-    Você pode fazer seu login em nosso webplayer utilizando os seguintes dados:<br>
+define("CORPO_EMAIL", "Hola %NOME%, tu prueba fue creada con éxito.<br><br>
+    Puedes iniciar sesión en nuestro webplayer con los siguientes datos:<br>
     <br>
-    Usuário: <b>%USUARIO%</b> <br>
-    Senha: <b>%SENHA%</b> <br><br><br>
-    Você também pode testar nossa lista fazendo o download abaixo:<br><br>
+    Usuario: <b>%USUARIO%</b> <br>
+    Contraseña: <b>%SENHA%</b> <br><br><br>
+    También puedes probar nuestra lista descargando desde el enlace:<br><br>
     %URL_LISTA%<br><br><br>
-    Aproveite seu teste é valido até: %VENCIMENTO%<br><br><br>
+    Aprovecha, tu prueba es válida hasta: %VENCIMENTO%<br><br><br>
     
-    Obrigado<br>
-    WebPlayer.
+    Gracias<br>
+    PLAYGO.
     
     ");
