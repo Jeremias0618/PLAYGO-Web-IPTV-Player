@@ -7,15 +7,15 @@
 [![Apache](https://img.shields.io/badge/Apache-2.4+-D22128?style=flat-square&logo=apache&logoColor=white)](https://httpd.apache.org/)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-EF9421?style=flat-square&logo=creative-commons&logoColor=white)](https://creativecommons.org/licenses/by-nc/4.0/)
 [![Xtream UI](https://img.shields.io/badge/Xtream%20UI-Compatible-00A86B?style=flat-square&logo=stream&logoColor=white)](#)
-[![Visitor Counter](https://visitor-badge.laobi.icu/badge?page_id=PLAYGO-Web-IPTV-Player&left_color=blue&right_color=green)](https://github.com/yourusername/PLAYGO-Web-IPTV-Player)
+[![Visitor Counter](https://visitor-badge.laobi.icu/badge?page_id=PLAYGO-Web-IPTV-Player&left_color=blue&right_color=green)](https://github.com/Jeremias0618/PLAYGO-Web-IPTV-Player)
 
 **PLAYGO** is a lightweight, modular web-based IPTV player that connects to Xtream UI-compatible IPTV services. It does not redistribute or host any content; instead, it allows users to stream IPTV by configuring the provider's IP and port. PLAYGO is ideal for users who want a centralized and personalized IPTV experience.
 
-![Preview Screenshot](img/Screenshot_1.png)
+![Preview Screenshot](assets/image/Screenshot_1.png)
 
-![Preview Screenshot](img/Screenshot_2.png)
+![Preview Screenshot](assets/image/Screenshot_2.png)
 
-![Preview Screenshot](img/Screenshot_3.png)
+![Preview Screenshot](assets/image/Screenshot_3.png)
 
 ---
 
@@ -48,14 +48,23 @@ PLAYGO/
 ├── connection.php         
 ├── LICENSE
 ├── README.md
-├── assets/                # CSS, JS, themes, player plugins
+├── assets/                # Assets organized by type
+│   ├── icon/              # Icons (favicon, buttons)
+│   ├── image/             # Images (wallpaper, screenshots)
+│   └── logo/              # Logo files
 ├── collection/            # Media files (audio, images)
-├── css/                   # Additional styles
+├── styles/                # Additional styles
+│   └── login/             # Login page styles
 ├── db/                    # Cached data in JSON
-├── img/                   # General images
 ├── inc/                   # Reusable PHP includes
-├── js/                    # Main JavaScript files
-├── libs/                  # Config, language, utilities
+├── scripts/               # Main JavaScript files
+│   └── login/             # Login page scripts
+├── libs/                  # Libraries and utilities
+│   ├── controllers/       # Controllers (login, etc.)
+│   ├── services/          # Services (authentication, etc.)
+│   ├── config.php         # Configuration
+│   ├── idioma.php         # Language files
+│   └── lib.php            # General utilities
 ├── tmdb\_cache/           # Cached images from TMDB
 └── vendor/                # External dependencies (Composer, PHPMailer)
 
@@ -74,35 +83,6 @@ PLAYGO/
 - Write permissions for:
   - `db/`, `tmdb_cache/`, `collection/`
 
----
-
-## ⚙️ Installation
-
-1. **Clone or download** the repository to your web server:
-   ```bash
-   git clone https://github.com/yourusername/PLAYGO.git
-   cd PLAYGO
-
-2. **Install PHP extensions**:
-
-   ```bash
-   bash php7.2-ext.sh
-   ```
-
-3. **Configure IPTV connection**:
-   Edit `config.php` and set your Xtream UI credentials (IP, port).
-
-4. **(Optional) Install dependencies**:
-
-   ```bash
-   composer install
-   ```
-
-5. **Access via browser**:
-
-   ```
-   http://yourserver/PLAYGO/login.php
-   ```
 
 ---
 
@@ -131,8 +111,10 @@ PLAYGO/
 
 ### Code Style
 
-* Follows PHP standards with clear comments and modular organization.
+* Follows PHP standards with modular organization.
 * Reusable components in `/inc`, configuration in `/libs`.
+* MVC pattern: Controllers in `/libs/controllers`, Services in `/libs/services`.
+* Assets organized: `/assets/icon`, `/assets/image`, `/assets/logo`.
 
 ---
 
@@ -152,7 +134,7 @@ PLAYGO does not host, store, or provide any IPTV content. It is a tool for conne
 
 ## 📬 Contact
 
-For issues, suggestions, or contributions, please open an [Issue](https://github.com/yourusername/PLAYGO/issues) or [Pull Request](https://github.com/yourusername/PLAYGO/pulls).
+For issues, suggestions, or contributions, please open an [Issue](https://github.com/Jeremias0618/PLAYGO/issues) or [Pull Request](https://github.com/Jeremias0618/PLAYGO/pulls).
 
 ---
 

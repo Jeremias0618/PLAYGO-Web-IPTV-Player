@@ -34,7 +34,7 @@ if ($peliculas && count($peliculas) > 0) {
         $recomendados[] = [
             'id' => $p['stream_id'],
             'nombre' => $p['name'],
-            'img' => !empty($p['cover']) ? $p['cover'] : (!empty($p['stream_icon']) ? $p['stream_icon'] : 'img/noimg.jpg'),
+            'img' => !empty($p['cover']) ? $p['cover'] : (!empty($p['stream_icon']) ? $p['stream_icon'] : 'assets/logo/logo.png'),
             'ano' => $p['year'] ?? '',
             'rate' => $p['rating'] ?? '0',
             'tipo' => 'movie'
@@ -51,7 +51,7 @@ if ($series && count($series) > 0) {
         $recomendados[] = [
             'id' => $s['series_id'],
             'nombre' => $s['name'],
-            'img' => !empty($s['cover']) ? $s['cover'] : (!empty($s['stream_icon']) ? $s['stream_icon'] : 'img/noimg.jpg'),
+            'img' => !empty($s['cover']) ? $s['cover'] : (!empty($s['stream_icon']) ? $s['stream_icon'] : 'assets/logo/logo.png'),
             'ano' => $s['year'] ?? '',
             'rate' => $s['rating'] ?? '0',
             'tipo' => 'serie'
@@ -70,20 +70,20 @@ $recomendados = array_slice($recomendados, 0, 8);
     <meta charset="utf-8">
     <title>PLAYGO - MI PERFIL</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="img/favicon.ico">
-    <link rel="stylesheet" href="./css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./css/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="./css/owl.carousel.min.css">
-    <link rel="stylesheet" href="./css/jquery.mcustomscrollbar.min.css">
-    <link rel="stylesheet" href="./css/nouislider.min.css">
-    <link rel="stylesheet" href="./css/ionicons.min.css">
-    <link rel="stylesheet" href="./css/photoswipe.css">
-    <link rel="stylesheet" href="./css/glightbox.css">
-    <link rel="stylesheet" href="./css/default-skin.css">
-    <link rel="stylesheet" href="./css/jBox.all.min.css">
-    <link rel="stylesheet" href="./css/select2.min.css">
-    <link rel="stylesheet" href="./css/listings.css">
-    <link rel="stylesheet" href="./css/main.css">
+    <link rel="shortcut icon" href="assets/icon/favicon.ico">
+    <link rel="stylesheet" href="./styles/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="./styles/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="./styles/owl.carousel.min.css">
+    <link rel="stylesheet" href="./styles/jquery.mcustomscrollbar.min.css">
+    <link rel="stylesheet" href="./styles/nouislider.min.css">
+    <link rel="stylesheet" href="./styles/ionicons.min.css">
+    <link rel="stylesheet" href="./styles/photoswipe.css">
+    <link rel="stylesheet" href="./styles/glightbox.css">
+    <link rel="stylesheet" href="./styles/default-skin.css">
+    <link rel="stylesheet" href="./styles/jBox.all.min.css">
+    <link rel="stylesheet" href="./styles/select2.min.css">
+    <link rel="stylesheet" href="./styles/listings.css">
+    <link rel="stylesheet" href="./styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         .mobile-menu {
@@ -2058,7 +2058,7 @@ $recomendados = array_slice($recomendados, 0, 8);
                 <div class="col-12">
                     <div class="header__content d-flex align-items-center justify-content-between">
                         <a class="header__logo" href="login.php">
-                            <img src="img/logo.png" alt="">
+                            <img src="assets/logo/logo.png" alt="">
                         </a>
                         <ul class="header__nav d-flex align-items-center mb-0">
                             <li class="header__nav-item">
@@ -2292,8 +2292,8 @@ $recomendados = array_slice($recomendados, 0, 8);
     </div>
 </div>
 
-<script src="./js/jquery-3.5.1.min.js"></script>
-<script src="./js/owl.carousel.min.js"></script>
+<script src="./scripts/jquery-3.5.1.min.js"></script>
+<script src="./scripts/owl.carousel.min.js"></script>
 <script>
 // HISTORIAL
 $(document).ready(function(){

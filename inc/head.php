@@ -18,7 +18,6 @@
       <!--[if lt IE 8]>
       <link rel="stylesheet" href="assets/<?php echo $template; ?>/css/ie.css" type="text/css" media="screen, projection">
       <![endif]-->
-      <link href="assets/<?php echo $template; ?>/css/lity.css" rel="stylesheet"/>
       
       <script>
       	function go(to) { document.location.href=to; }

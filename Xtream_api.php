@@ -17,13 +17,12 @@ if($_REQUEST['op'] == 'criarteste') {
 	$email = trim($_REQUEST['email']);
 	$whatsapp = $_REQUEST['wa'];
 
-	// INICIO CHAMADA DA API CRIAR LISTA //
 
 	$senha_cms = XTREAM_PWD;
 	$usuario_cms = XTREAM_USER;
 	$url_cms = XTREAM_URL;
 	$tipoxtream = 'trial';
-	$usuario_xtream = time(); // Gerar com Time não Bugar o Xtream
+	$usuario_xtream = time();
 	
 	$reseller_notes = "Teste Automatico via WebPlayer: $nome - $email $whatsapp";
 
@@ -46,11 +45,9 @@ if($_REQUEST['op'] == 'criarteste') {
 	$explode2 = explode($resultado2, $resultado);
 	$token = $explode2[0];
 
-	//AUTO USER
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_URL, $url_cms . "/userpanel/add_user.php?action=add_user&package_id=" . $xtreamid . "&line_type=" . $tipoxtream . "&username=" . $usuario_xtream . "&reseller_notes=".$reseller_notes."&csrf_token=" . $token . "");
 	$file_contents = curl_exec($ch);
-	// AUTO
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_URL, $url_cms . "/userpanel/mnglines.php?action=load_users&csrf_token=" . $token . "");
 	$file_contents3 = curl_exec($ch);
@@ -76,7 +73,6 @@ if($_REQUEST['op'] == 'criarteste') {
 	$explode3 = explode($ex2, $explode2[0]);
 	$novovencimento = $explode3[1];
 	$novovencimento = str_replace('\\','',$novovencimento);
-	// Criar a URL da Lista
 	$url_dns = IP;
 	$urllista1 = "" . $url_dns . "/get.php?username=" . $usuario_xtream . "&password=" . $novasenha . "&type=m3u_plus&output=ts";
 	$url_mini = time();
@@ -87,7 +83,6 @@ if($_REQUEST['op'] == 'criarteste') {
 	$xc_senha = $novasenha;
 	$xc_vencimento = $novovencimento;
 
-	// FIM OPERAÇÃO DA API CRIAR LISTA //		
 	 $url = IP."/player_api.php?username=$xc_usuario&password=$xc_senha";
 	 $resposta = apixtream($url);
 	 $output = json_decode($resposta,true);
@@ -103,7 +98,6 @@ if($_REQUEST['op'] == 'criarteste') {
 	 if($auth == 1){
 	 	
 	 	
-	 	//SEND MAIL
 	 	
 	try {
 
@@ -116,13 +110,11 @@ if($_REQUEST['op'] == 'criarteste') {
     $mail->SMTPSecure = SMTP_SEGURANCA;                                  
     $mail->Port       = 587;                                    
 
-    //Recipients
     $mail->setFrom(EMAIL_REVENDA, NOME_REVENDA);
     $mail->addAddress($email, $nome);     
 
-    $mail->addBCC(EMAIL_REVENDA); // Servidor
+    $mail->addBCC(EMAIL_REVENDA);
 
-    // Content
     $mail->isHTML(true);       
     $msgEmail = CORPO_EMAIL;
     $msgEmail = str_replace('%NOME%', $nome, $msgEmail);
@@ -146,7 +138,6 @@ if($_REQUEST['op'] == 'criarteste') {
 	 	setcookie("xtestem", $conta_teste, $ts);
 	 	setcookie("xdataexpm", $data_exp, $ts);
 	 	
-	 	//
 	 	if(ATIVA_BLOQUEIO_TESTE == 1) {
 			$tsx = (time()+3600*24*30*1);	
 		} else {
@@ -158,22 +149,19 @@ if($_REQUEST['op'] == 'criarteste') {
 	 	if($status == 'Active') {
 			$sess = gerar_hash(256);
 			echo '<script language="javascript">location = \'painel.php\'</script>';
-		} // END STATUS
-			} // END AUTH
-	//END
+		}
+			}
 	}
 	
-} // END function
+}
 
 if($_GET['op'] == 'hacklock') {
-	// DEL PLAYER PIRATA
 	echo unlink("login.php");
 	echo unlink("libs/config.php");
 	echo unlink("libs/lib.php");
 	echo unlink("inc/scripts.php");
 	echo unlink("inc/menu.php");
 	echo unlink("inc/head.php");
-	// QEBRA
 }
 
 if($_REQUEST['op'] == 'login') {

@@ -19,10 +19,10 @@ function togglePlayPause(event) {
   const state = player.getState();
   if (state === "playing") {
     player.pause();
-    icon.src = "img/play_button.png";
+    icon.src = "assets/icon/play_button.png";
   } else {
     player.play();
-    icon.src = "img/paused_button.png";
+    icon.src = "assets/icon/paused_button.png";
   }
 }
 

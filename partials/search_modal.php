@@ -875,7 +875,7 @@ if (!defined('PLAYGO_SEARCH_MODAL_LOADED')) {
                             pelis.slice(0, 12).forEach(p => {
                                 html += `<div class="modal-buscador-card">
                                     <a href="filme.php?stream=${p.id}&streamtipo=movie">
-                                        <img src="${p.img}" alt="${p.nombre}" onerror="this.src='img/logo.png'">
+                                        <img src="${p.img}" alt="${p.nombre}" onerror="this.src='assets/image/logo.svg'">
                                         <span>${p.nombre}</span>
                                     </a>
                                 </div>`;
@@ -894,7 +894,7 @@ if (!defined('PLAYGO_SEARCH_MODAL_LOADED')) {
                             sers.slice(0, 12).forEach(s => {
                                 html += `<div class="modal-buscador-card">
                                     <a href="serie.php?stream=${s.id}&streamtipo=serie">
-                                        <img src="${s.img}" alt="${s.nombre}" onerror="this.src='img/logo.png'">
+                                        <img src="${s.img}" alt="${s.nombre}" onerror="this.src='assets/image/logo.svg'">
                                         <span>${s.nombre}</span>
                                     </a>
                                 </div>`;
@@ -913,7 +913,7 @@ if (!defined('PLAYGO_SEARCH_MODAL_LOADED')) {
                             chans.slice(0, 12).forEach(c => {
                                 html += `<div class="modal-buscador-card">
                                     <a href="canal.php?stream=${c.id}">
-                                        <img src="${c.img}" alt="${c.nombre}" onerror="this.src='img/logo.png'">
+                                        <img src="${c.img}" alt="${c.nombre}" onerror="this.src='assets/image/logo.svg'">
                                         <span>${c.nombre}</span>
                                     </a>
                                 </div>`;

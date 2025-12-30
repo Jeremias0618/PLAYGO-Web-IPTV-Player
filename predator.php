@@ -37,10 +37,10 @@ foreach ($saga_predator_ids as $id) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>SAGA PREDATOR</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="./css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./css/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="./css/main.css">
-    <link rel="shortcut icon" href="img/favicon.ico">
+    <link rel="stylesheet" href="./styles/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="./styles/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <style>
         body {
             background: url('collection/img/predator.webp') no-repeat center center fixed;
@@ -156,7 +156,7 @@ foreach ($saga_predator_ids as $id) {
                 <div class="col-12">
                     <div class="header__content d-flex align-items-center justify-content-between">
                         <a class="header__logo" href="login.php">
-                            <img src="img/logo.png" alt="">
+                            <img src="assets/logo/logo.png" alt="">
                         </a>
                         <ul class="header__nav d-flex align-items-center mb-0">
                             <li class="header__nav-item">

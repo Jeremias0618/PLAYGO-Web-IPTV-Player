@@ -101,22 +101,22 @@ if (is_array($episodios)) {
     <title>PLAYGO - <?php echo htmlspecialchars($serie_nome); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="shortcut icon" href="img/favicon.ico">
+    <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="./css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./css/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="./css/owl.carousel.min.css">
-    <link rel="stylesheet" href="./css/jquery.mcustomscrollbar.min.css">
-    <link rel="stylesheet" href="./css/nouislider.min.css">
-    <link rel="stylesheet" href="./css/ionicons.min.css">
-    <link rel="stylesheet" href="./css/photoswipe.css">
-    <link rel="stylesheet" href="./css/glightbox.css">
-    <link rel="stylesheet" href="./css/default-skin.css">
-    <link rel="stylesheet" href="./css/jBox.all.min.css">
-    <link rel="stylesheet" href="./css/select2.min.css">
-    <link rel="stylesheet" href="./css/listings.css">
-    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./styles/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="./styles/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="./styles/owl.carousel.min.css">
+    <link rel="stylesheet" href="./styles/jquery.mcustomscrollbar.min.css">
+    <link rel="stylesheet" href="./styles/nouislider.min.css">
+    <link rel="stylesheet" href="./styles/ionicons.min.css">
+    <link rel="stylesheet" href="./styles/photoswipe.css">
+    <link rel="stylesheet" href="./styles/glightbox.css">
+    <link rel="stylesheet" href="./styles/default-skin.css">
+    <link rel="stylesheet" href="./styles/jBox.all.min.css">
+    <link rel="stylesheet" href="./styles/select2.min.css">
+    <link rel="stylesheet" href="./styles/listings.css">
+    <link rel="stylesheet" href="./styles/main.css">
     <style>
         .mobile-menu {
         display: none;
@@ -1103,7 +1103,7 @@ if (is_array($episodios)) {
                 <div class="col-12">
                     <div class="header__content d-flex align-items-center justify-content-between">
                         <a class="header__logo" href="login.php">
-                            <img src="img/logo.png" alt="">
+                            <img src="assets/logo/logo.png" alt="">
                         </a>
                         <ul class="header__nav d-flex align-items-center mb-0">
                             <li class="header__nav-item">

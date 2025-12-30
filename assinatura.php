@@ -86,7 +86,7 @@ $pwd = $_COOKIE['xpwdm'];
                             </ul>
                         </div>
                         <div class="generic_price_btn clearfix">
-  <a class="" href="<?php echo LINK_PAGAR1; ?>" data-lity><?php echo BOTAO_ASSINAR; ?></a>
+  <a class="" href="<?php echo LINK_PAGAR1; ?>"><?php echo BOTAO_ASSINAR; ?></a>
                         </div>
                     </div>
                 </div>
@@ -120,7 +120,7 @@ $pwd = $_COOKIE['xpwdm'];
                             </ul>
                         </div>
                         <div class="generic_price_btn clearfix">
-  <a class="" href="<?php echo LINK_PAGAR2; ?>" data-lity><?php echo BOTAO_ASSINAR; ?></a>
+  <a class="" href="<?php echo LINK_PAGAR2; ?>"><?php echo BOTAO_ASSINAR; ?></a>
                         </div>
                     </div>
                 </div>
@@ -154,7 +154,7 @@ $pwd = $_COOKIE['xpwdm'];
                             </ul>
                         </div>
                         <div class="generic_price_btn clearfix">
-  <a class="" href="<?php echo LINK_PAGAR3; ?>" data-lity><?php echo BOTAO_ASSINAR; ?></a>
+  <a class="" href="<?php echo LINK_PAGAR3; ?>"><?php echo BOTAO_ASSINAR; ?></a>
                         </div>
                     </div>
                 </div>
@@ -188,7 +188,7 @@ $pwd = $_COOKIE['xpwdm'];
                             </ul>
                         </div>
                         <div class="generic_price_btn clearfix">
-  <a class="" href="<?php echo LINK_PAGAR4; ?>" data-lity><?php echo BOTAO_ASSINAR; ?></a>
+  <a class="" href="<?php echo LINK_PAGAR4; ?>"><?php echo BOTAO_ASSINAR; ?></a>
                         </div>
                     </div>
                 </div>

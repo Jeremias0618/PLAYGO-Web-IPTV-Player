@@ -108,21 +108,21 @@ if ($output && is_array($output) && count($output) > 0) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="./css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./css/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="./css/owl.carousel.min.css">
-    <link rel="stylesheet" href="./css/jquery.mcustomscrollbar.min.css">
-    <link rel="stylesheet" href="./css/nouislider.min.css">
-    <link rel="stylesheet" href="./css/ionicons.min.css">
-    <link rel="stylesheet" href="./css/photoswipe.css">
-    <link rel="stylesheet" href="./css/glightbox.css">
-    <link rel="stylesheet" href="./css/default-skin.css">
-    <link rel="stylesheet" href="./css/jBox.all.min.css">
-    <link rel="stylesheet" href="./css/select2.min.css">
-    <link rel="stylesheet" href="./css/listings.css">
-    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./styles/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="./styles/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="./styles/owl.carousel.min.css">
+    <link rel="stylesheet" href="./styles/jquery.mcustomscrollbar.min.css">
+    <link rel="stylesheet" href="./styles/nouislider.min.css">
+    <link rel="stylesheet" href="./styles/ionicons.min.css">
+    <link rel="stylesheet" href="./styles/photoswipe.css">
+    <link rel="stylesheet" href="./styles/glightbox.css">
+    <link rel="stylesheet" href="./styles/default-skin.css">
+    <link rel="stylesheet" href="./styles/jBox.all.min.css">
+    <link rel="stylesheet" href="./styles/select2.min.css">
+    <link rel="stylesheet" href="./styles/listings.css">
+    <link rel="stylesheet" href="./styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="shortcut icon" href="img/favicon.ico">
+    <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - Series</title>
     <style>
     .seasons__cover,
@@ -500,7 +500,7 @@ body {
                 <div class="col-12">
                     <div class="header__content d-flex align-items-center justify-content-between">
                         <a class="header__logo" href="login.php">
-                            <img src="img/logo.png" alt="" height="48px">
+                            <img src="assets/logo/logo.png" alt="" height="48px">
                         </a>
                         <ul class="header__nav d-flex align-items-center mb-0">
                             <li class="header__nav-item">
@@ -782,23 +782,23 @@ foreach($populares as $pop) {
     </div>
 </section>
 
-<script src="./js/jquery-3.5.1.min.js"></script>
-<script src="./js/bootstrap.bundle.min.js"></script>
-<script src="./js/owl.carousel.min.js"></script>
-<script src="./js/jquery.mousewheel.min.js"></script>
-<script src="./js/jquery.mcustomscrollbar.min.js"></script>
-<script src="./js/wnumb.js"></script>
-<script src="./js/nouislider.min.js"></script>
-<script src="./js/jquery.morelines.min.js"></script>
-<script src="./js/photoswipe.min.js"></script>
-<script src="./js/photoswipe-ui-default.min.js"></script>
-<script src="./js/glightbox.min.js"></script>
-<script src="./js/jBox.all.min.js"></script>
-<script src="./js/select2.min.js"></script>
-<script src="./js/jwplayer.js"></script>
-<script src="./js/jwplayer.core.controls.js"></script>
-<script src="./js/provider.hlsjs.js"></script>
-<script src="./js/main.js"></script>
+<script src="./scripts/jquery-3.5.1.min.js"></script>
+<script src="./scripts/bootstrap.bundle.min.js"></script>
+<script src="./scripts/owl.carousel.min.js"></script>
+<script src="./scripts/jquery.mousewheel.min.js"></script>
+<script src="./scripts/jquery.mcustomscrollbar.min.js"></script>
+<script src="./scripts/wnumb.js"></script>
+<script src="./scripts/nouislider.min.js"></script>
+<script src="./scripts/jquery.morelines.min.js"></script>
+<script src="./scripts/photoswipe.min.js"></script>
+<script src="./scripts/photoswipe-ui-default.min.js"></script>
+<script src="./scripts/glightbox.min.js"></script>
+<script src="./scripts/jBox.all.min.js"></script>
+<script src="./scripts/select2.min.js"></script>
+<script src="./scripts/jwplayer.js"></script>
+<script src="./scripts/jwplayer.core.controls.js"></script>
+<script src="./scripts/provider.hlsjs.js"></script>
+<script src="./scripts/main.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
 <script>
 // Barra de año

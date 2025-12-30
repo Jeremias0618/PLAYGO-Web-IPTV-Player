@@ -42,20 +42,20 @@ if (!is_array($liveCategories)) {
     <meta charset="utf-8">
     <title>PLAYGO - TV en Vivo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="img/favicon.ico">
-    <link rel="stylesheet" href="./css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./css/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="./css/owl.carousel.min.css">
-    <link rel="stylesheet" href="./css/jquery.mcustomscrollbar.min.css">
-    <link rel="stylesheet" href="./css/nouislider.min.css">
-    <link rel="stylesheet" href="./css/ionicons.min.css">
-    <link rel="stylesheet" href="./css/photoswipe.css">
-    <link rel="stylesheet" href="./css/glightbox.css">
-    <link rel="stylesheet" href="./css/default-skin.css">
-    <link rel="stylesheet" href="./css/jBox.all.min.css">
-    <link rel="stylesheet" href="./css/select2.min.css">
-    <link rel="stylesheet" href="./css/listings.css">
-    <link rel="stylesheet" href="./css/main.css">
+    <link rel="shortcut icon" href="assets/icon/favicon.ico">
+    <link rel="stylesheet" href="./styles/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="./styles/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="./styles/owl.carousel.min.css">
+    <link rel="stylesheet" href="./styles/jquery.mcustomscrollbar.min.css">
+    <link rel="stylesheet" href="./styles/nouislider.min.css">
+    <link rel="stylesheet" href="./styles/ionicons.min.css">
+    <link rel="stylesheet" href="./styles/photoswipe.css">
+    <link rel="stylesheet" href="./styles/glightbox.css">
+    <link rel="stylesheet" href="./styles/default-skin.css">
+    <link rel="stylesheet" href="./styles/jBox.all.min.css">
+    <link rel="stylesheet" href="./styles/select2.min.css">
+    <link rel="stylesheet" href="./styles/listings.css">
+    <link rel="stylesheet" href="./styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         .home__bg { filter: blur(0px) !important; opacity: 10%; }
@@ -762,7 +762,7 @@ if (!is_array($liveCategories)) {
                     <div class="col-12">
                         <div class="header__content d-flex align-items-center justify-content-between">
                             <a class="header__logo" href="login.php">
-                                <img src="img/logo.png" alt="">
+                                <img src="assets/logo/logo.png" alt="">
                             </a>
                             <ul class="header__nav d-flex align-items-center mb-0">
                                 <li class="header__nav-item">
@@ -899,29 +899,29 @@ if (!is_array($liveCategories)) {
             <div class="row">
                 <div class="col-12">
                     <div class="footer__copyright">
-                        &copy; 2024 <img height="20px" style="padding-left: 10px; padding-right: 10px; margin-top: -2px;" class="whiteout" src="img/logo.png"> MAXGO
+                        &copy; 2024 <img height="20px" style="padding-left: 10px; padding-right: 10px; margin-top: -2px;" class="whiteout" src="assets/logo/logo.png"> MAXGO
                     </div>
                 </div>
             </div>
         </div>
     </footer>
-    <script src="./js/jquery-3.5.1.min.js"></script>
-    <script src="./js/bootstrap.bundle.min.js"></script>
-    <script src="./js/owl.carousel.min.js"></script>
-    <script src="./js/jquery.mousewheel.min.js"></script>
-    <script src="./js/jquery.mcustomscrollbar.min.js"></script>
-    <script src="./js/wnumb.js"></script>
-    <script src="./js/nouislider.min.js"></script>
-    <script src="./js/jquery.morelines.min.js"></script>
-    <script src="./js/photoswipe.min.js"></script>
-    <script src="./js/photoswipe-ui-default.min.js"></script>
-    <script src="./js/glightbox.min.js"></script>
-    <script src="./js/jBox.all.min.js"></script>
-    <script src="./js/select2.min.js"></script>
-    <script src="./js/jwplayer.js"></script>
-    <script src="./js/jwplayer.core.controls.js"></script>
-    <script src="./js/provider.hlsjs.js"></script>
-    <script src="./js/main.js"></script>
+    <script src="./scripts/jquery-3.5.1.min.js"></script>
+    <script src="./scripts/bootstrap.bundle.min.js"></script>
+    <script src="./scripts/owl.carousel.min.js"></script>
+    <script src="./scripts/jquery.mousewheel.min.js"></script>
+    <script src="./scripts/jquery.mcustomscrollbar.min.js"></script>
+    <script src="./scripts/wnumb.js"></script>
+    <script src="./scripts/nouislider.min.js"></script>
+    <script src="./scripts/jquery.morelines.min.js"></script>
+    <script src="./scripts/photoswipe.min.js"></script>
+    <script src="./scripts/photoswipe-ui-default.min.js"></script>
+    <script src="./scripts/glightbox.min.js"></script>
+    <script src="./scripts/jBox.all.min.js"></script>
+    <script src="./scripts/select2.min.js"></script>
+    <script src="./scripts/jwplayer.js"></script>
+    <script src="./scripts/jwplayer.core.controls.js"></script>
+    <script src="./scripts/provider.hlsjs.js"></script>
+    <script src="./scripts/main.js"></script>
     <script>
     (function() {
         const categoriasCanales = <?php echo json_encode(array_map(function($c){
