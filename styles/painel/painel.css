@@ -135,6 +135,14 @@
         object-fit: contain;
     }
 
+    .content__tabs {
+        display: none !important;
+    }
+
+    .tabs-actions {
+        display: none !important;
+    }
+
     .content__mobile-tabs {
         position: relative;
         display: flex;
@@ -168,9 +176,11 @@
         min-width: 120px;
         max-width: 140px;
     }
+}
 
-    .tabs-actions {
-        display: none;
+@media (min-width: 601px) {
+    .content__mobile-tabs {
+        display: none !important;
     }
 }
 
@@ -259,6 +269,48 @@
 
 #recientes-type:hover,
 #estrenos-type:hover {
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    background-color: rgba(0, 0, 0, 0.85) !important;
+}
+
+#recientes-type-mobile,
+#estrenos-type-mobile {
+    background: rgba(0, 0, 0, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #fff !important;
+    padding: 4px 8px;
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 6px center !important;
+    padding-right: 24px !important;
+    cursor: pointer;
+}
+
+#recientes-type-mobile option,
+#estrenos-type-mobile option {
+    background: #1a1a1a !important;
+    color: #fff !important;
+    padding: 10px !important;
+}
+
+#recientes-type-mobile::-ms-expand,
+#estrenos-type-mobile::-ms-expand {
+    display: none;
+}
+
+#recientes-type-mobile:focus,
+#estrenos-type-mobile:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    background-color: rgba(0, 0, 0, 0.9) !important;
+}
+
+#recientes-type-mobile:hover,
+#estrenos-type-mobile:hover {
     border-color: rgba(255, 255, 255, 0.4) !important;
     background-color: rgba(0, 0, 0, 0.85) !important;
 }
