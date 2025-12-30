@@ -3,7 +3,7 @@ require_once("libs/lib.php");
 
 // Verifica sesión
 if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['xuserm']) || empty($_COOKIE['xpwdm'])) {
-    header("Location: index.php");
+    header("Location: login.php");
     exit;
 }
 
@@ -155,7 +155,7 @@ foreach ($saga_predator_ids as $id) {
             <div class="row">
                 <div class="col-12">
                     <div class="header__content d-flex align-items-center justify-content-between">
-                        <a class="header__logo" href="index.php">
+                        <a class="header__logo" href="login.php">
                             <img src="img/logo.png" alt="">
                         </a>
                         <ul class="header__nav d-flex align-items-center mb-0">

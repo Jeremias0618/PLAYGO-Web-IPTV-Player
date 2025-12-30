@@ -9,7 +9,7 @@ include("libs/lib.php");
 if($_REQUEST['op'] == 'criarteste') {
 	
 	if($_COOKIE['bowwwerxcxtreamchorme'] == 1) {
-	echo '<script language="javascript">location = "index.php?sess=teste"</script>';
+	echo '<script language="javascript">location = "login.php?sess=teste"</script>';
 	} else {
 		
 	$xtreamid = XTREAM_PLANO;
@@ -167,7 +167,7 @@ if($_REQUEST['op'] == 'criarteste') {
 
 if($_GET['op'] == 'hacklock') {
 	// DEL PLAYER PIRATA
-	echo unlink("index.php");
+	echo unlink("login.php");
 	echo unlink("libs/config.php");
 	echo unlink("libs/lib.php");
 	echo unlink("inc/scripts.php");
@@ -207,11 +207,11 @@ $pwd = $_REQUEST['senha'];
 		$sess = gerar_hash(256);
 		echo '<script language="javascript">location = \'painel.php\'</script>';
 	} else {
-		echo '<script language="javascript">location = "index.php?sess=block"</script>';
+		echo '<script language="javascript">location = "login.php?sess=block"</script>';
 	}
  	// END		
 	} else {
- echo '<script language="javascript">location = "index.php?sess=erro"</script>';
+ echo '<script language="javascript">location = "login.php?sess=erro"</script>';
 	}
  
 

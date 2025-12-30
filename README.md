@@ -35,7 +35,8 @@
 ```
 
 PLAYGO/
-├── index.php              
+├── index.php              # Redirects to login.php
+├── login.php               # Login page
 ├── Xtream\_api.php        # Xtream UI API integration
 ├── canais.php / canal.php # Channel listing and details
 ├── filmes.php / filme.php # Movie listing and details
@@ -55,7 +56,6 @@ PLAYGO/
 ├── inc/                   # Reusable PHP includes
 ├── js/                    # Main JavaScript files
 ├── libs/                  # Config, language, utilities
-├── scopbin/               # Scripts and binaries
 ├── tmdb\_cache/           # Cached images from TMDB
 └── vendor/                # External dependencies (Composer, PHPMailer)
 
@@ -101,7 +101,7 @@ PLAYGO/
 5. **Access via browser**:
 
    ```
-   http://yourserver/PLAYGO/index.php
+   http://yourserver/PLAYGO/login.php
    ```
 
 ---

@@ -1,5 +1,5 @@
 <?php
-if ( !isset($_COOKIE['xstatusm']) ){ echo '<script language="javascript">location = "index.php?reg=logar"</script>'; } 
+if ( !isset($_COOKIE['xstatusm']) ){ echo '<script language="javascript">location = "login.php?reg=logar"</script>'; } 
 ?>
                      <li><a href="painel.php?sessao=<?php echo gerar_hash(256); ?>"><?php echo MENU_HOME; ?></a></li>
                      

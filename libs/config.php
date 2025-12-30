@@ -1,13 +1,11 @@
 <?php
 
-// URL DNS
 define('IP','https://URL'); 
 
 $template = 'blue'; 
 
 define("WHATSAPP", ''); 
 
-// Website 
 define("NOME_IPTV", 'PLAYGO'); 
 
 define("LINK_PAGAR1", '');
@@ -25,15 +23,14 @@ $nome4 = "Anual";
 $valor4 = "199.90";
 
 
-define("ATIVAR_TESTE", '0');  // 1 = YES / 0 = NO
-define("HORAS", '2');  // Trial Duration in hours
-define("XTREAM_URL", 'https://cms-eu.xtream-codes.com/'); // URL del CMS de Xtream-Codes
-define("XTREAM_USER", ''); // Usuario de Xtream-Codes
-define("XTREAM_PWD", ''); // Contraseña de Xtream-Codes
-define("XTREAM_PLANO", '1'); // Número del plan de Xtream-Codes; en caso de dudas contacta al soporte
-define("ATIVA_BLOQUEIO_TESTE", '0'); // Si está activado (1) bloquea nuevos registros desde el computador del usuario por 30 días, evitando pruebas constantes
+define("ATIVAR_TESTE", '0');
+define("HORAS", '2');
+define("XTREAM_URL", 'https://cms-eu.xtream-codes.com/');
+define("XTREAM_USER", '');
+define("XTREAM_PWD", '');
+define("XTREAM_PLANO", '1');
+define("ATIVA_BLOQUEIO_TESTE", '0');
 
-// Configuración del correo SMTP para envío de pruebas:
 define("SMTP_HOST", 'mail.revenda.com');
 define("SMTP_USER", '');
 define("SMTP_SENHA", '');
@@ -43,18 +40,8 @@ define("EMAIL_ASSUNTO", 'Bem Vindo ao ITV - WebPlayer');
 define("EMAIL_REVENDA", 'contato@revenda.com');
 define("NOME_REVENDA", 'WebPlayer');
 
-// Adults categories
-define("AVISO_ADULTOS_CANAL", 'XXX: ADULTOS'); // Should be the same as XC
-define("AVISO_ADULTOS_FILME", 'FILMES: ADULTOS'); // Should be the same as XC
-// Puedes ver este nombre cuando el sistema genere las categorías
-
-
-// Atención al editar el cuerpo del correo
-// No cambies las variables
-//
-// %VENCIMENTO%, %NOME%, %USUARIO%, %SENHA%
-//
-// Pide ayuda a un desarrollador si es necesario.
+define("AVISO_ADULTOS_CANAL", 'XXX: ADULTOS');
+define("AVISO_ADULTOS_FILME", 'FILMES: ADULTOS');
 
 
 define("CORPO_EMAIL", "Hola %NOME%, tu prueba fue creada con éxito.<br><br>

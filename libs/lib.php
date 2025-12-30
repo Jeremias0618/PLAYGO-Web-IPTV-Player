@@ -113,7 +113,7 @@ if($_GET['acao'] == 'sair') {
   setcookie('xconnm');
   setcookie('xtestem');
   setcookie('xdataexpm');
-  header("Location: index.php");	
+  header("Location: login.php");	
 }
 
 function thor($action, $string) {
