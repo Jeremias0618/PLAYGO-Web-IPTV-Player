@@ -5,13 +5,38 @@ ini_set("display_errors", 0);
 error_reporting(0);
 ini_set("track_errors","0");
 
-require_once("libs/config.php");
-require_once("libs/idioma.php");
+if (!defined('IP')) {
+    $configPath = __DIR__ . '/config.php';
+    if (file_exists($configPath)) {
+        require_once($configPath);
+    } else {
+        $configPath = dirname(__DIR__) . '/libs/config.php';
+        if (file_exists($configPath)) {
+            require_once($configPath);
+        }
+    }
+}
 
-$vl1 = explode(".",$valor1);
-$vl2 = explode(".",$valor2);
-$vl3 = explode(".",$valor3);
-$vl4 = explode(".",$valor4);
+if (!defined('HOME_BEMVINDO')) {
+    $idiomaPath = __DIR__ . '/idioma.php';
+    if (file_exists($idiomaPath)) {
+        require_once($idiomaPath);
+    } else {
+        $idiomaPath = dirname(__DIR__) . '/libs/idioma.php';
+        if (file_exists($idiomaPath)) {
+            require_once($idiomaPath);
+        }
+    }
+}
+
+if (isset($valor1) && isset($valor2) && isset($valor3) && isset($valor4)) {
+    $vl1 = explode(".",$valor1);
+    $vl2 = explode(".",$valor2);
+    $vl3 = explode(".",$valor3);
+    $vl4 = explode(".",$valor4);
+} else {
+    $vl1 = $vl2 = $vl3 = $vl4 = [];
+}
 
 function apixtream($url_api){	
 $ch = curl_init();	

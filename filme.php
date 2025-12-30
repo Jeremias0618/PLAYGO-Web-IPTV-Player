@@ -115,7 +115,7 @@ $nota = $output['info']['rating'];
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/font-awesome-6.5.0.min.css">
     <link rel="stylesheet" href="./styles/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="./styles/bootstrap-grid.min.css">
     <link rel="stylesheet" href="./styles/owl.carousel.min.css">
@@ -129,7 +129,7 @@ $nota = $output['info']['rating'];
     <link rel="stylesheet" href="./styles/select2.min.css">
     <link rel="stylesheet" href="./styles/listings.css">
     <link rel="stylesheet" href="./styles/main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/font-awesome-6.5.0.min.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - <?php echo htmlspecialchars($filme); ?></title>
     <style>

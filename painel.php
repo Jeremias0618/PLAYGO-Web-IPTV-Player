@@ -1,5 +1,6 @@
 <?php
 require_once("libs/lib.php");
+require_once("libs/services/content.php");
 
 if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['xuserm']) || empty($_COOKIE['xpwdm'])) {
     header("Location: login.php");
@@ -8,6 +9,8 @@ if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['x
 
 $user = $_COOKIE['xuserm'];
 $pwd = $_COOKIE['xpwdm'];
+$movies = getMovies($user, $pwd, 1000);
+$series = getSeries($user, $pwd, 1000);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -29,115 +32,10 @@ $pwd = $_COOKIE['xpwdm'];
     <link rel="stylesheet" href="./styles/select2.min.css">
     <link rel="stylesheet" href="./styles/listings.css">
     <link rel="stylesheet" href="./styles/main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        .home__bg { filter: blur(0px) !important; opacity: 10%; }
-        .card__cover img { height: 400px; object-fit: cover; }
-        .card.card--big .card__cover img { height: 420px; }
-        .card__title { min-height: 48px; }
-        .header__content {
-            background: #000 !important;
-            border-radius: 12px;
-            padding: 12px 24px;
-        }
-        .header__wrap {
-            background: #000 !important;
-        }
-        .card__content,
-        .card.card--big .card__content,
-        .card {
-            background: transparent !important;
-            box-shadow: none !important;
-        }
-        .card__rate {
-            margin-bottom: 0;
-        }
-        .card__title {
-            margin-bottom: 0 !important;
-            min-height: unset !important;
-            font-size: 1.05rem;
-            line-height: 1.2;
-        }
-        .card__rate {
-            margin-top: 2px !important;
-            margin-bottom: 0 !important;
-            font-size: 1.02rem;
-            display: block;
-        }
-        .owl-carousel.home__carousel .card.card--big {
-            width: 230px;
-            min-width: 230px;
-            max-width: 100%;
-            margin: 0 22px;
-            display: inline-block;
-            vertical-align: top;
-            background: #181818;
-            border-radius: 12px;
-        }
-        .owl-carousel.home__carousel .owl-item {
-            padding-left: 24px;
-            padding-right: 24px;
-        }
-        .navbar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 80px;
-            z-index: 1;
-            pointer-events: none;
-            background: linear-gradient(90deg, #0f2027 0%, #2c5364 100%);
-            opacity: 0.85;
-            transition: opacity 0.4s;
-        }
-        .bg-animate {
-            animation: navbarBgMove 8s linear infinite alternate;
-            background-size: 200% 100%;
-        }
-        @keyframes navbarBgMove {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-        @media (max-width: 600px) {
-            .owl-carousel.home__carousel .card.card--big {
-                width: 180px;
-                min-width: 180px;
-                margin: 0 16px;
-            }
-            .owl-carousel.home__carousel .owl-item {
-                padding-left: 18px !important;
-                padding-right: 18px !important;
-            }
-            .header__content {
-                padding: 12px 24px;
-                padding-left: 4px !important;
-            }
-            .header__logo {
-                margin-left: 0 !important;
-                padding-left: 0 !important;
-                margin-right: auto;
-            }
-        }
-        @media (min-width: 601px) {
-            .header__logo img {
-                width: 240px !important;
-                height: 80px !important;
-                max-width: none !important;
-                object-fit: contain;
-            }
-        }
-        @media (max-width: 600px) {
-            .header__logo img {
-                width: 240px !important;
-                height: 60px !important;
-                max-width: 100% !important;
-                object-fit: contain;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="./styles/font-awesome-6.5.0.min.css">
+    <link rel="stylesheet" href="./styles/painel/painel.css">
 </head>
 <body class="body">
-    <!-- HEADER -->
 <header class="header">
     <div class="navbar-overlay bg-animate"></div>
     <div class="header__wrap">
@@ -186,19 +84,9 @@ $pwd = $_COOKIE['xpwdm'];
 
 <?php include_once __DIR__ . '/partials/search_modal.php'; ?>
 
-    <!-- SLIDER DESTACADOS -->
     <section class="home">
         <div class="owl-carousel home__bg">
             <?php
-            // Slider de fondo (mantener igual)
-            $url_movies = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams";
-            $res_movies = apixtream($url_movies);
-            $movies = json_decode($res_movies,true);
-
-            $url_series = IP."/player_api.php?username=$user&password=$pwd&action=get_series";
-            $res_series = apixtream($url_series);
-            $series = json_decode($res_series,true);
-
             $slider_items = [];
             foreach($movies as $row) {
                 $slider_items[] = [
@@ -230,7 +118,6 @@ $pwd = $_COOKIE['xpwdm'];
                 <div class="col-12">
                     <div class="owl-carousel home__carousel">
                         <?php
-                        // Carrusel: mezclar películas y series y mostrar 12 aleatorios
                         $carousel_items = [];
                         foreach($movies as $row) {
                             $carousel_items[] = [
@@ -288,21 +175,46 @@ $pwd = $_COOKIE['xpwdm'];
         </div>
     </section>
 
-    <!-- TABS PELÍCULAS Y SERIES -->
     <section class="content">
         <div class="content__head">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h1 class="home__title" style="margin-top:30px;">RECIÉN <b>AGREGADOS</b></h1>
-                        <ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#movies" role="tab" aria-controls="movies" aria-selected="true">PELÍCULAS</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#series" role="tab" aria-controls="series" aria-selected="false">SERIES</a>
-                            </li>
-                        </ul>
+                        <div class="d-flex align-items-center justify-content-between" style="margin-top:30px;">
+                            <h1 class="home__title" style="margin:0;">RECOMENDACIONES</h1>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#movies" role="tab" aria-controls="movies" aria-selected="true">PELÍCULAS</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#series" role="tab" aria-controls="series" aria-selected="false">SERIES</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#estrenos" role="tab" aria-controls="estrenos" aria-selected="false">ESTRENOS</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#recientes" role="tab" aria-controls="recientes" aria-selected="false">RECIÉN AGREGADOS</a>
+                                </li>
+                            </ul>
+                            <div class="tabs-actions">
+                                <button class="refresh-btn" data-type="movie" type="button" title="Actualizar Películas" id="refresh-movies-btn" style="display:none;">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button class="refresh-btn" data-type="series" type="button" title="Actualizar Series" id="refresh-series-btn" style="display:none;">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <select id="recientes-type" class="form-control" style="display:none; width: auto; max-width: 200px;">
+                                    <option value="movie">Películas</option>
+                                    <option value="series">Series</option>
+                                </select>
+                                <select id="estrenos-type" class="form-control" style="display:none; width: auto; max-width: 200px;">
+                                    <option value="movie">Películas</option>
+                                    <option value="series">Series</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="content__mobile-tabs" id="content__mobile-tabs">
                             <div class="content__mobile-tabs-btn dropdown-toggle" role="navigation" id="mobile-tabs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <input type="button" value="Películas">
@@ -312,7 +224,25 @@ $pwd = $_COOKIE['xpwdm'];
                                 <ul class="nav nav-tabs" role="tablist">
                                     <li class="nav-item"><a class="nav-link active" id="movies-tab" data-toggle="tab" href="#movies" role="tab" aria-controls="movies" aria-selected="true">PELÍCULAS</a></li>
                                     <li class="nav-item"><a class="nav-link" id="series-tab" data-toggle="tab" href="#series" role="tab" aria-controls="series" aria-selected="false">SERIES</a></li>
+                                    <li class="nav-item"><a class="nav-link" id="estrenos-tab" data-toggle="tab" href="#estrenos" role="tab" aria-controls="estrenos" aria-selected="false">ESTRENOS</a></li>
+                                    <li class="nav-item"><a class="nav-link" id="recientes-tab" data-toggle="tab" href="#recientes" role="tab" aria-controls="recientes" aria-selected="false">RECIÉN AGREGADOS</a></li>
                                 </ul>
+                            </div>
+                            <div class="tabs-actions-mobile">
+                                <button class="refresh-btn" data-type="movie" type="button" title="Actualizar Películas" id="refresh-movies-btn-mobile" style="display:none;">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button class="refresh-btn" data-type="series" type="button" title="Actualizar Series" id="refresh-series-btn-mobile" style="display:none;">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <select id="recientes-type-mobile" class="form-control" style="display:none; width: auto; max-width: 140px;">
+                                    <option value="movie">Películas</option>
+                                    <option value="series">Series</option>
+                                </select>
+                                <select id="estrenos-type-mobile" class="form-control" style="display:none; width: auto; max-width: 140px;">
+                                    <option value="movie">Películas</option>
+                                    <option value="series">Series</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -320,23 +250,17 @@ $pwd = $_COOKIE['xpwdm'];
             </div>
         </div>
         <div class="container">
-            <!-- content tabs -->
             <div class="tab-content">
-                <!-- MOVIES TAB -->
                 <div class="tab-pane fade show active" id="movies" role="tabpanel" aria-labelledby="movies-tab">
-                    <div class="row">
+                    <div class="row" id="movies-grid">
                         <?php
-                        // Películas recientes
-                        $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams";
-                        $resposta = apixtream($url);
-                        $output = json_decode($resposta,true);
-                        shuffle($output);
-foreach(array_slice($output,0,16) as $row) {
+                        $movies_list = getMovies($user, $pwd, 16);
+                        foreach($movies_list as $row) {
     $filme_nome = $row['name'];
     $filme_id = $row['stream_id'];
     $filme_img = $row['stream_icon'];
-    $filme_rat = $row['rating_5based']; // Puntuación
-    $filme_ano = isset($row['year']) ? $row['year'] : 'N/A'; // Año de estreno
+    $filme_rat = $row['rating_5based'];
+    $filme_ano = isset($row['year']) ? $row['year'] : 'N/A';
 ?>
 <div class="col-6 col-sm-4 col-lg-3 col-xl-3">
     <div class="card">
@@ -361,15 +285,11 @@ foreach(array_slice($output,0,16) as $row) {
 <?php } ?>
                     </div>
                 </div>
-                <!-- SERIES TAB -->
                 <div class="tab-pane fade" id="series" role="tabpanel" aria-labelledby="series-tab">
-                    <div class="row">
+                    <div class="row" id="series-grid">
                         <?php
-                        $url = IP."/player_api.php?username=$user&password=$pwd&action=get_series";
-                        $resposta = apixtream($url);
-                        $output = json_decode($resposta,true);
-                        shuffle($output);
-foreach(array_slice($output,0,16) as $row) {
+                        $series_list = getSeries($user, $pwd, 16);
+                        foreach($series_list as $row) {
     $serie_nome = $row['name'];
     $serie_id = $row['series_id'];
     $serie_img = $row['cover'];
@@ -399,18 +319,84 @@ foreach(array_slice($output,0,16) as $row) {
 <?php } ?>
                     </div>
                 </div>
+                <div class="tab-pane fade" id="estrenos" role="tabpanel" aria-labelledby="estrenos-tab">
+                    <div class="row" id="estrenos-grid">
+                        <?php
+                        $estrenos = getPremieres($user, $pwd, 'movie', 16);
+                        foreach($estrenos as $row) {
+                            $filme_nome = $row['name'];
+                            $filme_id = $row['stream_id'];
+                            $filme_img = $row['stream_icon'];
+                            $filme_rat = $row['rating_5based'];
+                            $filme_ano = isset($row['year']) ? $row['year'] : 'N/A';
+                        ?>
+                        <div class="col-6 col-sm-4 col-lg-3 col-xl-3">
+                            <div class="card">
+                                <div class="card__cover">
+                                    <img loading="lazy" src="<?php echo $filme_img; ?>" alt="">
+                                    <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=movie" class="card__play">
+                                        <i class="fas fa-play"></i>
+                                    </a>
+                                </div>
+                                <div class="card__content">
+                                    <h3 class="card__title" style="margin-top:0;">
+                                        <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=movie">
+                                        <?php echo limitar_texto(preg_replace('/\s*\(\d{4}\)$/', '', $filme_nome),30); ?>
+                                        </a>
+                                    </h3>
+                                    <span class="card__rate" style="display:block;margin-top:4px;margin-bottom:0;font-size:1.05rem;">
+                                        <?php echo $filme_ano; ?> &nbsp; <i class="fas fa-star" style="color:#FFD700"></i> <?php echo $filme_rat; ?>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="recientes" role="tabpanel" aria-labelledby="recientes-tab">
+                    <div class="row" id="recientes-grid">
+                        <?php
+                        $recientes = getRecentContent($user, $pwd, 'movie', 16);
+                        foreach($recientes as $row) {
+                            $filme_nome = $row['name'];
+                            $filme_id = $row['stream_id'];
+                            $filme_img = $row['stream_icon'];
+                            $filme_rat = $row['rating_5based'];
+                            $filme_ano = isset($row['year']) ? $row['year'] : 'N/A';
+                        ?>
+                        <div class="col-6 col-sm-4 col-lg-3 col-xl-3">
+                            <div class="card">
+                                <div class="card__cover">
+                                    <img loading="lazy" src="<?php echo $filme_img; ?>" alt="">
+                                    <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=movie" class="card__play">
+                                        <i class="fas fa-play"></i>
+                                    </a>
+                                </div>
+                                <div class="card__content">
+                                    <h3 class="card__title" style="margin-top:0;">
+                                        <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=movie">
+                                        <?php echo limitar_texto(preg_replace('/\s*\(\d{4}\)$/', '', $filme_nome),30); ?>
+                                        </a>
+                                    </h3>
+                                    <span class="card__rate" style="display:block;margin-top:4px;margin-bottom:0;font-size:1.05rem;">
+                                        <?php echo $filme_ano; ?> &nbsp; <i class="fas fa-star" style="color:#FFD700"></i> <?php echo $filme_rat; ?>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
-    
-    <!-- ...resto de painel.php igual... -->
 
     <footer class="footer">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="footer__copyright">
-                        &copy; 2024 <img height="20px" style="padding-left: 10px; padding-right: 10px; margin-top: -2px;" class="whiteout" src="assets/logo/logo.png"> MAXGO
+                        &copy; <?php echo date('Y'); ?> <img height="20px" style="padding-left: 10px; padding-right: 10px; margin-top: -2px;" class="whiteout" src="assets/logo/logo.png"> PLAYGO
                     </div>
                 </div>
             </div>
@@ -433,41 +419,6 @@ foreach(array_slice($output,0,16) as $row) {
     <script src="./scripts/jwplayer.core.controls.js"></script>
     <script src="./scripts/provider.hlsjs.js"></script>
     <script src="./scripts/main.js"></script>
-    
-<script>
-$(document).ready(function(){
-    var $carousel = $('.home__carousel');
-    $carousel.owlCarousel({
-        loop: true,
-        margin: 20,
-        nav: false, // Usamos botones personalizados
-        dots: false,
-        autoplay: false,
-        autoplayTimeout: 0,
-        autoplayHoverPause: false,
-        rtl: false,
-        smartSpeed: 1800,
-        responsive:{
-            0:{ items:1 },
-            600:{ items:3 },
-            1000:{ items:5 }
-        }
-    });
-
-    // Botones personalizados
-    $('.home__nav--prev').off('click').on('click', function(){
-        $carousel.trigger('prev.owl.carousel');
-    });
-    $('.home__nav--next').off('click').on('click', function(){
-        $carousel.trigger('next.owl.carousel');
-    });
-
-    // Movimiento automático (solo uno activo)
-    if (window._carouselInterval) clearInterval(window._carouselInterval);
-    window._carouselInterval = setInterval(function(){
-        $carousel.trigger('next.owl.carousel', [1800]);
-    }, 2000);
-});
-</script>
+    <script src="./scripts/painel/painel.js"></script>
 </body>
 </html>

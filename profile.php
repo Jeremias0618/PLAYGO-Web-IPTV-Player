@@ -84,7 +84,7 @@ $recomendados = array_slice($recomendados, 0, 8);
     <link rel="stylesheet" href="./styles/select2.min.css">
     <link rel="stylesheet" href="./styles/listings.css">
     <link rel="stylesheet" href="./styles/main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/font-awesome-6.5.0.min.css">
     <style>
         .mobile-menu {
         display: none;

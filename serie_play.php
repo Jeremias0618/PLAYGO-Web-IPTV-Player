@@ -118,7 +118,7 @@ if ($ep_img_from_get) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>PLAYGO - <?php echo htmlspecialchars($serie_nome); ?> - <?php echo htmlspecialchars($ep_name); ?></title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/font-awesome-6.5.0.min.css">
     <link rel="stylesheet" href="./styles/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="./styles/bootstrap-grid.min.css">
     <link rel="stylesheet" href="./styles/owl.carousel.min.css">

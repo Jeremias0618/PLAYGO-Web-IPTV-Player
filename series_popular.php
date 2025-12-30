@@ -64,7 +64,7 @@ $series_pagina = ($output && is_array($output)) ? array_slice(array_values($outp
     <link rel="stylesheet" href="./styles/select2.min.css">
     <link rel="stylesheet" href="./styles/listings.css">
     <link rel="stylesheet" href="./styles/main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/font-awesome-6.5.0.min.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - Populares</title>
     <style>
