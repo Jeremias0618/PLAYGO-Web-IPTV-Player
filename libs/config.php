@@ -1,6 +1,6 @@
 <?php
 
-define('IP','https://URL'); 
+define('IP','https://playgo.pe'); 
 
 define('TMDB_API_KEY', 'eae5dbe11c2b8d96808af6b5e0fec463');
 

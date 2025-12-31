@@ -85,9 +85,9 @@ if(!empty($peliculas_ids)) {
     
     $search_key = $saga_id;
     $search_words = isset($search_terms[$search_key]) ? $search_terms[$search_key] : [ucfirst(str_replace('_', ' ', $saga_id))];
-    
-    $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams";
-    $resposta = apixtream($url);
+
+$url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams";
+$resposta = apixtream($url);
     $all_movies = json_decode($resposta, true);
     
     if ($all_movies && is_array($all_movies)) {
@@ -140,16 +140,16 @@ $backdrop_fondo = '';
 if (!empty($peliculas) && is_array($peliculas) && count($peliculas) > 0) {
     $pelicula_aleatoria = $peliculas[array_rand($peliculas)];
     if (isset($pelicula_aleatoria['stream_id'])) {
-        $vod_id = $pelicula_aleatoria['stream_id'];
-        $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$vod_id";
-        $res_info = apixtream($url_info);
-        $data_info = json_decode($res_info, true);
-        if (
-            isset($data_info['info']['backdrop_path']) &&
-            is_array($data_info['info']['backdrop_path']) &&
-            count($data_info['info']['backdrop_path']) > 0
-        ) {
-            $backdrop_fondo = $data_info['info']['backdrop_path'][0];
+    $vod_id = $pelicula_aleatoria['stream_id'];
+    $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$vod_id";
+    $res_info = apixtream($url_info);
+    $data_info = json_decode($res_info, true);
+    if (
+        isset($data_info['info']['backdrop_path']) &&
+        is_array($data_info['info']['backdrop_path']) &&
+        count($data_info['info']['backdrop_path']) > 0
+    ) {
+        $backdrop_fondo = $data_info['info']['backdrop_path'][0];
         } elseif (isset($pelicula_aleatoria['stream_icon']) && !empty($pelicula_aleatoria['stream_icon'])) {
             $backdrop_fondo = $pelicula_aleatoria['stream_icon'];
         }
@@ -963,7 +963,7 @@ $peliculas_pagina = $output;
     }
     .section.details {
         position: relative;
-    }
+        }
     </style>
 <?php if($backdrop_fondo): ?>
 <style>
@@ -1087,10 +1087,10 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
                 <div class="collection-list-item">
                     <div class="row">
                         <div class="col-12 col-sm-4 col-md-3 col-lg-3">
-                            <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>">
+                    <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>">
                                 <img loading="lazy" src="<?php echo htmlspecialchars($filme_img); ?>" alt="<?php echo htmlspecialchars($filme_nome); ?>" class="collection-poster">
-                            </a>
-                        </div>
+                    </a>
+            </div>
                         <div class="col-12 col-sm-8 col-md-9 col-lg-9">
                             <h2 class="collection-info-title">
                                 <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>" style="color: #fff; text-decoration: none;">
@@ -1099,7 +1099,7 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
                             </h2>
                             <?php if (!empty($filme_genre)): ?>
                             <ul class="collection-info-genres">
-                                <?php 
+<?php
                                 $genres = is_array($filme_genre) ? $filme_genre : explode(',', $filme_genre);
                                 foreach($genres as $g): 
                                     $genre_trimmed = trim($g);
@@ -1129,7 +1129,7 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
                                         $seconds = $filme_duration % 60;
                                         if ($hours > 0) {
                                             $duracao_formatted = sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
-                                        } else {
+} else {
                                             $duracao_formatted = sprintf("%02d:%02d", $minutes, $seconds);
                                         }
                                     }
@@ -1146,7 +1146,7 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
                             <?php if (!empty($filme_plot)): ?>
                             <div class="collection-info-plot">
                                 <?php echo htmlspecialchars($filme_plot); ?>
-                            </div>
+        </div>
                             <?php endif; ?>
                             <div class="collection-buttons">
                                 <button class="collection-btn-trailer" data-youtube-id="<?php echo $has_trailer ? htmlspecialchars($youtube_id) : ''; ?>" data-movie-title="<?php echo htmlspecialchars($filme_nome); ?>" <?php echo $has_trailer ? '' : 'disabled'; ?> style="<?php echo $has_trailer ? 'cursor:pointer;' : 'opacity:0.5;cursor:not-allowed;'; ?>">
@@ -1162,14 +1162,14 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
                     </div>
                 </div>
             </div>
-<?php
-    }
-} else {
+                    <?php
+                    }
+                    } else {
     echo '<div class="col-12" style="color:#fff;font-size:1.2rem;text-align:center;">No hay películas disponibles en esta saga.</div>';
-}
-?>
+                    }
+                    ?>
+            </div>
         </div>
-    </div>
 </section>
 
 <div class="modal fade" id="trailerModal" tabindex="-1" role="dialog" aria-labelledby="trailerModalTitle" aria-modal="true">
