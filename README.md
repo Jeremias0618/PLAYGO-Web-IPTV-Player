@@ -38,11 +38,11 @@ PLAYGO/
 ├── index.php              # Redirects to login.php
 ├── login.php               # Login page
 ├── Xtream\_api.php        # Xtream UI API integration
-├── canais.php / canal.php # Channel listing and details
+├── channels.php / canal.php # Channel listing and details
 ├── filmes.php / filme.php # Movie listing and details
 ├── series.php / serie.php # Series listing and episode view
 ├── assinatura.php         
-├── painel.php             
+├── home.php             
 ├── install.sh             # Initial setup script
 ├── php7.2-ext.sh          # PHP extensions installer
 ├── connection.php         

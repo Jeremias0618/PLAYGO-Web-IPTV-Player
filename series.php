@@ -504,10 +504,10 @@ body {
                         </a>
                         <ul class="header__nav d-flex align-items-center mb-0">
                             <li class="header__nav-item">
-                                <a href="./painel.php" class="header__nav-link">Inicio</a>
+                                <a href="./home.php" class="header__nav-link">Inicio</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="./canais.php" class="header__nav-link">TV en Vivo</a>
+                                <a href="./channels.php" class="header__nav-link">TV en Vivo</a>
                             </li>
                             <li class="header__nav-item">
                                 <a href="filmes.php" class="header__nav-link">Películas</a>

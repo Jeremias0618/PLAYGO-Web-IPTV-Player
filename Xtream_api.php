@@ -148,7 +148,7 @@ if($_REQUEST['op'] == 'criarteste') {
 	 	
 	 	if($status == 'Active') {
 			$sess = gerar_hash(256);
-			echo '<script language="javascript">location = \'painel.php\'</script>';
+			echo '<script language="javascript">location = \'home.php\'</script>';
 		}
 			}
 	}
@@ -190,7 +190,7 @@ $pwd = $_REQUEST['senha'];
  	
  	if($status == 'Active') {
 		$sess = gerar_hash(256);
-		echo '<script language="javascript">location = \'painel.php\'</script>';
+		echo '<script language="javascript">location = \'home.php\'</script>';
 	} else {
 		echo '<script language="javascript">location = "login.php?sess=block"</script>';
 	}

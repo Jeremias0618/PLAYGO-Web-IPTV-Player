@@ -602,10 +602,10 @@ if (!empty($canal_data['plot'])) {
                             </a>
                             <ul class="header__nav d-flex align-items-center mb-0">
                                 <li class="header__nav-item">
-                                    <a href="./painel.php" class="header__nav-link">Inicio</a>
+                                    <a href="./home.php" class="header__nav-link">Inicio</a>
                                 </li>
                                 <li class="header__nav-item">
-                                    <a href="./canais.php" class="header__nav-link header__nav-link--active">TV en Vivo</a>
+                                    <a href="./channels.php" class="header__nav-link header__nav-link--active">TV en Vivo</a>
                                 </li>
                                 <li class="header__nav-item">
                                     <a href="filmes.php" class="header__nav-link">Películas</a>
@@ -664,7 +664,7 @@ if (!empty($canal_data['plot'])) {
                                 <div class="canal-nombre"><?php echo htmlspecialchars($canal); ?></div>
                                 <div class="en-vivo-label"><i class="fa fa-circle"></i> EN VIVO</div>
                                 <div class="volver-canais-btn">
-                                    <a href="canais.php"><i class="fa fa-arrow-left"></i> Volver a canales</a>
+                                    <a href="channels.php"><i class="fa fa-arrow-left"></i> Volver a canales</a>
                                 </div>
                             </div>
                         </div>

@@ -2,7 +2,7 @@
 
 function handleLoginRequest() {
     if (isset($_COOKIE['xuserm']) && isset($_COOKIE['xpwdm'])) {
-        header("Location: painel.php");
+        header("Location: home.php");
         exit;
     }
 
@@ -13,7 +13,7 @@ function handleLoginRequest() {
         if (validar_usuario($username, $password)) {
             setcookie('xuserm', $username, time() + (7 * 24 * 60 * 60), "/");
             setcookie('xpwdm', $password, time() + (7 * 24 * 60 * 60), "/");
-            header("Location: painel.php");
+            header("Location: home.php");
             exit;
         } else {
             header("Location: login.php?sess=erro");

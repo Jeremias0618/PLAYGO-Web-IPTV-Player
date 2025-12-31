@@ -1,0 +1,35 @@
+.sidebar-categorias {
+    background: #181818;
+    border-radius: 14px;
+    padding: 18px 12px;
+    margin-top: 152px;
+}
+.sidebar-categorias h2 {
+    color: #e50914;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+.sidebar-categorias ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar-categorias li {
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+.sidebar-categorias li a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.sidebar-categorias li a:hover {
+    color: #e50914;
+}
+@media (max-width: 600px) {
+    .sidebar-categorias {
+        margin-top: 18px;
+    }
+}
+

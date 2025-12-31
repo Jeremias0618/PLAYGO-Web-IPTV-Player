@@ -725,8 +725,8 @@ if ($ep_img_from_get) {
                             <img src="assets/logo/logo.png" alt="">
                         </a>
                         <ul class="header__nav d-flex align-items-center mb-0">
-                            <li class="header__nav-item"><a href="./painel.php" class="header__nav-link">Inicio</a></li>
-                            <li class="header__nav-item"><a href="./canais.php" class="header__nav-link">TV en Vivo</a></li>
+                            <li class="header__nav-item"><a href="./home.php" class="header__nav-link">Inicio</a></li>
+                            <li class="header__nav-item"><a href="./channels.php" class="header__nav-link">TV en Vivo</a></li>
                             <li class="header__nav-item"><a href="filmes.php" class="header__nav-link">Películas</a></li>
                             <li class="header__nav-item"><a href="series.php" class="header__nav-link">Series</a></li>
                         </ul>
@@ -756,8 +756,8 @@ if ($ep_img_from_get) {
 <nav class="mobile-menu" id="mobileMenu">
   <button class="close-menu" id="closeMobileMenu" aria-label="Cerrar menú">&times;</button>
   <ul>
-    <li><a href="./painel.php">INICIO</a></li>
-    <li><a href="./canais.php">TV EN VIVO</a></li>
+    <li><a href="./home.php">INICIO</a></li>
+    <li><a href="./channels.php">TV EN VIVO</a></li>
     <li><a href="filmes.php">PELÍCULAS</a></li>
     <li><a href="series.php">SERIES</a></li>
     <li><a href="profile.php">PERFIL</a></li>
