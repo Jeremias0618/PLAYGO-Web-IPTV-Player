@@ -1,7 +1,7 @@
 <?php
 require_once("libs/lib.php");
+require_once("libs/services/live.php");
 
-// Redirigir si no hay sesión iniciada
 if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['xuserm']) || empty($_COOKIE['xpwdm'])) {
     echo "<script>window.location.href = 'login.php';</script>";
     exit;
@@ -10,25 +10,9 @@ if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['x
 $user = $_COOKIE['xuserm'];
 $pwd = $_COOKIE['xpwdm'];
 
-// Solo recibimos el id del canal y la categoría (opcional)
 $id = isset($_GET['stream']) ? trim($_GET['stream']) : '';
 $idcatg = isset($_GET['catg']) ? trim($_GET['catg']) : '';
 
-$customChannelLogos = [
-    15   => 'channels/USMP_TV_2021.png',
-    248  => 'channels/ATV_Sur_2025_Web.png',
-    249  => 'channels/PBO.png',
-    252  => 'channels/RPP_2018.png',
-    1099 => 'channels/cropped-energeekbg-1.png',
-    1104 => 'channels/ESPN-Logo.png',
-    1105 => 'channels/ESPN2_2006.png',
-    1107 => 'channels/ESPN_4_logo.svg.png',
-    1110 => 'channels/ESPN_7_logo.svg.png',
-    1114 => 'channels/Gol_Peru.png',
-    1115 => 'channels/Karibena_tv.png',
-];
-
-// Obtenemos los datos del canal por su id
 $url = IP."/player_api.php?username=$user&password=$pwd&action=get_live_streams";
 $resposta = apixtream($url);
 $canales = json_decode($resposta, true);
@@ -43,13 +27,8 @@ if(!$canal_data) {
     die('<div style="color:#fff;background:#e50914;padding:30px;text-align:center;font-size:1.3rem;">Canal no encontrado.</div>');
 }
 $canal = $canal_data['name'];
-$img = $canal_data['stream_icon'];
-if (isset($customChannelLogos[$id])) {
-    $customPath = __DIR__ . '/' . $customChannelLogos[$id];
-    if (file_exists($customPath)) {
-        $img = $customChannelLogos[$id];
-    }
-}
+$defaultIcon = isset($canal_data['stream_icon']) ? $canal_data['stream_icon'] : '';
+$img = getChannelLogo($id, $defaultIcon);
 $tipo = $canal_data['stream_type'];
 $info = '';
 if (!empty($canal_data['plot'])) {
@@ -1115,16 +1094,11 @@ if (!empty($canal_data['plot'])) {
                 // Filtrar el canal actual
                 $output = array_filter($output, function($c) use ($id) { return $c['stream_id'] != $id; });
                 shuffle($output);
-                foreach(array_slice($output,0,5) as $row) { // SOLO 5 CANALES
+                foreach(array_slice($output,0,5) as $row) {
                     $canal_nome = $row['name'];
                     $canal_id = $row['stream_id'];
-                    $canal_img = $row['stream_icon'];
-                    if (isset($customChannelLogos[$canal_id])) {
-                        $customPath = __DIR__ . '/' . $customChannelLogos[$canal_id];
-                        if (file_exists($customPath)) {
-                            $canal_img = $customChannelLogos[$canal_id];
-                        }
-                    }
+                    $defaultIcon = isset($row['stream_icon']) ? $row['stream_icon'] : '';
+                    $canal_img = getChannelLogo($canal_id, $defaultIcon);
                 ?>
                 <div class="recomendado-card">
                     <div class="card__cover" style="position:relative;">

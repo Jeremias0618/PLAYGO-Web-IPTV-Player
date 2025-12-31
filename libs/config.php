@@ -4,19 +4,7 @@ define('IP','https://URL');
 
 define('TMDB_API_KEY', 'api_here');
 
-$customChannelLogos = [
-    15   => 'channels/USMP_TV_2021.png',
-    248  => 'channels/ATV_Sur_2025_Web.png',
-    249  => 'channels/PBO.png',
-    252  => 'channels/RPP_2018.png',
-    1099 => 'channels/cropped-energeekbg-1.png',
-    1104 => 'channels/ESPN-Logo.png',
-    1105 => 'channels/ESPN2_2006.png',
-    1107 => 'channels/ESPN_4_logo.svg.png',
-    1110 => 'channels/ESPN_7_logo.svg.png',
-    1114 => 'channels/Gol_Peru.png',
-    1115 => 'channels/Karibena_tv.png',
-];
+$customChannelLogos = [];
 
 $template = 'blue'; 
 

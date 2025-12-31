@@ -34,7 +34,7 @@ function getChannelLogo($channelId, $defaultIcon) {
     global $customChannelLogos;
     
     if (!isset($customChannelLogos) || !is_array($customChannelLogos)) {
-        return $defaultIcon;
+        $customChannelLogos = [];
     }
     
     if (isset($customChannelLogos[$channelId])) {
@@ -42,6 +42,16 @@ function getChannelLogo($channelId, $defaultIcon) {
         if (file_exists($customPath)) {
             return $customChannelLogos[$channelId];
         }
+    }
+    
+    if (!function_exists('getLocalChannelImage')) {
+        require_once(__DIR__ . '/channel_images.php');
+    }
+    
+    $localImage = getLocalChannelImage($channelId, $defaultIcon);
+    
+    if (strpos($localImage, 'assets/channels/') === 0) {
+        return $localImage;
     }
     
     return $defaultIcon;

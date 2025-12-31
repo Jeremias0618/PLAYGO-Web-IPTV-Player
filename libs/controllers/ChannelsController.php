@@ -38,6 +38,15 @@ function processChannelsData($streams) {
 function getChannelsPageData($user, $pwd, $categoryId = null) {
     $categories = getLiveCategories($user, $pwd);
     $streams = getLiveStreams($user, $pwd, $categoryId);
+    
+    if (!function_exists('downloadChannelsImages')) {
+        require_once(__DIR__ . '/../services/channel_images.php');
+    }
+    
+    if (!empty($streams)) {
+        downloadChannelsImages($streams, 20);
+    }
+    
     $processedStreams = processChannelsData($streams);
     
     return [
