@@ -1,4 +1,7 @@
 $(document).ready(function(){
+    var lastRefreshTime = 0;
+    var refreshCooldown = 3000;
+    
     var $carousel = $('.home__carousel');
     $carousel.owlCarousel({
         loop: true,
@@ -71,8 +74,27 @@ $(document).ready(function(){
     });
 
     function refreshContent(type, $btn, $grid) {
+        var currentTime = Date.now();
+        var timeSinceLastRefresh = currentTime - lastRefreshTime;
+        
+        if (timeSinceLastRefresh < refreshCooldown) {
+            var remainingTime = Math.ceil((refreshCooldown - timeSinceLastRefresh) / 1000);
+            var originalTitle = $btn.attr('title') || '';
+            $btn.attr('title', 'Espera ' + remainingTime + ' segundo' + (remainingTime > 1 ? 's' : ''));
+            $btn.addClass('cooldown');
+            
+            setTimeout(function() {
+                $btn.removeClass('cooldown');
+                $btn.attr('title', originalTitle);
+            }, refreshCooldown - timeSinceLastRefresh);
+            
+            return;
+        }
+        
+        lastRefreshTime = currentTime;
         $btn.addClass('spinning');
         $btn.prop('disabled', true);
+        $btn.addClass('cooldown');
         
         $.ajax({
             url: 'libs/endpoints/ApiContentEndpoint.php',
@@ -96,7 +118,11 @@ $(document).ready(function(){
             },
             complete: function() {
                 $btn.removeClass('spinning');
-                $btn.prop('disabled', false);
+                
+                setTimeout(function() {
+                    $btn.prop('disabled', false);
+                    $btn.removeClass('cooldown');
+                }, refreshCooldown);
             }
         });
     }

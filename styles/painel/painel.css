@@ -204,13 +204,20 @@
     font-size: 1rem;
 }
 
-.refresh-btn:hover {
+.refresh-btn:hover:not(.cooldown):not(:disabled) {
     background: rgba(255, 255, 255, 0.1);
     transform: scale(1.1);
 }
 
-.refresh-btn:active {
+.refresh-btn:active:not(.cooldown):not(:disabled) {
     transform: scale(0.95);
+}
+
+.refresh-btn.cooldown,
+.refresh-btn.cooldown:hover {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .refresh-btn:active {

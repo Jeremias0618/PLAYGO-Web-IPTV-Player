@@ -59,6 +59,9 @@ $series = getSeries($user, $pwd, 1000);
                             <li class="header__nav-item">
                                 <a href="series.php" class="header__nav-link">Series</a>
                             </li>
+                            <li class="header__nav-item">
+                                <a href="sagas.php" class="header__nav-link">Sagas</a>
+                            </li>
                         </ul>
                         <div class="header__auth d-flex align-items-center">
                             <button class="header__search-btn" type="button" id="openSearchModal">

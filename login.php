@@ -193,7 +193,8 @@ handleLoginRequest();
             </div>
         </div>
     </div>
-    <?php include("inc/scripts.php"); ?>
+    <script src="scripts/jquery-1.12.4.min.js"></script>
+    <script src="scripts/bootstrap-3.3.7.min.js"></script>
     <script src="scripts/login/form.js"></script>
 </body>
 </html>

