@@ -12,7 +12,6 @@ $output = json_decode($resposta,true);
 
 $poster_img = $output['info']['cover'];
 $episodios = $output['episodes'] ?? [];
-$tmdb_api_key = "eae5dbe11c2b8d96808af6b5e0fec463";
 $tmdb_id = $output['info']['tmdb_id'] ?? null;
 $tmdb_episodios_imgs = [];
 
@@ -21,7 +20,7 @@ if ($tmdb_id && isset($episodios[$season])) {
     if (!is_dir($cache_dir)) mkdir($cache_dir, 0777, true);
 
     // Obtener episodios de la temporada desde TMDb
-    $tmdb_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$season?api_key=$tmdb_api_key&language=es-ES";
+    $tmdb_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$season?api_key=" . TMDB_API_KEY . "&language=es-ES";
     $tmdb_json = @file_get_contents($tmdb_url);
     $tmdb_data = json_decode($tmdb_json, true);
     if (!empty($tmdb_data['episodes'])) {

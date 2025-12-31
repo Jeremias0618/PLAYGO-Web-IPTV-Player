@@ -39,11 +39,10 @@ if (!empty($trailer)) {
 }
 $episodios = $output['episodes'] ?? [];
 
-$tmdb_api_key = "eae5dbe11c2b8d96808af6b5e0fec463";
 $tmdb_id = $output['info']['tmdb_id'] ?? null;
 if (!$tmdb_id && !empty($serie_nome)) {
     $query = urlencode($serie_nome);
-    $tmdb_search_url = "https://api.themoviedb.org/3/search/tv?api_key=$tmdb_api_key&language=es-ES&query=$query";
+    $tmdb_search_url = "https://api.themoviedb.org/3/search/tv?api_key=" . TMDB_API_KEY . "&language=es-ES&query=$query";
     if (!empty($ano)) {
         $tmdb_search_url .= "&first_air_date_year=" . urlencode(substr($ano,0,4));
     }
@@ -60,7 +59,7 @@ if ($tmdb_id && is_array($episodios)) {
     if (!is_dir($cache_dir)) mkdir($cache_dir, 0777, true);
 
     foreach ($episodios as $season_num => $eps) {
-        $tmdb_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$season_num?api_key=$tmdb_api_key&language=es-ES";
+        $tmdb_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$season_num?api_key=" . TMDB_API_KEY . "&language=es-ES";
         $tmdb_json = @file_get_contents($tmdb_url);
         $tmdb_data = json_decode($tmdb_json, true);
         if (!empty($tmdb_data['episodes'])) {

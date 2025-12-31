@@ -24,13 +24,12 @@ $repro_img = $backdrop ?: $poster_img;
 $filme = $output['movie_data']['name'];
 $filme = preg_replace('/\s*\(\d{4}\)$/', '', $filme);
 
-$tmdb_api_key = "eae5dbe11c2b8d96808af6b5e0fec463";
 $tmdb_id = $output['info']['tmdb_id'] ?? null;
 $ano = $output['info']['releasedate'] ?? '';
 
 if (!$tmdb_id && !empty($filme)) {
     $query = urlencode($filme);
-    $tmdb_search_url = "https://api.themoviedb.org/3/search/movie?api_key=$tmdb_api_key&language=es-ES&query=$query";
+    $tmdb_search_url = "https://api.themoviedb.org/3/search/movie?api_key=" . TMDB_API_KEY . "&language=es-ES&query=$query";
     if (!empty($ano)) {
         $tmdb_search_url .= "&year=" . urlencode(substr($ano,0,4));
     }
@@ -47,7 +46,7 @@ $wallpaper_tmdb = '';
 $poster_tmdb = '';
 
 if ($tmdb_id) {
-    $tmdb_images_url = "https://api.themoviedb.org/3/movie/$tmdb_id/images?api_key=$tmdb_api_key";
+    $tmdb_images_url = "https://api.themoviedb.org/3/movie/$tmdb_id/images?api_key=" . TMDB_API_KEY;
     $tmdb_images_json = @file_get_contents($tmdb_images_url);
     $tmdb_images_data = json_decode($tmdb_images_json, true);
 

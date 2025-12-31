@@ -2,6 +2,8 @@
 
 define('IP','https://URL'); 
 
+define('TMDB_API_KEY', 'eae5dbe11c2b8d96808af6b5e0fec463');
+
 $template = 'blue'; 
 
 define("WHATSAPP", ''); 

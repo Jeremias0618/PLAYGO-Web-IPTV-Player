@@ -69,8 +69,7 @@ if ($tmdb_id && $season && $ep_number) {
         $ep_still = $still_local_url;
     } else {
         // Si no existe local, intenta TMDB directo y descarga si existe
-        $tmdb_api_key = "eae5dbe11c2b8d96808af6b5e0fec463";
-        $tmdb_still_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$season/episode/$ep_number?api_key=$tmdb_api_key&language=es-ES";
+        $tmdb_still_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$season/episode/$ep_number?api_key=" . TMDB_API_KEY . "&language=es-ES";
         $tmdb_still_json = @file_get_contents($tmdb_still_url);
         $tmdb_still_data = json_decode($tmdb_still_json, true);
         if (!empty($tmdb_still_data['still_path'])) {
