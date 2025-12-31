@@ -68,8 +68,10 @@ function getRecentContent($user, $pwd, $type = 'movie', $limit = 16) {
     return array_slice($output, 0, $limit);
 }
 
-function getPremieres($user, $pwd, $type = 'movie', $limit = 16) {
-    $currentYear = date('Y');
+function getPremieres($user, $pwd, $type = 'movie', $limit = 16, $year = null) {
+    if ($year === null) {
+        $year = date('Y');
+    }
     
     if ($type === 'movie' || $type === 'movies') {
         $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams";
@@ -86,8 +88,8 @@ function getPremieres($user, $pwd, $type = 'movie', $limit = 16) {
     
     $estrenos = [];
     foreach($output as $row) {
-        $year = isset($row['year']) ? $row['year'] : (isset($row['releaseDate']) ? substr($row['releaseDate'], 0, 4) : 'N/A');
-        if ($year == $currentYear) {
+        $rowYear = isset($row['year']) ? $row['year'] : (isset($row['releaseDate']) ? substr($row['releaseDate'], 0, 4) : 'N/A');
+        if ($rowYear == $year) {
             $estrenos[] = $row;
         }
     }

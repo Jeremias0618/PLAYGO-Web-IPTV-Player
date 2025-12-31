@@ -1,5 +1,6 @@
 <?php
 require_once("libs/lib.php");
+require_once("libs/controllers/ChannelsController.php");
 
 if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['xuserm']) || empty($_COOKIE['xpwdm'])) {
     header("Location: login.php");
@@ -11,29 +12,10 @@ $pwd = $_COOKIE['xpwdm'];
 
 $categoria = isset($_REQUEST['catg']) ? urldecode($_REQUEST['catg']) : 'TV en Vivo';
 $id = isset($_REQUEST['id']) ? trim($_REQUEST['id']) : '';
-$adulto = isset($_REQUEST['adulto']) ? trim($_REQUEST['adulto']) : '';
-$sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
 
-$customChannelLogos = [
-    15   => 'channels/USMP_TV_2021.png',
-    248  => 'channels/ATV_Sur_2025_Web.png',
-    249  => 'channels/PBO.png',
-    252  => 'channels/RPP_2018.png',
-    1099 => 'channels/cropped-energeekbg-1.png',
-    1104 => 'channels/ESPN-Logo.png',
-    1105 => 'channels/ESPN2_2006.png',
-    1107 => 'channels/ESPN_4_logo.svg.png',
-    1110 => 'channels/ESPN_7_logo.svg.png',
-    1114 => 'channels/Gol_Peru.png',
-    1115 => 'channels/Karibena_tv.png',
-];
-
-$urlLiveCategories = IP."/player_api.php?username=$user&password=$pwd&action=get_live_categories";
-$resLiveCategories = apixtream($urlLiveCategories);
-$liveCategories = json_decode($resLiveCategories, true);
-if (!is_array($liveCategories)) {
-    $liveCategories = [];
-}
+$pageData = getChannelsPageData($user, $pwd, $id ? $id : null);
+$liveCategories = $pageData['categories'];
+$streams = $pageData['streams'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -78,7 +60,7 @@ if (!is_array($liveCategories)) {
                                     <a href="./home.php" class="header__nav-link">Inicio</a>
                                 </li>
                                 <li class="header__nav-item">
-                                    <a href="./channels.php?sessao=<?php echo $sessao; ?>" class="header__nav-link header__nav-link--active">TV en Vivo</a>
+                                    <a href="./channels.php" class="header__nav-link header__nav-link--active">TV en Vivo</a>
                                 </li>
                                 <li class="header__nav-item">
                                     <a href="filmes.php" class="header__nav-link">Películas</a>
@@ -127,39 +109,21 @@ if (!is_array($liveCategories)) {
                     </div>
                     <div class="canales-grid">
                         <?php
-                        $url = IP."/player_api.php?username=$user&password=$pwd&action=get_live_streams".($id ? "&category_id=$id" : "");
-                        $resposta = apixtream($url);
-                        $output = json_decode($resposta,true);
-                        if ($output && is_array($output)) {
-                            foreach($output as $index) {
-                                $canal_nome = $index['name'];
-                                $canal_type = $index['stream_type'];
-                                $canal_id = $index['stream_id'];
-                                $canal_img = $index['stream_icon'];
-                                if (isset($customChannelLogos[$canal_id])) {
-                                    $customPath = __DIR__ . '/' . $customChannelLogos[$canal_id];
-                                    if (file_exists($customPath)) {
-                                        $canal_img = $customChannelLogos[$canal_id];
-                                    }
-                                }
-                                $cat_id = isset($index['category_id']) ? $index['category_id'] : '';
+                        if (!empty($streams)) {
+                            foreach($streams as $channel) {
+                                $canal_nome = $channel['name'];
+                                $canal_type = $channel['type'];
+                                $canal_id = $channel['id'];
+                                $canal_img = $channel['logo'];
+                                $cat_id = $channel['category_id'];
+                                $desc = $channel['description'];
                         ?>
                         <div class="canal-card" style="position:relative;" data-cat="<?php echo $cat_id; ?>">
-                            <img src="<?php echo $canal_img; ?>" alt="<?php echo htmlspecialchars($canal_nome); ?>">
+                            <img src="<?php echo htmlspecialchars($canal_img); ?>" alt="<?php echo htmlspecialchars($canal_nome); ?>">
                             <div class="canal-card-info">
                                 <span class="canal-title"><?php echo limitar_texto($canal_nome, 32); ?></span>
                                 <span class="canal-desc">
-                                    <?php
-                                    $desc = '';
-                                    if (!empty($index['plot'])) {
-                                        $desc = $index['plot'];
-                                    } elseif (!empty($index['description'])) {
-                                        $desc = $index['description'];
-                                    } elseif (!empty($index['category_name'])) {
-                                        $desc = 'Categoría: ' . $index['category_name'];
-                                    }
-                                    echo limitar_texto($desc, 60);
-                                    ?>
+                                    <?php echo limitar_texto($desc, 60); ?>
                                 </span>
                             </div>
                             <a class="canal-play" href="canal.php?stream=<?php echo $canal_id; ?>" title="Ver canal">
@@ -179,7 +143,7 @@ if (!is_array($liveCategories)) {
                         <h2><i class="fa fa-tv" aria-hidden="true"></i> Categorías</h2>
                         <ul>
                             <li>
-                                <a href="channels.php?sessao=<?php echo $sessao; ?>&id=&catg=TV%20en%20Vivo"<?php if($id=='') echo ' style="color:#f50b60;"'; ?>>Todos</a>
+                                <a href="channels.php?catg=TV%20en%20Vivo"<?php if($id=='') echo ' style="color:#f50b60;"'; ?>>Todos</a>
                             </li>
                         <?php foreach ($liveCategories as $cat): ?>
                             <?php

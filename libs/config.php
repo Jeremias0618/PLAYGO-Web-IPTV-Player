@@ -2,7 +2,21 @@
 
 define('IP','https://URL'); 
 
-define('TMDB_API_KEY', 'key_here');
+define('TMDB_API_KEY', 'api_here');
+
+$customChannelLogos = [
+    15   => 'channels/USMP_TV_2021.png',
+    248  => 'channels/ATV_Sur_2025_Web.png',
+    249  => 'channels/PBO.png',
+    252  => 'channels/RPP_2018.png',
+    1099 => 'channels/cropped-energeekbg-1.png',
+    1104 => 'channels/ESPN-Logo.png',
+    1105 => 'channels/ESPN2_2006.png',
+    1107 => 'channels/ESPN_4_logo.svg.png',
+    1110 => 'channels/ESPN_7_logo.svg.png',
+    1114 => 'channels/Gol_Peru.png',
+    1115 => 'channels/Karibena_tv.png',
+];
 
 $template = 'blue'; 
 
@@ -27,20 +41,20 @@ $valor4 = "199.90";
 
 define("ATIVAR_TESTE", '0');
 define("HORAS", '2');
-define("XTREAM_URL", 'https://cms-eu.xtream-codes.com/');
+define("XTREAM_URL", 'https://cms-us.xtream-codes.com/');
 define("XTREAM_USER", '');
 define("XTREAM_PWD", '');
 define("XTREAM_PLANO", '1');
 define("ATIVA_BLOQUEIO_TESTE", '0');
 
-define("SMTP_HOST", 'mail.revenda.com');
+define("SMTP_HOST", 'mail.playgo.pe');
 define("SMTP_USER", '');
 define("SMTP_SENHA", '');
 define("SMTP_PORTA", '587');
 define("SMTP_SEGURANCA", 'tls');
-define("EMAIL_ASSUNTO", 'Bem Vindo ao ITV - WebPlayer');
-define("EMAIL_REVENDA", 'contato@revenda.com');
-define("NOME_REVENDA", 'WebPlayer');
+define("EMAIL_ASSUNTO", 'Bienvenido a PLAYGO - WebPlayer');
+define("EMAIL_REVENDA", 'contato@playgo.pe');
+define("NOME_REVENDA", 'PLAYGO');
 
 define("AVISO_ADULTOS_CANAL", 'XXX: ADULTOS');
 define("AVISO_ADULTOS_FILME", 'FILMES: ADULTOS');

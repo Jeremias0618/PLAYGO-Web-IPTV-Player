@@ -238,7 +238,8 @@
 }
 
 #recientes-type,
-#estrenos-type {
+#estrenos-type,
+#estrenos-year {
     background: rgba(0, 0, 0, 0.8) !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
     color: #fff !important;
@@ -253,35 +254,46 @@
     background-position: right 8px center !important;
     padding-right: 30px !important;
     cursor: pointer;
+    font-size: 0.95rem;
 }
 
 #recientes-type option,
-#estrenos-type option {
+#estrenos-type option,
+#estrenos-year option {
     background: #1a1a1a !important;
     color: #fff !important;
     padding: 10px !important;
 }
 
 #recientes-type::-ms-expand,
-#estrenos-type::-ms-expand {
+#estrenos-type::-ms-expand,
+#estrenos-year::-ms-expand {
     display: none;
 }
 
 #recientes-type:focus,
-#estrenos-type:focus {
+#estrenos-type:focus,
+#estrenos-year:focus {
     outline: none;
     border-color: rgba(255, 255, 255, 0.5) !important;
     background-color: rgba(0, 0, 0, 0.9) !important;
 }
 
 #recientes-type:hover,
-#estrenos-type:hover {
+#estrenos-type:hover,
+#estrenos-year:hover {
     border-color: rgba(255, 255, 255, 0.4) !important;
     background-color: rgba(0, 0, 0, 0.85) !important;
 }
 
+#estrenos-year {
+    min-width: 120px;
+    max-width: 150px;
+}
+
 #recientes-type-mobile,
-#estrenos-type-mobile {
+#estrenos-type-mobile,
+#estrenos-year-mobile {
     background: rgba(0, 0, 0, 0.8) !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
     color: #fff !important;
@@ -295,30 +307,52 @@
     background-position: right 6px center !important;
     padding-right: 24px !important;
     cursor: pointer;
+    font-size: 0.85rem;
 }
 
 #recientes-type-mobile option,
-#estrenos-type-mobile option {
+#estrenos-type-mobile option,
+#estrenos-year-mobile option {
     background: #1a1a1a !important;
     color: #fff !important;
     padding: 10px !important;
 }
 
 #recientes-type-mobile::-ms-expand,
-#estrenos-type-mobile::-ms-expand {
+#estrenos-type-mobile::-ms-expand,
+#estrenos-year-mobile::-ms-expand {
     display: none;
 }
 
 #recientes-type-mobile:focus,
-#estrenos-type-mobile:focus {
+#estrenos-type-mobile:focus,
+#estrenos-year-mobile:focus {
     outline: none;
     border-color: rgba(255, 255, 255, 0.5) !important;
     background-color: rgba(0, 0, 0, 0.9) !important;
 }
 
 #recientes-type-mobile:hover,
-#estrenos-type-mobile:hover {
+#estrenos-type-mobile:hover,
+#estrenos-year-mobile:hover {
     border-color: rgba(255, 255, 255, 0.4) !important;
     background-color: rgba(0, 0, 0, 0.85) !important;
+}
+
+#estrenos-year-mobile {
+    min-width: 90px;
+    max-width: 140px;
+    -webkit-appearance: menulist !important;
+    -moz-appearance: menulist !important;
+    appearance: menulist !important;
+}
+
+#estrenos-year-mobile::-webkit-appearance {
+    -webkit-appearance: menulist !important;
+}
+
+#estrenos-year-mobile option {
+    padding: 12px !important;
+    font-size: 14px !important;
 }
 

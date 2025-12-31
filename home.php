@@ -216,6 +216,14 @@ $series = getSeries($user, $pwd, 1000);
                                     <option value="movie">Películas</option>
                                     <option value="series">Series</option>
                                 </select>
+                                <select id="estrenos-year" class="form-control" style="display:none; width: auto; max-width: 150px;">
+                                    <?php
+                                    $currentYear = date('Y');
+                                    for ($y = $currentYear; $y >= 1973; $y--) {
+                                        echo '<option value="' . $y . '"' . ($y == $currentYear ? ' selected' : '') . '>' . $y . '</option>';
+                                    }
+                                    ?>
+                                </select>
                             </div>
                         </div>
                         <div class="content__mobile-tabs" id="content__mobile-tabs">
@@ -245,6 +253,14 @@ $series = getSeries($user, $pwd, 1000);
                                 <select id="estrenos-type-mobile" class="form-control" style="display:none; width: auto; max-width: 140px;">
                                     <option value="movie">Películas</option>
                                     <option value="series">Series</option>
+                                </select>
+                                <select id="estrenos-year-mobile" class="form-control" style="display:none; width: auto; max-width: 100px;">
+                                    <?php
+                                    $currentYear = date('Y');
+                                    for ($y = $currentYear; $y >= 1973; $y--) {
+                                        echo '<option value="' . $y . '"' . ($y == $currentYear ? ' selected' : '') . '>' . $y . '</option>';
+                                    }
+                                    ?>
                                 </select>
                             </div>
                         </div>
