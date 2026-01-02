@@ -930,10 +930,13 @@ if (!empty($canal_data['plot'])) {
                                     <a href="./channels.php" class="header__nav-link header__nav-link--active">TV en Vivo</a>
                                 </li>
                                 <li class="header__nav-item">
-                                    <a href="filmes.php" class="header__nav-link">Películas</a>
+                                    <a href="movies.php" class="header__nav-link">Películas</a>
                                 </li>
                                 <li class="header__nav-item">
                                     <a href="series.php" class="header__nav-link">Series</a>
+                                </li>
+                                <li class="header__nav-item">
+                                    <a href="sagas.php" class="header__nav-link">Sagas</a>
                                 </li>
                             </ul>
                             <div class="header__auth d-flex align-items-center">
@@ -1103,13 +1106,13 @@ if (!empty($canal_data['plot'])) {
                 <div class="recomendado-card">
                     <div class="card__cover" style="position:relative;">
                         <img loading="lazy" src="<?php echo $canal_img; ?>" alt="<?php echo htmlspecialchars($canal_nome); ?>">
-                        <a href="canal.php?stream=<?php echo $canal_id; ?>&catg=<?php echo $idcatg; ?>" class="card__play">
+                        <a href="channel.php?stream=<?php echo $canal_id; ?>&catg=<?php echo $idcatg; ?>" class="card__play">
                             <i class="fas fa-play"></i>
                         </a>
                     </div>
                     <div class="card__content">
                         <h3 class="card__title">
-                            <a href="canal.php?stream=<?php echo $canal_id; ?>&catg=<?php echo $idcatg; ?>">
+                            <a href="channel.php?stream=<?php echo $canal_id; ?>&catg=<?php echo $idcatg; ?>">
                                 <?php echo limitar_texto($canal_nome,30); ?>
                             </a>
                         </h3>
@@ -1275,7 +1278,7 @@ if (!empty($canal_data['plot'])) {
                     <div class="modal-buscador-grid">`;
                 pelis.slice(0,12).forEach(p => {
                     html += `<div class="modal-buscador-card">
-                        <a href="filme.php?stream=${p.id}&streamtipo=movie">
+                        <a href="movie.php?stream=${p.id}&streamtipo=movie">
                             <img src="${p.img}" alt="${p.nombre}" onerror="this.src='assets/logo/logo.png'">
                             <span>${p.nombre}</span>
                         </a>
@@ -1323,7 +1326,7 @@ if (!empty($canal_data['plot'])) {
                     <div class="modal-buscador-grid">`;
                 chans.slice(0,12).forEach(c => {
                     html += `<div class="modal-buscador-card">
-                        <a href="canal.php?stream=${c.id}">
+                        <a href="channel.php?stream=${c.id}">
                             <img src="${c.img}" alt="${c.nombre}" onerror="this.src='assets/logo/logo.png'">
                             <span>${c.nombre}</span>
                         </a>

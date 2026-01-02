@@ -701,7 +701,7 @@ html > body > * {
                                 <a href="./channels.php" class="header__nav-link">TV en Vivo</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="filmes.php" class="header__nav-link">Películas</a>
+                                <a href="movies.php" class="header__nav-link">Películas</a>
                             </li>
                             <li class="header__nav-item">
                                 <a href="series.php" class="header__nav-link">Series</a>
@@ -733,7 +733,7 @@ html > body > * {
 </header>
 <div id="bg-overlay"></div>
 
-<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
+<?php include_once __DIR__ . '/libs/views/search.php'; ?>
 
 <div style="width:100%;text-align:center;margin:130px 0 30px 0;">
     <h2 style="font-size:2.5rem;font-weight:800;letter-spacing:2px;color:#fff;display:inline-block;padding:10px 40px;border-radius:12px;">SAGAS</h2>

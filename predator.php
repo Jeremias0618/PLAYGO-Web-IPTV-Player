@@ -147,7 +147,7 @@ foreach ($saga_predator_ids as $id) {
 </head>
 <body>
 <div class="predator-overlay"></div>
-<!-- HEADER igual a filmes.php -->
+<!-- HEADER igual a movies.php -->
 <header class="header">
     <div class="navbar-overlay bg-animate"></div>
     <div class="header__wrap">
@@ -166,10 +166,13 @@ foreach ($saga_predator_ids as $id) {
                                 <a href="./channels.php" class="header__nav-link">TV en Vivo</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="filmes.php" class="header__nav-link">Películas</a>
+                                <a href="movies.php" class="header__nav-link">Películas</a>
                             </li>
                             <li class="header__nav-item">
                                 <a href="series.php" class="header__nav-link">Series</a>
+                            </li>
+                            <li class="header__nav-item">
+                                <a href="sagas.php" class="header__nav-link">Sagas</a>
                             </li>
                         </ul>
                         <div class="header__auth d-flex align-items-center">
@@ -193,7 +196,7 @@ foreach ($saga_predator_ids as $id) {
         </div>
     </div>
 </header>
-<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
+<?php include_once __DIR__ . '/libs/views/search.php'; ?>
 <!-- FIN HEADER -->
 
 <main>
@@ -201,7 +204,7 @@ foreach ($saga_predator_ids as $id) {
         <h1 class="saga-title"><i class="fa fa-skull-crossbones"></i> SAGA PREDATOR</h1>
         <div class="saga-grid">
             <?php foreach ($peliculas as $p): ?>
-                <a class="saga-card-link" href="filme.php?stream=<?php echo $p['id']; ?>&streamtipo=movie">
+                <a class="saga-card-link" href="movie.php?stream=<?php echo $p['id']; ?>&streamtipo=movie">
                     <div class="saga-card">
                         <img src="<?php echo htmlspecialchars($p['img']); ?>" alt="<?php echo htmlspecialchars($p['nombre']); ?>">
                         <div class="saga-card-content">

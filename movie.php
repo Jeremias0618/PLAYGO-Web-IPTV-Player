@@ -838,10 +838,13 @@ $nota = $output['info']['rating'];
                                 <a href="./channels.php" class="header__nav-link">TV en Vivo</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="filmes.php" class="header__nav-link">Películas</a>
+                                <a href="movies.php" class="header__nav-link">Películas</a>
                             </li>
                             <li class="header__nav-item">
                                 <a href="series.php" class="header__nav-link">Series</a>
+                            </li>
+                            <li class="header__nav-item">
+                                <a href="sagas.php" class="header__nav-link">Sagas</a>
                             </li>
                         </ul>
                         <div class="header__auth d-flex align-items-center">
@@ -865,7 +868,7 @@ $nota = $output['info']['rating'];
         </div>
     </div>
 </header>
-<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
+<?php include_once __DIR__ . '/libs/views/search.php'; ?>
 <section class="section details">
 <div class="details__bg" data-bg="<?php echo $wallpaper_tmdb ?: ($backdrop ?: $poster_img); ?>"></div>
     <div class="container top-margin">
@@ -1043,13 +1046,13 @@ $nota = $output['info']['rating'];
                     <div class="card">
                         <div class="card__cover">
                             <img loading="lazy" src="<?php echo $filme_img; ?>" alt="">
-                            <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>" class="card__play">
+                            <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>" class="card__play">
                                 <i class="fas fa-play"></i>
                             </a>
                         </div>
                         <div class="card__content">
                             <h3 class="card__title">
-                                <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>">
+                                <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>">
                                     <?php echo $filme_nome; ?>
                                 </a>
                             </h3>

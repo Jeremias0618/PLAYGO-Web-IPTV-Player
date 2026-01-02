@@ -54,7 +54,7 @@ $series = getSeries($user, $pwd, 1000);
                                 <a href="./channels.php" class="header__nav-link">TV en Vivo</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="filmes.php" class="header__nav-link">Películas</a>
+                                <a href="movies.php" class="header__nav-link">Películas</a>
                             </li>
                             <li class="header__nav-item">
                                 <a href="series.php" class="header__nav-link">Series</a>
@@ -85,7 +85,7 @@ $series = getSeries($user, $pwd, 1000);
     </div>
 </header>
 
-<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
+<?php include_once __DIR__ . '/libs/views/search.php'; ?>
 
     <section class="home">
         <div class="owl-carousel home__bg">
@@ -146,7 +146,7 @@ $series = getSeries($user, $pwd, 1000);
                         shuffle($carousel_items);
                         foreach(array_slice($carousel_items,0,12) as $item) {
                             if($item['type'] == 'movie') {
-                                $url = "filme.php?stream={$item['id']}&streamtipo=movie";
+                                $url = "movie.php?stream={$item['id']}&streamtipo=movie";
                             } else {
                                 $url = "serie.php?stream={$item['id']}&streamtipo=serie";
                             }
@@ -285,13 +285,13 @@ $series = getSeries($user, $pwd, 1000);
     <div class="card">
         <div class="card__cover">
             <img loading="lazy" src="<?php echo $filme_img; ?>" alt="">
-            <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=movie" class="card__play">
+            <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=movie" class="card__play">
                 <i class="fas fa-play"></i>
             </a>
         </div>
         <div class="card__content">
             <h3 class="card__title" style="margin-top:0;">
-                <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=movie">
+                <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=movie">
                 <?php echo limitar_texto(preg_replace('/\s*\(\d{4}\)$/', '', $filme_nome),30); ?>
                 </a>
             </h3>
@@ -353,13 +353,13 @@ $series = getSeries($user, $pwd, 1000);
                             <div class="card">
                                 <div class="card__cover">
                                     <img loading="lazy" src="<?php echo $filme_img; ?>" alt="">
-                                    <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=movie" class="card__play">
+                                    <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=movie" class="card__play">
                                         <i class="fas fa-play"></i>
                                     </a>
                                 </div>
                                 <div class="card__content">
                                     <h3 class="card__title" style="margin-top:0;">
-                                        <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=movie">
+                                        <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=movie">
                                         <?php echo limitar_texto(preg_replace('/\s*\(\d{4}\)$/', '', $filme_nome),30); ?>
                                         </a>
                                     </h3>
@@ -387,13 +387,13 @@ $series = getSeries($user, $pwd, 1000);
                             <div class="card">
                                 <div class="card__cover">
                                     <img loading="lazy" src="<?php echo $filme_img; ?>" alt="">
-                                    <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=movie" class="card__play">
+                                    <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=movie" class="card__play">
                                         <i class="fas fa-play"></i>
                                     </a>
                                 </div>
                                 <div class="card__content">
                                     <h3 class="card__title" style="margin-top:0;">
-                                        <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=movie">
+                                        <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=movie">
                                         <?php echo limitar_texto(preg_replace('/\s*\(\d{4}\)$/', '', $filme_nome),30); ?>
                                         </a>
                                     </h3>
@@ -438,6 +438,10 @@ $series = getSeries($user, $pwd, 1000);
     <script src="./scripts/jwplayer.core.controls.js"></script>
     <script src="./scripts/provider.hlsjs.js"></script>
     <script src="./scripts/main.js"></script>
-    <script src="./scripts/home/home.js"></script>
+    <script src="./scripts/home/carousel.js"></script>
+    <script src="./scripts/home/tabs.js"></script>
+    <script src="./scripts/home/refresh.js"></script>
+    <script src="./scripts/home/recent.js"></script>
+    <script src="./scripts/home/premieres.js"></script>
 </body>
 </html>

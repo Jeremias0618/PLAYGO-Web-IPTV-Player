@@ -1007,7 +1007,7 @@ body::before {
                                 <a href="./channels.php" class="header__nav-link">TV en Vivo</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="filmes.php" class="header__nav-link">Películas</a>
+                                <a href="movies.php" class="header__nav-link">Películas</a>
                             </li>
                             <li class="header__nav-item">
                                 <a href="series.php" class="header__nav-link">Series</a>
@@ -1039,7 +1039,7 @@ body::before {
 </header>
 <div id="bg-overlay"></div>
 
-<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
+<?php include_once __DIR__ . '/libs/views/search.php'; ?>
 
 <div style="width:100%;text-align:center;margin:120px 0 15px 0;">
     <h2 style="font-size:2.5rem;font-weight:800;letter-spacing:2px;color:#fff;display:inline-block;padding:10px 40px;border-radius:12px;"><?php echo htmlspecialchars($saga_actual['nombre']); ?></h2>
@@ -1087,13 +1087,13 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
                 <div class="collection-list-item">
                     <div class="row">
                         <div class="col-12 col-sm-4 col-md-3 col-lg-3">
-                    <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>">
+                    <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>">
                                 <img loading="lazy" src="<?php echo htmlspecialchars($filme_img); ?>" alt="<?php echo htmlspecialchars($filme_nome); ?>" class="collection-poster">
                     </a>
             </div>
                         <div class="col-12 col-sm-8 col-md-9 col-lg-9">
                             <h2 class="collection-info-title">
-                                <a href="filme.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>" style="color: #fff; text-decoration: none;">
+                                <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>" style="color: #fff; text-decoration: none;">
                                     <?php echo htmlspecialchars($filme_nome); ?>
                                 </a>
                             </h2>

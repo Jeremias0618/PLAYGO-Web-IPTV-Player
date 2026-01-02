@@ -29,7 +29,7 @@
             const href = link.getAttribute('href');
             const match = href.match(/stream=(\d+)/);
             if (match) {
-                link.setAttribute('href', 'canal.php?stream=' + match[1]);
+                link.setAttribute('href', 'channel.php?stream=' + match[1]);
             }
         });
     }

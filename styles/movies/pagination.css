@@ -1,0 +1,70 @@
+.custom-paginator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0 30px 0;
+    padding: 0;
+    list-style: none;
+    background: #292933;
+    border-radius: 6px;
+    min-height: 48px;
+    box-shadow: 0 2px 8px #0002;
+    overflow: hidden;
+    width: fit-content;
+    min-width: 340px;
+}
+
+.custom-paginator li {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.custom-paginator a, .custom-paginator span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    height: 48px;
+    color: #bfc1c8;
+    background: transparent;
+    border: none;
+    font-size: 1.15rem;
+    font-weight: 400;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+    outline: none;
+    border-radius: 0;
+}
+
+.custom-paginator .active a,
+.custom-paginator .active span {
+    background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 0;
+}
+
+.custom-paginator li:not(.active):hover a {
+    background: #23232b;
+    color: #fff;
+}
+
+.custom-paginator .disabled span {
+    color: #555;
+    cursor: default;
+    background: transparent;
+}
+
+.custom-paginator .arrow {
+    font-size: 1.3rem;
+    color: #bfc1c8;
+    padding: 0 10px;
+}
+
+.custom-paginator .arrow:hover {
+    color: #fff;
+    background: #23232b;
+}
+

@@ -510,10 +510,13 @@ body {
                                 <a href="./channels.php" class="header__nav-link">TV en Vivo</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="filmes.php" class="header__nav-link">Películas</a>
+                                <a href="movies.php" class="header__nav-link">Películas</a>
                             </li>
                             <li class="header__nav-item">
                                 <a href="series.php" class="header__nav-link header__nav-link--active">Series</a>
+                            </li>
+                            <li class="header__nav-item">
+                                <a href="sagas.php" class="header__nav-link">Sagas</a>
                             </li>
                         </ul>
                         <div class="header__auth d-flex align-items-center">
@@ -537,7 +540,7 @@ body {
         </div>
     </div>
 </header>
-<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
+<?php include_once __DIR__ . '/libs/views/search.php'; ?>
 
 <!-- CONTENIDO PRINCIPAL CON FONDO OSCURO -->
 <div class="main-bg-fondo">

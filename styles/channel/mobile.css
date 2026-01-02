@@ -1,0 +1,89 @@
+@media only screen and (max-width: 600px) and (pointer: coarse) and (hover: none) {
+    .section.details {
+        padding-top: 60px;
+        min-height: unset;
+    }
+    .card--details {
+        padding: 14px 4px;
+        border-radius: 10px;
+    }
+    .canal-logo-box img {
+        max-width: 120px;
+        max-height: 80px;
+    }
+    .canal-nombre {
+        font-size: 1.1rem;
+        margin-top: 7px;
+    }
+    .en-vivo-label {
+        font-size: 0.95rem;
+        padding: 5px 10px;
+        border-radius: 6px;
+    }
+    .volver-canais-btn a {
+        font-size: 0.98rem;
+        padding: 6px 12px;
+        border-radius: 6px;
+    }
+    .video-embed-box {
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    #livevideo {
+        min-height: 140px !important;
+        height: auto !important;
+        border-radius: 0 0 8px 8px;
+    }
+    .info-canal-box {
+        font-size: 0.98rem;
+        padding: 10px 8px;
+        border-radius: 8px;
+    }
+    .epg-table-box {
+        padding: 10px 4px 4px 4px;
+        border-radius: 8px;
+        font-size: 0.95rem;
+    }
+    .epg-title {
+        font-size: 1.05rem;
+        margin-bottom: 7px;
+    }
+    .epg-table th, .epg-table td {
+        padding: 5px 4px;
+        font-size: 0.93rem;
+    }
+    .recomendados-grid {
+        gap: 10px;
+        justify-content: center;
+    }
+    .recomendado-card {
+        width: 98vw;
+        min-width: 98vw;
+        max-width: 98vw;
+        border-radius: 8px;
+    }
+    .recomendado-card .card__cover {
+        height: 90px;
+    }
+    .recomendado-card .card__title {
+        font-size: 0.98rem;
+        min-height: 28px;
+    }
+    .modal-buscador {
+        padding: 18px 4px 10px 4px;
+        border-radius: 10px;
+        max-width: 99vw;
+    }
+    .modal-buscador-card {
+        width: 80px;
+    }
+    .modal-buscador-card img {
+        height: 90px;
+        border-radius: 6px;
+    }
+    .footer__copyright {
+        font-size: 0.95rem;
+        padding-bottom: 10px;
+    }
+}
+

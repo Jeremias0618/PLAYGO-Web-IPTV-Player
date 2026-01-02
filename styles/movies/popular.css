@@ -1,0 +1,46 @@
+.section-popular {
+    margin: 50px 0 0 0;
+    padding-bottom: 30px;
+    position: relative;
+}
+
+.section-popular .home__title {
+    color: #fff;
+    font-size: 2.1rem;
+    margin-bottom: 32px;
+    text-align: left;
+    letter-spacing: 1px;
+}
+
+.section-popular .home__title b {
+    color: #e50914;
+    font-weight: 700;
+}
+
+.section-popular .section__btn {
+    display: inline-block;
+    margin: 30px auto 0 auto;
+    background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
+    color: #fff;
+    border-radius: 8px;
+    padding: 18px 48px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    text-align: center;
+    box-shadow: 0 2px 8px #0002;
+    letter-spacing: 1px;
+    border: none;
+    line-height: 1.2;
+    white-space: nowrap;
+    min-width: 180px;
+}
+
+.section-popular .section__btn:hover {
+    background: #fff;
+    color: #e50914;
+    box-shadow: 0 4px 16px #0003;
+}
+

@@ -38,8 +38,8 @@ PLAYGO/
 ├── index.php              # Redirects to login.php
 ├── login.php               # Login page
 ├── Xtream\_api.php        # Xtream UI API integration
-├── channels.php / canal.php # Channel listing and details
-├── filmes.php / filme.php # Movie listing and details
+├── channels.php / channel.php # Channel listing and details
+├── movies.php / movie.php # Movie listing and details
 ├── series.php / serie.php # Series listing and episode view
 ├── assinatura.php         
 ├── home.php             

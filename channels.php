@@ -1,6 +1,6 @@
 <?php
 require_once("libs/lib.php");
-require_once("libs/controllers/ChannelsController.php");
+require_once("libs/controllers/Channels.php");
 
 if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['xuserm']) || empty($_COOKIE['xpwdm'])) {
     header("Location: login.php");
@@ -64,10 +64,13 @@ $streams = $pageData['streams'];
                                     <a href="./channels.php" class="header__nav-link header__nav-link--active">TV en Vivo</a>
                                 </li>
                                 <li class="header__nav-item">
-                                    <a href="filmes.php" class="header__nav-link">Películas</a>
+                                    <a href="movies.php" class="header__nav-link">Películas</a>
                                 </li>
                                 <li class="header__nav-item">
                                     <a href="series.php" class="header__nav-link">Series</a>
+                                </li>
+                                <li class="header__nav-item">
+                                    <a href="sagas.php" class="header__nav-link">Sagas</a>
                                 </li>
                             </ul>
                             <div class="header__auth d-flex align-items-center">
@@ -92,7 +95,7 @@ $streams = $pageData['streams'];
         </div>
     </header>
 
-    <?php include_once __DIR__ . '/partials/search_modal.php'; ?>
+    <?php include_once __DIR__ . '/libs/views/search.php'; ?>
 
     <section class="content channels-section details" style="margin-top:30px; position: relative;">
         <div class="details__bg" data-bg="./assets/image/wallpaper_02.webp"></div>
@@ -100,7 +103,7 @@ $streams = $pageData['streams'];
             <div class="row">
                 <div class="col-12">
                     <h1 class="channels-page-title">
-                        <i class="fa fa-tv" aria-hidden="true"></i> Televisión en Vivo
+                        TELEVISIÓN EN VIVO
                     </h1>
                     <div class="channels-categories-row">
                         <a href="channels.php?catg=TV%20en%20Vivo" class="category-btn <?php echo $id=='' ? 'active' : ''; ?>">
@@ -140,7 +143,7 @@ $streams = $pageData['streams'];
                                 <img src="<?php echo htmlspecialchars($canal_img); ?>" alt="<?php echo htmlspecialchars($canal_nome); ?>" onerror="this.src='assets/logo/logo.png'">
                             </div>
                             <div class="canal-name"><?php echo htmlspecialchars($canal_nome); ?></div>
-                            <a class="canal-watch-btn" href="canal.php?stream=<?php echo $canal_id; ?>">
+                            <a class="canal-watch-btn" href="channel.php?stream=<?php echo $canal_id; ?>">
                                 <i class="fa fa-play"></i> Ver canal
                             </a>
                         </div>
@@ -192,10 +195,10 @@ $streams = $pageData['streams'];
         ];
     }, $liveCategories), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
     </script>
-    <script src="./scripts/channels/channels-filter.js"></script>
-    <script src="./scripts/channels/channels-mobile.js"></script>
-    <script src="./scripts/channels/channels-navigation.js"></script>
-    <script src="./scripts/channels/channels-init.js"></script>
+    <script src="./scripts/channels/filter.js"></script>
+    <script src="./scripts/channels/mobile.js"></script>
+    <script src="./scripts/channels/navigation.js"></script>
+    <script src="./scripts/channels/init.js"></script>
 </body>
 </html>
 

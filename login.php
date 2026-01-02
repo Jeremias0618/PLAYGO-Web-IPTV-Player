@@ -1,7 +1,7 @@
 <?php
 require_once("libs/lib.php");
 require_once("libs/services/auth.php");
-require_once("libs/controllers/AuthenticationController.php");
+require_once("libs/controllers/Authentication.php");
 
 handleLoginRequest();
 ?>

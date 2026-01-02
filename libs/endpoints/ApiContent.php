@@ -16,15 +16,15 @@ try {
     }
     
     if (!function_exists('handleRefreshRequest')) {
-        require_once(__DIR__ . '/../controllers/ContentRefreshController.php');
+        require_once(__DIR__ . '/../controllers/ContentRefresh.php');
     }
     
     if (!function_exists('handleRecentContentRequest')) {
-        require_once(__DIR__ . '/../controllers/ContentRecentController.php');
+        require_once(__DIR__ . '/../controllers/ContentRecent.php');
     }
     
     if (!function_exists('handlePremieresRequest')) {
-        require_once(__DIR__ . '/../controllers/ContentPremieresController.php');
+        require_once(__DIR__ . '/../controllers/ContentPremieres.php');
     }
 
     if (isset($_POST['action']) && $_POST['action'] === 'refresh') {

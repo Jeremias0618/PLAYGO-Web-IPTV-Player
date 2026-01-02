@@ -713,7 +713,7 @@ if ($ep_img_from_get) {
     </style>
 </head>
 <body>
-<!-- HEADER estilo filme.php -->
+<!-- HEADER estilo movie.php -->
 <header class="header">
     <div class="navbar-overlay bg-animate"></div>
     <div class="header__wrap">
@@ -727,8 +727,9 @@ if ($ep_img_from_get) {
                         <ul class="header__nav d-flex align-items-center mb-0">
                             <li class="header__nav-item"><a href="./home.php" class="header__nav-link">Inicio</a></li>
                             <li class="header__nav-item"><a href="./channels.php" class="header__nav-link">TV en Vivo</a></li>
-                            <li class="header__nav-item"><a href="filmes.php" class="header__nav-link">Películas</a></li>
+                            <li class="header__nav-item"><a href="movies.php" class="header__nav-link">Películas</a></li>
                             <li class="header__nav-item"><a href="series.php" class="header__nav-link">Series</a></li>
+                            <li class="header__nav-item"><a href="sagas.php" class="header__nav-link">Sagas</a></li>
                         </ul>
                         <div class="header__auth d-flex align-items-center">
                             <button class="header__search-btn" type="button" id="openSearchModal">
@@ -758,14 +759,14 @@ if ($ep_img_from_get) {
   <ul>
     <li><a href="./home.php">INICIO</a></li>
     <li><a href="./channels.php">TV EN VIVO</a></li>
-    <li><a href="filmes.php">PELÍCULAS</a></li>
+    <li><a href="movies.php">PELÍCULAS</a></li>
     <li><a href="series.php">SERIES</a></li>
     <li><a href="profile.php">PERFIL</a></li>
   </ul>
 </nav>
 <div id="mobileMenuOverlay"></div>
 
-<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
+<?php include_once __DIR__ . '/libs/views/search.php'; ?>
 <section class="section details">
     <div class="container" style="margin-top: 80px;">
         <div class="row">

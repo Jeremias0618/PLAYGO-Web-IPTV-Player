@@ -2068,10 +2068,13 @@ $recomendados = array_slice($recomendados, 0, 8);
                                 <a href="./channels.php" class="header__nav-link">TV en Vivo</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="filmes.php" class="header__nav-link">Películas</a>
+                                <a href="movies.php" class="header__nav-link">Películas</a>
                             </li>
                             <li class="header__nav-item">
                                 <a href="series.php" class="header__nav-link">Series</a>
+                            </li>
+                            <li class="header__nav-item">
+                                <a href="sagas.php" class="header__nav-link">Sagas</a>
                             </li>
                         </ul>
                         <div class="header__auth d-flex align-items-center">
@@ -2102,14 +2105,14 @@ $recomendados = array_slice($recomendados, 0, 8);
   <ul>
     <li><a href="./home.php">INICIO</a></li>
     <li><a href="./channels.php">TV EN VIVO</a></li>
-    <li><a href="filmes.php">PELÍCULAS</a></li>
+    <li><a href="movies.php">PELÍCULAS</a></li>
     <li><a href="series.php">SERIES</a></li>
     <li><a href="profile.php">PERFIL</a></li>
   </ul>
 </nav>
 <div id="mobileMenuOverlay"></div>
 
-<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
+<?php include_once __DIR__ . '/libs/views/search.php'; ?>
 
 <!-- CONTENIDO PRINCIPAL -->
 <div class="container main-content">
@@ -2263,7 +2266,7 @@ $recomendados = array_slice($recomendados, 0, 8);
             <?php foreach($recomendados as $item):
                 $url = ($item['tipo'] === "serie")
                     ? "serie.php?stream={$item['id']}&streamtipo=serie"
-                    : "filme.php?stream={$item['id']}&streamtipo=movie";
+                    : "movie.php?stream={$item['id']}&streamtipo=movie";
             ?>
             <div class="item">
                 <div class="movie-card">
@@ -2309,7 +2312,7 @@ $(document).ready(function(){
             data.historial.forEach(function(item){
                 let url = (item.tipo === "serie")
                     ? `serie.php?stream=${item.id}&streamtipo=serie`
-                    : `filme.php?stream=${item.id}&streamtipo=movie`;
+                    : `movie.php?stream=${item.id}&streamtipo=movie`;
                 html += `<div class="item">
                     <div class="movie-card">
                         <div class="movie-poster-wrap">
@@ -2371,7 +2374,7 @@ $(document).ready(function(){
             data.favoritos.forEach(function(item){
                 let url = (item.tipo === "serie")
                     ? `serie.php?stream=${item.id}&streamtipo=serie`
-                    : `filme.php?stream=${item.id}&streamtipo=movie`;
+                    : `movie.php?stream=${item.id}&streamtipo=movie`;
                 html += `<div class="item">
                     <div class="movie-card">
                         <div class="movie-poster-wrap">

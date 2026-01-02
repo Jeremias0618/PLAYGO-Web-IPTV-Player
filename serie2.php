@@ -533,13 +533,13 @@ if (is_array($episodios)) {
                                 <a href="./channels.php" class="header__nav-link">TV en Vivo</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="filmes.php" class="header__nav-link">Películas</a>
+                                <a href="movies.php" class="header__nav-link">Películas</a>
                             </li>
                             <li class="header__nav-item">
                                 <a href="series.php" class="header__nav-link header__nav-link--active">Series</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="sagas.php" class="header__nav-link">SAGAS</a>
+                                <a href="sagas.php" class="header__nav-link">Sagas</a>
                             </li>
                         </ul>
                         <div class="header__auth d-flex align-items-center">
@@ -814,7 +814,7 @@ if (is_array($episodios)) {
                     <div class="modal-buscador-grid">`;
                 pelis.slice(0,12).forEach(p => {
                     html += `<div class="modal-buscador-card">
-                        <a href="filme.php?stream=${p.id}&streamtipo=movie">
+                        <a href="movie.php?stream=${p.id}&streamtipo=movie">
                             <img src="${p.img}" alt="${p.nombre}" onerror="this.src='assets/logo/logo.png'">
                             <span>${p.nombre}</span>
                         </a>
@@ -862,7 +862,7 @@ if (is_array($episodios)) {
                     <div class="modal-buscador-grid">`;
                 chans.slice(0,12).forEach(c => {
                     html += `<div class="modal-buscador-card">
-                        <a href="canal.php?stream=${c.id}">
+                        <a href="channel.php?stream=${c.id}">
                             <img src="${c.img}" alt="${c.nombre}" onerror="this.src='assets/logo/logo.png'">
                             <span>${c.nombre}</span>
                         </a>

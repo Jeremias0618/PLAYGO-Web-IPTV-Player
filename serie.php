@@ -1112,10 +1112,13 @@ if (is_array($episodios)) {
                                 <a href="./channels.php" class="header__nav-link">TV en Vivo</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="filmes.php" class="header__nav-link">Películas</a>
+                                <a href="movies.php" class="header__nav-link">Películas</a>
                             </li>
                             <li class="header__nav-item">
                                 <a href="series.php" class="header__nav-link header__nav-link--active">Series</a>
+                            </li>
+                            <li class="header__nav-item">
+                                <a href="sagas.php" class="header__nav-link">Sagas</a>
                             </li>
                         </ul>
                         <div class="header__auth d-flex align-items-center">
@@ -1146,7 +1149,7 @@ if (is_array($episodios)) {
   <ul>
     <li><a href="./home.php">INICIO</a></li>
     <li><a href="./channels.php">TV EN VIVO</a></li>
-    <li><a href="filmes.php">PELÍCULAS</a></li>
+    <li><a href="movies.php">PELÍCULAS</a></li>
     <li><a href="series.php">SERIES</a></li>
     <li><a href="profile.php">PERFIL</a></li>
   </ul>
@@ -1154,7 +1157,7 @@ if (is_array($episodios)) {
 <div id="mobileMenuOverlay"></div>
 
 
-<?php include_once __DIR__ . '/partials/search_modal.php'; ?>
+<?php include_once __DIR__ . '/libs/views/search.php'; ?>
 <section class="serie-hero d-flex align-items-center">
   <div class="container">
     <div class="row align-items-center">

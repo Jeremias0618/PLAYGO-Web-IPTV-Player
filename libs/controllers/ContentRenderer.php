@@ -17,13 +17,13 @@ function renderMoviesGrid($items) {
         $html .= '<div class="card">';
         $html .= '<div class="card__cover">';
         $html .= '<img loading="lazy" src="' . htmlspecialchars($filme_img) . '" alt="">';
-        $html .= '<a href="filme.php?stream=' . $filme_id . '&streamtipo=movie" class="card__play">';
+        $html .= '<a href="movie.php?stream=' . $filme_id . '&streamtipo=movie" class="card__play">';
         $html .= '<i class="fas fa-play"></i>';
         $html .= '</a>';
         $html .= '</div>';
         $html .= '<div class="card__content">';
         $html .= '<h3 class="card__title" style="margin-top:0;">';
-        $html .= '<a href="filme.php?stream=' . $filme_id . '&streamtipo=movie">';
+        $html .= '<a href="movie.php?stream=' . $filme_id . '&streamtipo=movie">';
         $html .= htmlspecialchars(limitar_texto(preg_replace('/\s*\(\d{4}\)$/', '', $filme_nome), 30));
         $html .= '</a>';
         $html .= '</h3>';
