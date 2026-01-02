@@ -43,6 +43,7 @@ $streams = $pageData['streams'];
     <link rel="stylesheet" href="./styles/channels/channels-sidebar.css">
     <link rel="stylesheet" href="./styles/channels/channels-mobile.css">
     <link rel="stylesheet" href="./styles/channels/channels-search-modal.css">
+    <link rel="stylesheet" href="./styles/channels/channels-redesign.css">
 </head>
 <body class="body">
     <header class="header">
@@ -93,13 +94,29 @@ $streams = $pageData['streams'];
 
     <?php include_once __DIR__ . '/partials/search_modal.php'; ?>
 
-    <section class="content" style="margin-top:30px;">
-        <div class="container">
+    <section class="content channels-section details" style="margin-top:30px; position: relative;">
+        <div class="details__bg" data-bg="./assets/image/wallpaper_02.webp"></div>
+        <div class="container" style="position: relative; z-index: 1;">
             <div class="row">
-                <div class="col-lg-10 col-md-8">
-                    <h1 class="home__title" style="margin-bottom:18px;">
-                        <i class="fa fa-trophy" aria-hidden="true"></i> <?php echo htmlspecialchars($categoria); ?>
+                <div class="col-12">
+                    <h1 class="channels-page-title">
+                        <i class="fa fa-tv" aria-hidden="true"></i> Televisión en Vivo
                     </h1>
+                    <div class="channels-categories-row">
+                        <a href="channels.php?catg=TV%20en%20Vivo" class="category-btn <?php echo $id=='' ? 'active' : ''; ?>">
+                            <i class="fa fa-th"></i> Todos
+                        </a>
+                        <?php foreach ($liveCategories as $cat): ?>
+                            <?php
+                                $idcatcanal = $cat['category_id'];
+                                $catgcanal = $cat['category_name'];
+                            ?>
+                            <a href="channels.php?id=<?php echo $idcatcanal; ?>&catg=<?php echo urlencode($catgcanal); ?>" 
+                               class="category-btn <?php echo $id==$idcatcanal ? 'active' : ''; ?>">
+                                <?php echo htmlspecialchars($catgcanal); ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
                     <div class="mobile-categorias-filter" id="mobileCategoriasFilter">
                         <button id="mobileCategoriasBtn" style="background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);">
                             <i class="fa fa-list"></i> Categorías
@@ -118,16 +135,13 @@ $streams = $pageData['streams'];
                                 $cat_id = $channel['category_id'];
                                 $desc = $channel['description'];
                         ?>
-                        <div class="canal-card" style="position:relative;" data-cat="<?php echo $cat_id; ?>">
-                            <img src="<?php echo htmlspecialchars($canal_img); ?>" alt="<?php echo htmlspecialchars($canal_nome); ?>">
-                            <div class="canal-card-info">
-                                <span class="canal-title"><?php echo limitar_texto($canal_nome, 32); ?></span>
-                                <span class="canal-desc">
-                                    <?php echo limitar_texto($desc, 60); ?>
-                                </span>
+                        <div class="canal-card" data-cat="<?php echo $cat_id; ?>">
+                            <div class="canal-logo-container">
+                                <img src="<?php echo htmlspecialchars($canal_img); ?>" alt="<?php echo htmlspecialchars($canal_nome); ?>" onerror="this.src='assets/logo/logo.png'">
                             </div>
-                            <a class="canal-play" href="canal.php?stream=<?php echo $canal_id; ?>" title="Ver canal">
-                                <i class="fa fa-play"></i>
+                            <div class="canal-name"><?php echo htmlspecialchars($canal_nome); ?></div>
+                            <a class="canal-watch-btn" href="canal.php?stream=<?php echo $canal_id; ?>">
+                                <i class="fa fa-play"></i> Ver canal
                             </a>
                         </div>
                         <?php
@@ -137,28 +151,6 @@ $streams = $pageData['streams'];
                         }
                         ?>
                     </div>
-                </div>
-                <div class="col-lg-2 col-md-4 sidebar-categorias-col">
-                    <aside class="sidebar-categorias">
-                        <h2><i class="fa fa-tv" aria-hidden="true"></i> Categorías</h2>
-                        <ul>
-                            <li>
-                                <a href="channels.php?catg=TV%20en%20Vivo"<?php if($id=='') echo ' style="color:#f50b60;"'; ?>>Todos</a>
-                            </li>
-                        <?php foreach ($liveCategories as $cat): ?>
-                            <?php
-                                $idcatcanal = $cat['category_id'];
-                                $catgcanal = $cat['category_name'];
-                            ?>
-                            <li>
-                                <a href="channels.php?id=<?php echo $idcatcanal; ?>&catg=<?php echo urlencode($catgcanal); ?>"
-                                   <?php if($id==$idcatcanal) echo ' style="color:#f50b60;"'; ?>>
-                                   <?php echo htmlspecialchars($catgcanal); ?>
-                                </a>
-                            </li>
-                        <?php endforeach; ?>
-                        </ul>
-                    </aside>
                 </div>
             </div>
         </div>
