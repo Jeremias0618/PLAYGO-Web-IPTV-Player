@@ -35,15 +35,13 @@ $streams = $pageData['streams'];
     <link rel="stylesheet" href="./styles/vendors/default-skin.css">
     <link rel="stylesheet" href="./styles/vendors/jBox.all.min.css">
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
-    <link rel="stylesheet" href="./styles/core/listings.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
-    <link rel="stylesheet" href="./styles/channels/channels-layout.css">
-    <link rel="stylesheet" href="./styles/channels/channels-cards.css">
-    <link rel="stylesheet" href="./styles/channels/channels-sidebar.css">
-    <link rel="stylesheet" href="./styles/channels/channels-mobile.css">
-    <link rel="stylesheet" href="./styles/channels/channels-search-modal.css">
-    <link rel="stylesheet" href="./styles/channels/channels-redesign.css">
+    <link rel="stylesheet" href="./styles/channels/layout.css">
+    <link rel="stylesheet" href="./styles/channels/cards.css">
+    <link rel="stylesheet" href="./styles/channels/sidebar.css">
+    <link rel="stylesheet" href="./styles/channels/mobile.css">
+    <link rel="stylesheet" href="./styles/channels/redesign.css">
 </head>
 <body class="body">
     <header class="header">

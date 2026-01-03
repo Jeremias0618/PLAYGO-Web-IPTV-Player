@@ -1,0 +1,22 @@
+{
+  "controls": {
+    "live": "En vivo",
+    "advertisement": "Publicidad",
+    "buffering": "Cargando...",
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "rewind": "Rebobinar",
+    "forward": "Avanzar",
+    "settings": "Configuración",
+    "fullscreen": "Pantalla completa",
+    "exitFullscreen": "Salir de pantalla completa",
+    "mute": "Silenciar",
+    "unmute": "Activar sonido",
+    "volume": "Volumen",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "skip": "Omitir",
+    "close": "Cerrar"
+  }
+}
+

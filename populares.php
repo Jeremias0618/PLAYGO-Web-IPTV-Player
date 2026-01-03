@@ -62,7 +62,6 @@ $peliculas_pagina = ($output && is_array($output)) ? array_slice(array_values($o
     <link rel="stylesheet" href="./styles/vendors/default-skin.css">
     <link rel="stylesheet" href="./styles/vendors/jBox.all.min.css">
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
-    <link rel="stylesheet" href="./styles/core/listings.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">

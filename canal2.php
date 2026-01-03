@@ -68,7 +68,6 @@ if (!empty($canal_data['plot'])) {
     <link rel="stylesheet" href="./styles/vendors/default-skin.css">
     <link rel="stylesheet" href="./styles/vendors/jBox.all.min.css">
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
-    <link rel="stylesheet" href="./styles/core/listings.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
     <style>
@@ -639,19 +638,7 @@ if (!empty($canal_data['plot'])) {
         </div>
     </header>
 
-    <!-- MODAL BUSCADOR igual painel.php -->
-    <div class="modal-buscador-bg" id="modalBuscador">
-        <div class="modal-buscador">
-            <button class="modal-buscador-close" id="closeSearchModal" title="Cerrar">&times;</button>
-            <form id="modalBuscadorForm" autocomplete="off" onsubmit="return false;">
-                <div class="modal-buscador-inputbox">
-                    <input type="text" id="modalBuscadorInput" placeholder="Buscar películas, series o canales en vivo..." autofocus>
-                    <button type="button" id="modalBuscadorBtn">Buscar</button>
-                </div>
-            </form>
-            <div id="modalBuscadorResults"></div>
-        </div>
-    </div>
+    <?php include_once __DIR__ . '/libs/views/search.php'; ?>
 
     <!-- DETALLES DEL CANAL -->
 <section class="section details" style="position:relative;">
@@ -800,146 +787,6 @@ if (!empty($canal_data['plot'])) {
     <script src="./scripts/vendors/select2.min.js"></script>
     <script src="./scripts/core/main.js"></script>
     <script src="https://content.jwplatform.com/libraries/KB5zFt7A.js"></script>
-    <script>
-    // MODAL BUSCADOR igual painel.php
-    const openSearchModal = document.getElementById('openSearchModal');
-    const closeSearchModal = document.getElementById('closeSearchModal');
-    const modalBuscador = document.getElementById('modalBuscador');
-    const modalBuscadorInput = document.getElementById('modalBuscadorInput');
-    const modalBuscadorBtn = document.getElementById('modalBuscadorBtn');
-    const modalBuscadorResults = document.getElementById('modalBuscadorResults');
-
-    function showModalBuscador() {
-        modalBuscador.classList.add('active');
-        setTimeout(() => { modalBuscadorInput.focus(); }, 200);
-    }
-    function hideModalBuscador() {
-        modalBuscador.classList.remove('active');
-        modalBuscadorInput.value = '';
-        modalBuscadorResults.innerHTML = '';
-    }
-    if(openSearchModal) openSearchModal.onclick = showModalBuscador;
-    if(closeSearchModal) closeSearchModal.onclick = hideModalBuscador;
-    window.addEventListener('keydown', function(e) {
-        if (e.key === "Escape") hideModalBuscador();
-    });
-    if(modalBuscador) modalBuscador.addEventListener('click', function(e) {
-        if (e.target === modalBuscador) hideModalBuscador();
-    });
-
-    // Cargar datos para búsqueda (películas, series, canales)
-    let peliculas = [];
-    let series = [];
-    let canales = [];
-    <?php
-    // Películas
-    $url = IP_HTTPS."/player_api.php?username=$user&password=$pwd&action=get_vod_streams";
-    $resposta = apixtream($url);
-    $peliculas = json_decode($resposta,true);
-    echo "peliculas = ".json_encode(array_map(function($p){
-        return [
-            'id'=>$p['stream_id'],
-            'nombre'=>$p['name'],
-            'img'=>$p['stream_icon'],
-            'tipo'=>$p['stream_type']
-        ];
-    },$peliculas)).";\n";
-    // Series
-    $url = IP_HTTPS."/player_api.php?username=$user&password=$pwd&action=get_series";
-    $resposta = apixtream($url);
-    $series = json_decode($resposta,true);
-    echo "series = ".json_encode(array_map(function($s){
-        return [
-            'id'=>$s['series_id'],
-            'nombre'=>$s['name'],
-            'img'=>$s['cover']
-        ];
-    },$series)).";\n";
-    // Canales
-    $url = IP_HTTPS."/player_api.php?username=$user&password=$pwd&action=get_live_streams";
-    $resposta = apixtream($url);
-    $canales = json_decode($resposta,true);
-    echo "canales = ".json_encode(array_map(function($c){
-        return [
-            'id'=>$c['stream_id'],
-            'nombre'=>$c['name'],
-            'img'=>$c['stream_icon'],
-            'tipo'=>$c['stream_type']
-        ];
-    },$canales)).";\n";
-    ?>
-
-    function renderBuscadorResults(query) {
-        query = query.trim().toLowerCase();
-        let html = '';
-        // Películas
-        let pelis = peliculas.filter(p => p.nombre.toLowerCase().includes(query));
-        if (pelis.length > 0) {
-            html += `<div class="modal-buscador-section"><h3>PELICULAS</h3><div class="modal-buscador-grid">`;
-            pelis.slice(0,12).forEach(p => {
-                html += `<div class="modal-buscador-card">
-                    <a href="movie.php?stream=${p.id}&streamtipo=movie">
-                        <img src="${p.img}" alt="${p.nombre}">
-                        <span>${p.nombre}</span>
-                    </a>
-                </div>`;
-            });
-            html += `</div></div>`;
-        }
-        // Series
-        let sers = series.filter(s => s.nombre.toLowerCase().includes(query));
-        if (sers.length > 0) {
-            html += `<div class="modal-buscador-section"><h3>SERIES</h3><div class="modal-buscador-grid">`;
-            sers.slice(0,12).forEach(s => {
-                html += `<div class="modal-buscador-card">
-                    <a href="serie.php?stream=${s.id}&streamtipo=serie">
-                        <img src="${s.img}" alt="${s.nombre}">
-                        <span>${s.nombre}</span>
-                    </a>
-                </div>`;
-            });
-            html += `</div></div>`;
-        }
-        // Canales
-        let chans = canales.filter(c => c.nombre.toLowerCase().includes(query));
-        if (chans.length > 0) {
-            html += `<div class="modal-buscador-section"><h3>TV EN VIVO</h3><div class="modal-buscador-grid">`;
-            chans.slice(0,12).forEach(c => {
-                html += `<div class="modal-buscador-card">
-                    <a href="channel.php?stream=${c.id}">
-                        <img src="${c.img}" alt="${c.nombre}">
-                        <span>${c.nombre}</span>
-                    </a>
-                </div>`;
-            });
-            html += `</div></div>`;
-        }
-        if (!html && query.length > 0) {
-            html = `<div style="color:#fff;text-align:center;margin-top:30px;">Sin resultados.</div>`;
-        }
-        modalBuscadorResults.innerHTML = html;
-    }
-
-    // Buscar al escribir
-    modalBuscadorInput.addEventListener('input', function() {
-        let q = this.value;
-        if (q.length > 1) renderBuscadorResults(q);
-        else modalBuscadorResults.innerHTML = '';
-    });
-    // Buscar al hacer clic en botón
-    modalBuscadorBtn.addEventListener('click', function() {
-        let q = modalBuscadorInput.value;
-        if (q.length > 1) renderBuscadorResults(q);
-    });
-    // Enter en input
-    modalBuscadorInput.addEventListener('keydown', function(e){
-        if(e.key === "Enter") {
-            e.preventDefault();
-            let q = modalBuscadorInput.value;
-            if (q.length > 1) renderBuscadorResults(q);
-        }
-    });
-    </script>
 
 <script>
     // JWPlayer 8.7.4 para el canal en vivo

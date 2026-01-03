@@ -126,7 +126,6 @@ $nota = $output['info']['rating'];
     <link rel="stylesheet" href="./styles/vendors/default-skin.css">
     <link rel="stylesheet" href="./styles/vendors/jBox.all.min.css">
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
-    <link rel="stylesheet" href="./styles/core/listings.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
@@ -236,9 +235,9 @@ $nota = $output['info']['rating'];
         cursor: pointer;
         z-index: 2;
         transition: all 0.2s ease;
-        display: flex;
+         display: flex;
         align-items: center;
-        justify-content: center;
+         justify-content: center;
     }
     .modal-buscador-close:hover {
         background: rgba(255,255,255,0.3);
@@ -250,8 +249,8 @@ $nota = $output['info']['rating'];
         overflow-y: auto;
     }
     .modal-buscador-inputbox {
-        display: flex;
-        align-items: center;
+         display: flex;
+         align-items: center;
         margin-bottom: 24px;
         background: rgba(255,255,255,0.05);
         border-radius: 16px;
@@ -334,11 +333,11 @@ $nota = $output['info']['rating'];
         display: block;
     }
     .modal-buscador-card img {
-        width: 100%;
+    width: 100%;
         height: 160px;
-        object-fit: cover;
+    object-fit: cover;
         border-radius: 12px;
-        background: #232027;
+    background: #232027;
         margin-bottom: 12px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.3);
         transition: all 0.2s ease;
@@ -351,7 +350,7 @@ $nota = $output['info']['rating'];
     .modal-buscador-card span {
         color: #fff;
         font-size: 0.9rem;
-        display: block;
+    display: block;
         font-weight: 500;
         line-height: 1.3;
         padding: 0 4px;
@@ -410,9 +409,9 @@ $nota = $output['info']['rating'];
             max-width: 750px !important;
             width: 85vw !important;
         }
-    }
-    
-    @media (max-width: 600px) {
+}
+
+@media (max-width: 600px) {
         .modal-buscador {
             width: 98vw !important;
             max-width: 98vw !important;
@@ -508,18 +507,18 @@ $nota = $output['info']['rating'];
     @keyframes spin {
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
-    }
+}
 
-            @media (max-width: 600px) {
-        .header__logo {
-            margin-left: 0 !important;
-            padding-left: 0 !important;
+        @media (max-width: 600px) {
+            .header__logo {
+                margin-left: 0 !important;
+                padding-left: 0 !important;
             margin-right: auto !important;
+            }
+            .header__content {
+                padding-left: 4px !important;
+            }
         }
-        .header__content {
-            padding-left: 4px !important;
-        }
-    }
     
     @media (min-width: 601px) {
         .header__logo img {
@@ -593,10 +592,10 @@ $nota = $output['info']['rating'];
     }
 
     .card.card--details {
-        background: transparent !important;
+            background: transparent !important;
         border: none !important;
-        box-shadow: none !important;
-    }
+            box-shadow: none !important;
+        }
     .card.card--details .card__content,
     .card.card--details .card__cover {
         background: transparent !important;
@@ -606,8 +605,8 @@ $nota = $output['info']['rating'];
         border: none !important;
         border-radius: 14px !important;
         box-shadow: 0 4px 16px rgba(0,0,0,0.45) !important;
-        overflow: hidden;
-    }
+            overflow: hidden;
+        }
     .content .card .card__content {
         background: transparent !important;
     }
@@ -626,7 +625,7 @@ $nota = $output['info']['rating'];
         video:-webkit-full-screen ~ .navbar-overlay,
         video:-moz-full-screen ~ .header,
         video:-moz-full-screen ~ .navbar-overlay {
-            display: none !important;
+    display: none !important;
             opacity: 0 !important;
             visibility: hidden !important;
         }
@@ -637,43 +636,43 @@ $nota = $output['info']['rating'];
         :-webkit-full-screen .navbar-overlay,
         :-moz-full-screen .header,
         :-moz-full-screen .navbar-overlay {
-            display: none !important;
+    display: none !important;
             opacity: 0 !important;
             visibility: hidden !important;
         }
     }
     
 @media (max-width: 600px) {
-    .modal-buscador {
+  .modal-buscador {
         max-width: 98vw;
         width: 98vw;
         min-width: unset;
         padding: 18px 6px 12px 6px;
         border-radius: 12px;
         box-shadow: 0 4px 16px #000a;
-    }
-    .modal-buscador-inputbox input {
+  }
+  .modal-buscador-inputbox input {
         font-size: 1rem;
         padding: 10px 10px;
-    }
-    .modal-buscador-inputbox button {
+  }
+  .modal-buscador-inputbox button {
         font-size: 1rem;
         padding: 8px 12px;
-    }
-    .modal-buscador-section h3 {
+  }
+  .modal-buscador-section h3 {
         font-size: 1.05rem;
         margin-bottom: 10px;
-    }
-    .modal-buscador-grid {
+  }
+  .modal-buscador-grid {
         gap: 10px;
-    }
-    .modal-buscador-card {
+  }
+  .modal-buscador-card {
         width: 90px;
-    }
-    .modal-buscador-card img {
+  }
+  .modal-buscador-card img {
         height: 100px;
-    }
-    .modal-buscador-card span {
+  }
+  .modal-buscador-card span {
         font-size: 0.85rem;
     }
 }
@@ -732,7 +731,7 @@ $nota = $output['info']['rating'];
     }
 }
 
-    @media (max-width: 600px) {
+        @media (max-width: 600px) {
         .details__title {
             text-align: center !important;
             width: 100%;
@@ -754,8 +753,8 @@ $nota = $output['info']['rating'];
             text-align: center !important;
             align-items: center !important;
             justify-content: center !important;
-            display: flex;
-            flex-direction: column;
+    display: flex;
+    flex-direction: column;
         }
         .card__meta {
             justify-content: center !important;
@@ -815,8 +814,8 @@ $nota = $output['info']['rating'];
             margin-left: auto;
             margin-right: auto;
         }
-    }    
-    </style>
+}
+</style>
 </head>
 <body class="body">
 <!-- HEADER estilo painel.php -->
@@ -882,7 +881,7 @@ $nota = $output['info']['rating'];
                         <?php endforeach; ?>
                     </ul>
                 </h1>
-            </div>
+    </div>
             <div class="col-12 col-xl-12">
                 <div class="card card--details">
                     <div class="row">
@@ -895,14 +894,14 @@ $nota = $output['info']['rating'];
                             <div class="card__content">
                            <div class="card__wrap">
                               <span class="card__rate">
-                                 <?php
+            <?php
                                  echo ($ano ? substr($ano, 0, 4) : '');
                                  if ($nota !== '') {
                                        echo ' &nbsp; <i class="fa-solid fa-star"></i> ' . $nota;
                                  }
                                  ?>
-                              </span>
-                           </div>
+        </span>
+        </div>
                                 <ul class="card__meta">
                                     <li><span><strong>Duración:</strong></span> <?php echo $duracao; ?></li>
                                     <li><span><strong>País:</strong></span> <a href="#"><?php echo $pais; ?></a></li>
@@ -910,14 +909,14 @@ $nota = $output['info']['rating'];
                                 </ul>
                     <div class="card__description card__description--details">
                         <?php echo $plot; ?>
-                    </div>
+    </div>
                     <!-- Botón Tráiler YouTube -->
                     <div style="display: flex; gap: 16px; margin-top: 20px;">
                         <?php if (!empty($youtube_id)): ?>
                             <button id="btnTrailer" style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#ff0000 60%,#c80000 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
                                 <i class="fab fa-youtube" style="font-size:1.5rem;"></i>
                                 <span>Tráiler</span>
-                                            </button>
+        </button>
                                         <?php endif; ?>
 
                     <!-- Botón Favoritos -->
@@ -926,7 +925,7 @@ $nota = $output['info']['rating'];
                         <i class="fa fa-star" style="font-size:1.4rem;"></i>
                         <span id="favText">Agregar a Favoritos</span>
                     </button>
-                    <?php
+<?php
                     $saga_predator_ids = [7716, 2693, 2690, 2689, 2692, 2691, 2450, 2449];
                     if (in_array((int)$id, $saga_predator_ids)): ?>
                         <a href="predator.php" style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#0f2027 60%,#2c5364 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;text-decoration:none;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
@@ -934,7 +933,7 @@ $nota = $output['info']['rating'];
                             <span>Saga Predator</span>
                         </a>
                     <?php endif; ?>
-                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -943,13 +942,13 @@ $nota = $output['info']['rating'];
                             <div class="alert alert-danger" id="player__error" style="display: none;"></div>
                             <div id="player_row">
                                 <div id="now__playing__player"></div>
-                            </div>
+            </div>
                         </div>
                     </div>
                     <!-- Reproductor Plyr con botones avanzar/retroceder -->
-                    <div class="row">
+            <div class="row">
                         <div class="col-12">
-                            <?php
+                        <?php
                             $ext = strtolower($exts);
                             if ($ext == 'mp4'): ?>
                                 <!-- Plyr CSS -->
@@ -992,12 +991,12 @@ $nota = $output['info']['rating'];
                                         <source src="<?php echo IP; ?>/<?php echo $tipo; ?>/<?php echo $user; ?>/<?php echo $pwd; ?>/<?php echo $id; ?>.<?php echo $exts; ?>" />
                                         Tu navegador no soporta este formato de video.
                                     </video>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <!-- Fin reproductor -->
                 </div>
+                            <?php endif; ?>
+            </div>
+        </div>
+                    <!-- Fin reproductor -->
+    </div>
             </div>
         </div>
     </div>
@@ -1022,11 +1021,11 @@ $nota = $output['info']['rating'];
     <div class="container" style="margin-top: 30px;">
         <div class="row">
             <div class="col-12 col-lg-12 col-xl-12">
-                <div class="row">
-                    <div class="col-12">
+            <div class="row">
+                <div class="col-12">
                         <h2 class="section__title section__title--sidebar">Usuarios también vieron</h2>
-                    </div>
-                    <?php
+                </div>
+                <?php
                 $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams&category_id=$idcategoria";
                 $resposta = apixtream($url);
                 $output = json_decode($resposta,true);
@@ -1043,37 +1042,37 @@ $nota = $output['info']['rating'];
                     $filme_ano = isset($row['year']) ? $row['year'] : '';
                 ?>
                 <div class="col-4 col-sm-4 col-lg-2">
-                    <div class="card">
-                        <div class="card__cover">
+    <div class="card">
+        <div class="card__cover">
                             <img loading="lazy" src="<?php echo $filme_img; ?>" alt="">
                             <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>" class="card__play">
                                 <i class="fas fa-play"></i>
-                            </a>
-                        </div>
-                        <div class="card__content">
+            </a>
+        </div>
+        <div class="card__content">
                             <h3 class="card__title">
                                 <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>">
                                     <?php echo $filme_nome; ?>
                                 </a>
                             </h3>
                             <span class="card__rate">
-                                <?php
+                    <?php
                                 if ($filme_ano) {
                                     echo $filme_ano;
                                 }
                                 if ($filme_rat !== '') {
                                     echo ' <i class="fa-solid fa-star"></i> ' . $filme_rat;
                                 }
-                                ?>
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                    ?>
+                </span>
+        </div>
+    </div>
+</div>
                 <?php $i++; } ?>
+                </div>
                 </div>
             </div>
         </div>
-    </div>
 </section>
 <footer class="footer">
     <div class="container">

@@ -129,7 +129,6 @@ if ($ep_img_from_get) {
     <link rel="stylesheet" href="./styles/vendors/default-skin.css">
     <link rel="stylesheet" href="./styles/vendors/jBox.all.min.css">
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
-    <link rel="stylesheet" href="./styles/core/listings.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <style>

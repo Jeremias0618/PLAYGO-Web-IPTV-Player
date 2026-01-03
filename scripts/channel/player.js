@@ -47,7 +47,7 @@
 
     function tryHLSJS(streamUrl) {
         var hlsScript = document.createElement('script');
-        hlsScript.src = 'https://cdn.jsdelivr.net/npm/hls.js@latest';
+        hlsScript.src = './scripts/vendors/hls.min.js';
         hlsScript.onload = function() {
             if (typeof Hls !== 'undefined' && Hls.isSupported()) {
                 var video = document.getElementById('nativeVideo');
@@ -118,7 +118,6 @@
             primary: "html5",
             fallback: true,
             preload: "metadata",
-            ga: {},
             hls: {
                 lowLatencyMode: true,
                 backBufferLength: 90
@@ -145,7 +144,6 @@
             primary: "html5",
             fallback: true,
             preload: "metadata",
-            ga: {},
             hls: {
                 lowLatencyMode: true,
                 backBufferLength: 90

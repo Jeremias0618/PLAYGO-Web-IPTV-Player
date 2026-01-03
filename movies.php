@@ -52,7 +52,6 @@ $populares = $data['popular'];
     <link rel="stylesheet" href="./styles/vendors/default-skin.css">
     <link rel="stylesheet" href="./styles/vendors/jBox.all.min.css">
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
-    <link rel="stylesheet" href="./styles/core/listings.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
     <link rel="stylesheet" href="./styles/movies/movies-layout.css">
@@ -204,13 +203,13 @@ $populares = $data['popular'];
         <label for="orden">ORDENAR</label>
         <div style="display: flex; align-items: center; gap: 8px;">
             <select name="orden" id="orden" style="flex: 1;">
-                <option value="">Por defecto</option>
-                <option value="nombre" <?php if(isset($_GET['orden']) && $_GET['orden']=='nombre') echo 'selected'; ?>>Nombre</option>
-                <option value="año" <?php if(isset($_GET['orden']) && $_GET['orden']=='año') echo 'selected'; ?>>Año</option>
-                <option value="rating" <?php if(isset($_GET['orden']) && $_GET['orden']=='rating') echo 'selected'; ?>>Rating</option>
-                <option value="recientes" <?php if(isset($_GET['orden']) && $_GET['orden']=='recientes') echo 'selected'; ?>>Más recientes</option>
-                <option value="antiguas" <?php if(isset($_GET['orden']) && $_GET['orden']=='antiguas') echo 'selected'; ?>>Más antiguas</option>
-            </select>
+            <option value="">Por defecto</option>
+            <option value="nombre" <?php if(isset($_GET['orden']) && $_GET['orden']=='nombre') echo 'selected'; ?>>Nombre</option>
+            <option value="año" <?php if(isset($_GET['orden']) && $_GET['orden']=='año') echo 'selected'; ?>>Año</option>
+            <option value="rating" <?php if(isset($_GET['orden']) && $_GET['orden']=='rating') echo 'selected'; ?>>Rating</option>
+            <option value="recientes" <?php if(isset($_GET['orden']) && $_GET['orden']=='recientes') echo 'selected'; ?>>Más recientes</option>
+            <option value="antiguas" <?php if(isset($_GET['orden']) && $_GET['orden']=='antiguas') echo 'selected'; ?>>Más antiguas</option>
+        </select>
             <button type="button" class="filtro-orden-btn" id="ordenDirectionBtn" title="Cambiar dirección de ordenamiento" style="display: <?php echo (isset($_GET['orden']) && $_GET['orden'] != '') ? 'block' : 'none'; ?>;">
                 <i class="fa-solid fa-arrow-<?php echo (isset($_GET['orden_dir']) && $_GET['orden_dir'] == 'desc') ? 'down' : 'up'; ?>" id="ordenDirectionIcon"></i>
             </button>
@@ -219,11 +218,11 @@ $populares = $data['popular'];
     </div>
     <div class="filtro-opcion">
         <label style="opacity: 0; pointer-events: none;">&nbsp;</label>
-        <div class="filtros-botones">
-            <button type="submit" class="filtro-aplicar-btn">Aplicar</button>
+    <div class="filtros-botones">
+        <button type="submit" class="filtro-aplicar-btn">Aplicar</button>
             <button type="button" class="filtro-limpiar-btn" id="limpiarFiltrosBtn" title="Limpiar filtros" disabled>
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+            <i class="fa-solid fa-xmark"></i>
+        </button>
         </div>
     </div>
 </form>
@@ -283,14 +282,14 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
                     <h1 class="home__title bottom-margin-sml">POPULAR <b>ESTE MES</b></h1>
                 </div>
                 <?php
-                foreach($populares as $pop) {
-                    $filme_nome = $pop['name'];
-                    $filme_img = $pop['stream_icon'];
-                    $filme_ano = isset($pop['year']) ? $pop['year'] : '';
-                    $filme_rat = $pop['rating'];
-                    $filme_id = $pop['stream_id'];
-                    $filme_type = $pop['stream_type'];
-                ?>
+foreach($populares as $pop) {
+    $filme_nome = $pop['name'];
+    $filme_img = $pop['stream_icon'];
+    $filme_ano = isset($pop['year']) ? $pop['year'] : '';
+    $filme_rat = $pop['rating'];
+    $filme_id = $pop['stream_id'];
+    $filme_type = $pop['stream_type'];
+?>
 <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
     <div class="card">
         <div class="card__cover">

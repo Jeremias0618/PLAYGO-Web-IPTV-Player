@@ -1,29 +1,156 @@
-@media only screen and (max-width: 600px) and (pointer: coarse) and (hover: none) {
+.volver-canales-bottom-btn {
+    display: none;
+}
+
+@media only screen and (max-width: 600px) {
     .section.details {
-        padding-top: 60px;
+        padding-top: 70px;
         min-height: unset;
     }
     .card--details {
         padding: 14px 4px;
         border-radius: 10px;
+        margin-top: 10px;
     }
-    .canal-logo-box img {
-        max-width: 120px;
-        max-height: 80px;
+    .card--details > .row:first-child {
+        display: flex;
+        flex-direction: column;
     }
-    .canal-nombre {
-        font-size: 1.1rem;
-        margin-top: 7px;
+    .card--details > .row:first-child > .col-12:first-child {
+        order: 1;
+        width: 100%;
+        margin-bottom: 15px;
     }
-    .en-vivo-label {
+    .card--details > .row:first-child > .col-12:last-child {
+        order: 2;
+        width: 100%;
+    }
+    .col-12.col-sm-4.col-md-3.col-lg-3.col-xl-3 {
+        padding: 0;
+        margin-bottom: 20px;
+    }
+    .canal-logo-box {
+        width: 100%;
+        margin-bottom: 0;
+    }
+    .canal-logo-box-content {
+        display: none !important;
+    }
+    .canal-logo-box-mobile {
+        display: block !important;
+        width: 100%;
+        padding: 0 12px;
+        margin: 0 0 20px 0;
+    }
+    
+    .canal-mobile-row {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .canal-mobile-row-top {
+        background: linear-gradient(135deg, #1c1c1c 0%, #2a2a2a 100%);
+        border-radius: 16px;
+        padding: 24px 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .canal-mobile-row-top::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+    }
+    
+    .canal-mobile-logo {
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: transparent;
+        padding: 0;
+        flex-shrink: 0;
+        box-shadow: none;
+        border: none;
+    }
+    
+    .canal-mobile-row-top .en-vivo-label {
+        display: none !important;
+    }
+    
+    .canal-mobile-row-top .canal-nombre {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #fff;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        line-height: 1.3;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+    
+    .canal-mobile-row-bottom {
+        display: block;
+        flex: 1;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+    }
+    
+    .canal-mobile-row-bottom .canal-nombre {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #fff;
+        text-align: left;
+        margin: 0;
+        padding: 0;
+        line-height: 1.3;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+    
+    .canal-mobile-row-bottom .volver-canais-btn {
+        display: none !important;
+    }
+    
+    .volver-canales-bottom-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px 28px;
+        margin: 20px 12px 30px 12px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #e50914 0%, #c8008f 100%);
+        color: #fff;
         font-size: 0.95rem;
-        padding: 5px 10px;
-        border-radius: 6px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        box-shadow: 0 4px 16px rgba(229, 9, 20, 0.3);
+        transition: all 0.2s ease;
+        border: none;
+        width: calc(100% - 24px);
     }
-    .volver-canais-btn a {
-        font-size: 0.98rem;
-        padding: 6px 12px;
-        border-radius: 6px;
+    
+    .volver-canales-bottom-btn:active {
+        transform: scale(0.97);
+        box-shadow: 0 2px 8px rgba(229, 9, 20, 0.4);
+    }
+    
+    .volver-canales-bottom-btn i {
+        font-size: 0.9rem;
     }
     .video-embed-box {
         border-radius: 8px;
@@ -53,21 +180,35 @@
         font-size: 0.93rem;
     }
     .recomendados-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
         gap: 10px;
-        justify-content: center;
+        padding: 0 5px;
     }
-    .recomendado-card {
-        width: 98vw;
-        min-width: 98vw;
-        max-width: 98vw;
+    .recomendados-grid .canal-card:nth-child(n+7) {
+        display: none;
+    }
+    .recomendados-grid .canal-card {
+        padding: 10px;
+        border-radius: 12px;
+    }
+    .recomendados-grid .canal-logo-container {
+        height: 75px;
+        margin-bottom: 8px;
         border-radius: 8px;
     }
-    .recomendado-card .card__cover {
-        height: 90px;
+    .recomendados-grid .canal-name {
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+        min-height: 30px;
+        line-height: 1.2;
     }
-    .recomendado-card .card__title {
-        font-size: 0.98rem;
-        min-height: 28px;
+    .recomendados-grid .canal-watch-btn {
+        padding: 7px 10px;
+        font-size: 0.75rem;
+        border-radius: 18px;
+    }
+    .recomendados-grid .canal-watch-btn i {
+        font-size: 0.7rem;
     }
     .modal-buscador {
         padding: 18px 4px 10px 4px;

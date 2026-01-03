@@ -68,7 +68,7 @@ body.body .channels-section .container {
 
 .category-btn {
     background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    color: #fff !important;
     padding: 10px 20px;
     border-radius: 25px;
     text-decoration: none;
@@ -83,6 +83,7 @@ body.body .channels-section .container {
 
 .category-btn:hover {
     background: rgba(255, 255, 255, 0.15);
+    color: #fff !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
@@ -140,6 +141,10 @@ body.body .channels-section .container {
     border-color: rgba(229, 9, 20, 0.3);
 }
 
+.canal-card:hover .canal-name {
+    color: #fff !important;
+}
+
 .canal-card:hover::before {
     opacity: 1;
 }
@@ -167,7 +172,7 @@ body.body .channels-section .container {
 }
 
 .canal-name {
-    color: #fff;
+    color: #fff !important;
     font-size: 1rem;
     font-weight: 600;
     text-align: center;
@@ -184,7 +189,7 @@ body.body .channels-section .container {
 
 .canal-watch-btn {
     background: linear-gradient(135deg, #e50914 0%, #c8008f 100%);
-    color: #fff;
+    color: #fff !important;
     padding: 10px 20px;
     border-radius: 25px;
     text-decoration: none;
@@ -204,6 +209,7 @@ body.body .channels-section .container {
 
 .canal-watch-btn:hover {
     background: linear-gradient(135deg, #c8008f 0%, #e50914 100%);
+    color: #fff !important;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(229, 9, 20, 0.5);
 }
