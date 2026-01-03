@@ -1,0 +1,40 @@
+.input {
+    width: 100%;
+    padding: 12px 12px 12px 42px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: rgba(15, 15, 15, 0.8);
+    color: var(--ink-1);
+    font-size: 15px;
+    transition: box-shadow .15s ease, transform .05s ease, border-color .15s ease, background-color .15s ease;
+    min-height: 48px;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.input::placeholder {
+    color: var(--ink-2);
+    opacity: .8;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--brand-1);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-1) 14%, transparent);
+    background: rgba(20, 20, 20, 0.9);
+    transform: translateY(-1px);
+}
+
+.input:hover:not(:focus) {
+    border-color: color-mix(in oklab, var(--line) 80%, var(--brand-1));
+    background: rgba(18, 18, 18, 0.85);
+}
+
+.input:disabled {
+    cursor: not-allowed;
+    opacity: .5;
+    background: rgba(10, 10, 10, 0.6);
+}
+

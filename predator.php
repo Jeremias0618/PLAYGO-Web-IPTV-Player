@@ -36,10 +36,10 @@ foreach ($saga_predator_ids as $id) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>SAGA PREDATOR</title>
-    <link rel="stylesheet" href="./styles/font-awesome-6.5.0.min.css">
-    <link rel="stylesheet" href="./styles/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./styles/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
+    <link rel="stylesheet" href="./styles/vendors/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="./styles/vendors/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <style>
         body {

@@ -1,0 +1,162 @@
+.form {
+    display: grid;
+    gap: 18px;
+}
+
+.field {
+    display: grid;
+    gap: 8px;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-1);
+}
+
+.control {
+    position: relative;
+}
+
+.has-icon .input {
+    padding-left: 42px;
+}
+
+.has-action .input {
+    padding-right: 42px;
+}
+
+.control-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    color: var(--ink-2);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.control-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.control-action {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: transparent;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: all .15s ease;
+    border-radius: 6px;
+    z-index: 1;
+}
+
+.control-action:hover {
+    color: var(--ink-1);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.control-action.is-on {
+    color: var(--ink-1);
+}
+
+.control-action:disabled {
+    cursor: not-allowed;
+    opacity: .5;
+    pointer-events: none;
+}
+
+.icon-eye {
+    width: 20px;
+    height: 20px;
+}
+
+.icon-eye-closed {
+    display: none;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.link-muted {
+    color: var(--ink-2);
+    font-size: 14px;
+    text-decoration: none;
+    position: relative;
+    transition: color .15s ease;
+}
+
+.link-muted:hover {
+    color: var(--ink-1);
+}
+
+.is-blocked .link-muted {
+    cursor: not-allowed;
+    opacity: .5;
+    pointer-events: none;
+}
+
+.is-blocked .field {
+    cursor: not-allowed;
+}
+
+.is-blocked .label {
+    cursor: not-allowed;
+}
+
+.is-blocked .control {
+    cursor: not-allowed;
+}
+
+.is-blocked .input:disabled {
+    cursor: not-allowed !important;
+}
+
+.is-blocked .control-action:disabled {
+    cursor: not-allowed !important;
+}
+
+.is-blocked .button:disabled {
+    cursor: not-allowed !important;
+}
+
+.secure-note {
+    margin: 14px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-2);
+    font-size: 12px;
+    text-align: center;
+}
+
+.secure-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.secure-note strong {
+    font-weight: 600;
+    color: var(--ink-1);
+}
+

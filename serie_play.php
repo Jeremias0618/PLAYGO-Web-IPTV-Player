@@ -117,20 +117,20 @@ if ($ep_img_from_get) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>PLAYGO - <?php echo htmlspecialchars($serie_nome); ?> - <?php echo htmlspecialchars($ep_name); ?></title>
-    <link rel="stylesheet" href="./styles/font-awesome-6.5.0.min.css">
-    <link rel="stylesheet" href="./styles/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./styles/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="./styles/owl.carousel.min.css">
-    <link rel="stylesheet" href="./styles/jquery.mcustomscrollbar.min.css">
-    <link rel="stylesheet" href="./styles/nouislider.min.css">
-    <link rel="stylesheet" href="./styles/ionicons.min.css">
-    <link rel="stylesheet" href="./styles/photoswipe.css">
-    <link rel="stylesheet" href="./styles/glightbox.css">
-    <link rel="stylesheet" href="./styles/default-skin.css">
-    <link rel="stylesheet" href="./styles/jBox.all.min.css">
-    <link rel="stylesheet" href="./styles/select2.min.css">
-    <link rel="stylesheet" href="./styles/listings.css">
-    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
+    <link rel="stylesheet" href="./styles/vendors/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="./styles/vendors/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="./styles/vendors/owl.carousel.min.css">
+    <link rel="stylesheet" href="./styles/vendors/jquery.mcustomscrollbar.min.css">
+    <link rel="stylesheet" href="./styles/vendors/nouislider.min.css">
+    <link rel="stylesheet" href="./styles/vendors/ionicons.min.css">
+    <link rel="stylesheet" href="./styles/vendors/photoswipe.css">
+    <link rel="stylesheet" href="./styles/vendors/glightbox.css">
+    <link rel="stylesheet" href="./styles/vendors/default-skin.css">
+    <link rel="stylesheet" href="./styles/vendors/jBox.all.min.css">
+    <link rel="stylesheet" href="./styles/vendors/select2.min.css">
+    <link rel="stylesheet" href="./styles/core/listings.css">
+    <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <style>
         .mobile-menu {

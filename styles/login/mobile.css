@@ -1,0 +1,98 @@
+@media (max-width: 768px) {
+    .auth-page {
+        padding: 20px 16px;
+    }
+
+    .auth-card {
+        padding: 24px 20px;
+        border-radius: 16px;
+    }
+
+    .logo-image {
+        max-width: 200px;
+    }
+
+    .card-header h2 {
+        font-size: 22px;
+    }
+
+    .card-subtitle {
+        font-size: 13px;
+    }
+
+    .input {
+        min-height: 52px;
+        font-size: 16px;
+    }
+
+    .button {
+        min-height: 52px;
+        padding: 14px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-page {
+        padding: 16px 12px;
+    }
+
+    .auth-card {
+        padding: 20px 16px;
+    }
+
+    .logo-image {
+        max-width: 180px;
+    }
+
+    .card-header h2 {
+        font-size: 20px;
+    }
+
+    .input {
+        min-height: 50px;
+        padding: 12px 12px 12px 40px;
+    }
+
+    .button {
+        min-height: 50px;
+    }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+    .auth-page {
+        padding: 10px 16px;
+    }
+
+    .auth-card {
+        padding: 20px;
+        max-width: 90vw;
+    }
+
+    .logo-image {
+        max-width: 150px;
+    }
+
+    .card-header {
+        margin-bottom: 16px;
+    }
+}
+
+@media (max-height: 500px) and (max-width: 768px) {
+    body {
+        overflow: auto !important;
+    }
+
+    .auth-page {
+        align-items: flex-start;
+        padding-top: 5vh;
+    }
+
+    .logo-image {
+        max-width: 120px;
+    }
+
+    .card-header {
+        margin-bottom: 12px;
+    }
+}
+

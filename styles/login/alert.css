@@ -1,0 +1,91 @@
+.alert-error {
+    border-left: 4px solid var(--acc-2);
+    background: linear-gradient(90deg, #2a0003, #1D0002);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    animation: fade-in .25s ease-out;
+}
+
+.alert-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.alert-icon {
+    width: 20px;
+    height: 20px;
+    color: #ffffff;
+    flex: 0 0 auto;
+    margin-top: 2px;
+}
+
+.alert-text {
+    flex: 1;
+}
+
+.alert-title {
+    margin: 0 0 2px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.alert-message {
+    font-size: 13px;
+    color: #ffffff;
+    opacity: .95;
+    margin: 0;
+}
+
+.alert-blocked {
+    background: linear-gradient(90deg, rgba(255, 87, 34, 0.9), rgba(255, 87, 34, 0.85)) !important;
+    border-left-color: #ff5722 !important;
+    animation: pulse 2s infinite;
+}
+
+.alert-blocked .alert-title {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #fff 0%, #ffeb3b 100%);
+    border-radius: 2px;
+    transition: width 1s linear;
+    animation: progress-animation 1s ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+@keyframes progress-animation {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

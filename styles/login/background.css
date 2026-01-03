@@ -1,0 +1,64 @@
+.auth-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(1200px 800px at 0% 0%, rgba(229, 9, 20, 0.12) 0%, transparent 50%),
+                radial-gradient(1400px 900px at 100% 100%, rgba(255, 46, 99, 0.18) 0%, transparent 55%);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(20, 20, 20, 0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.auth-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.bg-grid {
+    position: absolute;
+    inset: 0;
+    opacity: .15;
+    mask-image: radial-gradient(800px 600px at center, #000 30%, transparent 70%);
+    background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+.bg-blob {
+    position: absolute;
+    filter: blur(80px);
+    opacity: .4;
+    border-radius: 50%;
+}
+
+.bg-blob-1 {
+    width: 600px;
+    height: 600px;
+    left: -150px;
+    top: -150px;
+    background: rgba(229, 9, 20, 0.3);
+}
+
+.bg-blob-2 {
+    width: 700px;
+    height: 700px;
+    right: -200px;
+    bottom: -200px;
+    background: rgba(255, 46, 99, 0.35);
+}
+

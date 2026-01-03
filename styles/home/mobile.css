@@ -1,0 +1,42 @@
+@media (max-width: 600px) {
+    .owl-carousel.home__carousel .card.card--big {
+        width: 180px;
+        min-width: 180px;
+        margin: 0 16px;
+    }
+
+    .owl-carousel.home__carousel .owl-item {
+        padding-left: 18px !important;
+        padding-right: 18px !important;
+    }
+
+    .header__content {
+        padding: 12px 24px;
+        padding-left: 4px !important;
+    }
+
+    .header__logo {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+        margin-right: auto;
+    }
+}
+
+@media (min-width: 601px) {
+    .header__logo img {
+        width: 240px !important;
+        height: 80px !important;
+        max-width: none !important;
+        object-fit: contain;
+    }
+}
+
+@media (max-width: 600px) {
+    .header__logo img {
+        width: 240px !important;
+        height: 60px !important;
+        max-width: 100% !important;
+        object-fit: contain;
+    }
+}
+

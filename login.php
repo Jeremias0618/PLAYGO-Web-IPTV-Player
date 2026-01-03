@@ -16,7 +16,16 @@ handleLoginRequest();
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e50914">
     <link rel="icon" type="image/x-icon" href="assets/icon/favicon.ico">
-    <link rel="stylesheet" href="styles/login/login.css">
+    <link rel="stylesheet" href="styles/login/variables.css">
+    <link rel="stylesheet" href="styles/login/base.css">
+    <link rel="stylesheet" href="styles/login/background.css">
+    <link rel="stylesheet" href="styles/login/card.css">
+    <link rel="stylesheet" href="styles/login/form.css">
+    <link rel="stylesheet" href="styles/login/input.css">
+    <link rel="stylesheet" href="styles/login/button.css">
+    <link rel="stylesheet" href="styles/login/alert.css">
+    <link rel="stylesheet" href="styles/login/modal.css">
+    <link rel="stylesheet" href="styles/login/mobile.css">
 </head>
 <body>
     <div class="auth-page">
@@ -193,8 +202,8 @@ handleLoginRequest();
             </div>
         </div>
     </div>
-    <script src="scripts/jquery-1.12.4.min.js"></script>
-    <script src="scripts/bootstrap-3.3.7.min.js"></script>
+    <script src="scripts/vendors/jquery-1.12.4.min.js"></script>
+    <script src="scripts/vendors/bootstrap-3.3.7.min.js"></script>
     <script src="scripts/login/form.js"></script>
 </body>
 </html>

@@ -48,20 +48,20 @@ if (!empty($canal_data['plot'])) {
     <title>PLAYGO - <?php echo htmlspecialchars($canal); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
-    <link rel="stylesheet" href="./styles/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./styles/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="./styles/owl.carousel.min.css">
-    <link rel="stylesheet" href="./styles/jquery.mcustomscrollbar.min.css">
-    <link rel="stylesheet" href="./styles/nouislider.min.css">
-    <link rel="stylesheet" href="./styles/ionicons.min.css">
-    <link rel="stylesheet" href="./styles/photoswipe.css">
-    <link rel="stylesheet" href="./styles/glightbox.css">
-    <link rel="stylesheet" href="./styles/default-skin.css">
-    <link rel="stylesheet" href="./styles/jBox.all.min.css">
-    <link rel="stylesheet" href="./styles/select2.min.css">
-    <link rel="stylesheet" href="./styles/listings.css">
-    <link rel="stylesheet" href="./styles/main.css">
-    <link rel="stylesheet" href="./styles/font-awesome-6.5.0.min.css">
+    <link rel="stylesheet" href="./styles/vendors/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="./styles/vendors/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="./styles/vendors/owl.carousel.min.css">
+    <link rel="stylesheet" href="./styles/vendors/jquery.mcustomscrollbar.min.css">
+    <link rel="stylesheet" href="./styles/vendors/nouislider.min.css">
+    <link rel="stylesheet" href="./styles/vendors/ionicons.min.css">
+    <link rel="stylesheet" href="./styles/vendors/photoswipe.css">
+    <link rel="stylesheet" href="./styles/vendors/glightbox.css">
+    <link rel="stylesheet" href="./styles/vendors/default-skin.css">
+    <link rel="stylesheet" href="./styles/vendors/jBox.all.min.css">
+    <link rel="stylesheet" href="./styles/vendors/select2.min.css">
+    <link rel="stylesheet" href="./styles/core/listings.css">
+    <link rel="stylesheet" href="./styles/core/main.css">
+    <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
     <style>
         body {
             background: #111 !important;
@@ -1136,23 +1136,23 @@ if (!empty($canal_data['plot'])) {
         </div>
     </footer>
 
-    <script src="./scripts/jquery-3.5.1.min.js"></script>
-    <script src="./scripts/bootstrap.bundle.min.js"></script>
-    <script src="./scripts/owl.carousel.min.js"></script>
-    <script src="./scripts/jquery.mousewheel.min.js"></script>
-    <script src="./scripts/jquery.mcustomscrollbar.min.js"></script>
-    <script src="./scripts/wnumb.js"></script>
-    <script src="./scripts/nouislider.min.js"></script>
-    <script src="./scripts/jquery.morelines.min.js"></script>
-    <script src="./scripts/photoswipe.min.js"></script>
-    <script src="./scripts/photoswipe-ui-default.min.js"></script>
-    <script src="./scripts/glightbox.min.js"></script>
-    <script src="./scripts/jBox.all.min.js"></script>
-    <script src="./scripts/select2.min.js"></script>
-    <script src="./scripts/jwplayer.js"></script>
-    <script src="./scripts/jwplayer.core.controls.js"></script>
-    <script src="./scripts/provider.hlsjs.js"></script>
-    <script src="./scripts/main.js"></script>
+    <script src="./scripts/vendors/jquery-3.5.1.min.js"></script>
+    <script src="./scripts/vendors/bootstrap.bundle.min.js"></script>
+    <script src="./scripts/vendors/owl.carousel.min.js"></script>
+    <script src="./scripts/vendors/jquery.mousewheel.min.js"></script>
+    <script src="./scripts/vendors/jquery.mcustomscrollbar.min.js"></script>
+    <script src="./scripts/vendors/wnumb.js"></script>
+    <script src="./scripts/vendors/nouislider.min.js"></script>
+    <script src="./scripts/vendors/jquery.morelines.min.js"></script>
+    <script src="./scripts/vendors/photoswipe.min.js"></script>
+    <script src="./scripts/vendors/photoswipe-ui-default.min.js"></script>
+    <script src="./scripts/vendors/glightbox.min.js"></script>
+    <script src="./scripts/vendors/jBox.all.min.js"></script>
+    <script src="./scripts/vendors/select2.min.js"></script>
+    <script src="./scripts/vendors/jwplayer.js"></script>
+    <script src="./scripts/vendors/jwplayer.core.controls.js"></script>
+    <script src="./scripts/vendors/provider.hlsjs.js"></script>
+    <script src="./scripts/core/main.js"></script>
     <script>
             // MODAL BUSCADOR MEJORADO
     const openSearchModal = document.getElementById('openSearchModal');

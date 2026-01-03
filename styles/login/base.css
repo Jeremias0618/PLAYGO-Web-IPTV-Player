@@ -1,0 +1,19 @@
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+
+body {
+    background: url('../../assets/image/wallpaper.webp') no-repeat center center fixed;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+    font-family: 'Poppins', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
+}
+

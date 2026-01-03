@@ -1,0 +1,54 @@
+.card__cover img {
+    height: 400px;
+    object-fit: cover;
+}
+
+.card.card--big .card__cover img {
+    height: 420px;
+}
+
+.card__title {
+    min-height: 48px;
+}
+
+.card__content,
+.card.card--big .card__content,
+.card {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.card__rate {
+    margin-bottom: 0;
+}
+
+.card__title {
+    margin-bottom: 0 !important;
+    min-height: unset !important;
+    font-size: 1.05rem;
+    line-height: 1.2;
+}
+
+.card__rate {
+    margin-top: 2px !important;
+    margin-bottom: 0 !important;
+    font-size: 1.02rem;
+    display: block;
+}
+
+.owl-carousel.home__carousel .card.card--big {
+    width: 230px;
+    min-width: 230px;
+    max-width: 100%;
+    margin: 0 22px;
+    display: inline-block;
+    vertical-align: top;
+    background: #181818;
+    border-radius: 12px;
+}
+
+.owl-carousel.home__carousel .owl-item {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+

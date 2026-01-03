@@ -1,0 +1,90 @@
+.button {
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: .01em;
+    transition: transform .05s ease, box-shadow .2s ease, background-color .2s ease, border-color .2s ease;
+    width: 100%;
+    min-height: 48px;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.button-primary {
+    color: #fff;
+    border: 1px solid var(--brand-1);
+    background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+    box-shadow: 0 4px 12px rgba(229, 9, 20, .2);
+}
+
+.button-primary.is-enabled:not(:disabled) {
+    background: linear-gradient(90deg, rgba(229, 9, 20, 0.85), rgba(255, 46, 99, 0.85));
+    border-color: rgba(229, 9, 20, 0.9);
+    box-shadow: 0 8px 16px rgba(229, 9, 20, .2);
+}
+
+.button-primary.is-enabled:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(229, 9, 20, .3);
+    background: linear-gradient(90deg, rgba(229, 9, 20, 0.9), rgba(255, 46, 99, 0.9));
+}
+
+.button-primary.is-enabled:not(:disabled):active {
+    transform: translateY(0);
+    box-shadow: 0 8px 18px rgba(229, 9, 20, .25);
+}
+
+.button-primary:disabled {
+    background: linear-gradient(90deg, rgba(229, 9, 20, 0.5), rgba(255, 46, 99, 0.5));
+    border-color: rgba(229, 9, 20, 0.5);
+    color: rgba(255, 255, 255, .7);
+    cursor: not-allowed !important;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(229, 9, 20, .1);
+}
+
+.button-secondary {
+    color: var(--ink-1);
+    background: linear-gradient(90deg, #1f1f1d, #232321);
+    border: 1px solid var(--line);
+    font-weight: 600;
+    min-width: 100px;
+}
+
+.button-secondary:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,.25);
+    transform: translateY(-1px);
+    background: linear-gradient(90deg, #232321, #272725);
+}
+
+.button-arrow {
+    width: 16px;
+    height: 16px;
+    transition: transform .2s ease;
+}
+
+.button:hover .button-arrow {
+    transform: translateX(4px);
+}
+
+.spinner {
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
