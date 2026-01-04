@@ -186,24 +186,174 @@
     min-width: 140px;
 }
 
+.filtros-toggle-btn {
+    display: none;
+}
+
 @media (max-width: 600px) {
+    .filtros-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin: 0 12px 16px 12px;
+        padding: 12px 24px;
+        background: rgba(0, 0, 0, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 8px;
+        color: #fff;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .filtros-toggle-btn:active {
+        transform: scale(0.98);
+        background: rgba(0, 0, 0, 0.95);
+    }
+    
+    .filtros-toggle-btn i {
+        font-size: 1rem;
+    }
+    
     .filtros-bar {
-        gap: 15px;
-        margin-bottom: 30px;
+        flex-direction: column;
+        gap: 16px;
+        margin: 0 12px 30px 12px;
+        padding: 0;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        display: flex;
+        transition: all 0.3s ease;
     }
+    
+    .filtros-bar.filtros-hidden {
+        display: none;
+    }
+    
+    .filtros-bar::before {
+        display: none;
+    }
+    
+    .filtro-opcion {
+        width: 100%;
+        gap: 8px;
+        padding: 0;
+    }
+    
+    .filtro-opcion label {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 6px;
+        letter-spacing: 1px;
+        font-weight: 500;
+    }
+    
     .filtro-opcion select {
-        min-width: 140px;
-        font-size: 0.9rem;
-        padding: 6px 30px 6px 10px;
+        width: 100%;
+        min-width: unset;
+        font-size: 0.95rem;
+        padding: 12px 35px 12px 14px;
+        background: rgba(0, 0, 0, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
+        border-radius: 8px;
+        height: 44px;
     }
-    .filtro-aplicar-btn,
-    .filtro-limpiar-btn {
-        padding: 6px 20px;
-        font-size: 0.9rem;
-        height: 36px;
+    
+    .filtro-opcion select:focus {
+        background: rgba(0, 0, 0, 0.95) !important;
+        border-color: rgba(255, 255, 255, 0.4) !important;
+        box-shadow: none;
     }
+    
+    .filtro-opcion > div {
+        width: 100%;
+    }
+    
+    .filtro-opcion > div[style*="display: flex"] {
+        gap: 10px;
+    }
+    
+    .filtro-opcion select[name="orden"] {
+        flex: 1;
+    }
+    
+    .filtro-orden-btn {
+        height: 44px;
+        width: 44px;
+        min-width: 44px;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    
+    .filtro-orden-btn:hover {
+        background: rgba(0, 0, 0, 0.95);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: none;
+    }
+    
+    .filtros-botones {
+        width: 100%;
+        margin-top: 8px;
+        gap: 10px !important;
+    }
+    
+    .filtro-aplicar-btn {
+        flex: 1;
+        height: 50px;
+        font-size: 1rem;
+        border-radius: 8px;
+        padding: 0;
+        box-shadow: 0 3px 12px rgba(229, 9, 20, 0.25);
+    }
+    
+    .filtro-aplicar-btn:active {
+        transform: scale(0.98);
+    }
+    
     .filtro-limpiar-btn {
-        width: 36px;
-        padding: 6px;
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    
+    .filtro-limpiar-btn:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.15);
+        transform: scale(1);
+    }
+    
+    .filtro-limpiar-btn:active:not(:disabled) {
+        transform: scale(0.96);
+    }
+    
+    .filtro-limpiar-btn i {
+        font-size: 1.2rem;
+    }
+    
+    .movies-filter-display {
+        width: 100%;
+        min-width: unset;
+        padding: 14px 40px 14px 16px;
+        font-size: 1rem;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
+        height: 44px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .movies-filter-display:hover {
+        background: rgba(0, 0, 0, 0.95) !important;
+        border-color: rgba(255, 255, 255, 0.4) !important;
     }
 }

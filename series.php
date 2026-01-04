@@ -64,6 +64,12 @@ if (isset($_GET['orden']) && $_GET['orden'] != '') {
             $yb = isset($b['releaseDate']) ? intval(substr($b['releaseDate'],0,4)) : (isset($b['year']) ? intval($b['year']) : 0);
             return $yb <=> $ya;
         });
+    } elseif ($_GET['orden'] == 'rating') {
+        usort($output, function($a, $b) {
+            $ra = isset($a['rating']) ? floatval($a['rating']) : 0;
+            $rb = isset($b['rating']) ? floatval($b['rating']) : 0;
+            return $rb <=> $ra;
+        });
     } elseif ($_GET['orden'] == 'recientes') {
         usort($output, function($a, $b) {
             $timeA = isset($a['last_modified']) ? intval($a['last_modified']) : (isset($a['added']) ? intval($a['added']) : 0);
@@ -105,7 +111,6 @@ if ($output && is_array($output) && count($output) > 0) {
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="./styles/vendors/bootstrap-reboot.min.css">
@@ -121,373 +126,42 @@ if ($output && is_array($output) && count($output) > 0) {
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
+    <link rel="stylesheet" href="./styles/movies/layout.css">
+    <link rel="stylesheet" href="./styles/movies/pagination.css">
+    <link rel="stylesheet" href="./styles/movies/title.css">
+    <link rel="stylesheet" href="./styles/movies/filters.css">
+    <link rel="stylesheet" href="./styles/movies/modals.css">
+    <link rel="stylesheet" href="./styles/movies/cards.css">
+    <link rel="stylesheet" href="./styles/movies/popular.css">
+    <link rel="stylesheet" href="./styles/movies/mobile.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - Series</title>
-    <style>
-    .seasons__cover,
-    .details__bg,
-    .home__bg {
-        filter: blur(0px) !important;
-        opacity: 10%;
-    }
-    /* PAGINADOR COMPACTO */
-    .custom-paginator {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 40px 0 30px 0;
-        padding: 0;
-        list-style: none;
-        background: #292933;
-        border-radius: 6px;
-        min-height: 48px;
-        box-shadow: 0 2px 8px #0002;
-        overflow: hidden;
-        width: fit-content;
-        min-width: 340px;
-    }
-    .custom-paginator li {
-        margin: 0;
-        display: flex;
-        align-items: center;
-    }
-    .custom-paginator a, .custom-paginator span {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 48px;
-        height: 48px;
-        color: #bfc1c8;
-        background: transparent;
-        border: none;
-        font-size: 1.15rem;
-        font-weight: 400;
-        text-decoration: none;
-        transition: background 0.2s, color 0.2s;
-        cursor: pointer;
-        outline: none;
-        border-radius: 0;
-    }
-    .custom-paginator .active a,
-    .custom-paginator .active span {
-        background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
-        color: #fff;
-        font-weight: 600;
-        border-radius: 0;
-    }
-    .custom-paginator li:not(.active):hover a {
-        background: #23232b;
-        color: #fff;
-    }
-    .custom-paginator .disabled span {
-        color: #555;
-        cursor: default;
-        background: transparent;
-    }
-    .custom-paginator .arrow {
-        font-size: 1.3rem;
-        color: #bfc1c8;
-        padding: 0 10px;
-    }
-    .custom-paginator .arrow:hover {
-        color: #fff;
-        background: #23232b;
-    }
-
-    }
-
-    .navbar-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 80px;
-        z-index: 1;
-        pointer-events: none;
-        background: linear-gradient(90deg, #0f2027 0%, #2c5364 100%);
-        opacity: 0.85;
-        transition: opacity 0.4s;
-    }
-    .bg-animate {
-        animation: navbarBgMove 8s linear infinite alternate;
-        background-size: 200% 100%;
-    }
-    @keyframes navbarBgMove {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 100% 50%; }
-    }
-    /* POPULAR ESTE MES */
-    .section-popular {
-        margin: 50px 0 0 0;
-        padding-bottom: 30px;
-        position: relative;
-    }
-    .section-popular .home__title {
-        color: #fff;
-        font-size: 2.1rem;
-        margin-bottom: 32px;
-        text-align: left;
-        letter-spacing: 1px;
-    }
-    .section-popular .home__title b {
-        color: #e50914;
-        font-weight: 700;
-    }
-    .section-popular .section__btn {
-        display: inline-block;
-        margin: 30px auto 0 auto;
-        background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
-        color: #fff;
-        border-radius: 8px;
-        padding: 18px 48px;
-        font-size: 1.25rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        text-decoration: none;
-        transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-        text-align: center;
-        box-shadow: 0 2px 8px #0002;
-        letter-spacing: 1px;
-        border: none;
-        line-height: 1.2;
-        white-space: nowrap;
-        min-width: 180px;
-    }
-    .section-popular .section__btn:hover {
-        background: #fff;
-        color: #e50914;
-        box-shadow: 0 4px 16px #0003;
-    }
-
-           @media (max-width: 600px) {
-            .header__logo {
-                margin-left: 0 !important;
-                padding-left: 0 !important;
-            }
-            .header__content {
-                padding-left: 4px !important;
-            }
-        }
-        
-    /* FILTROS */
-      .filtros-bar {
-         display: flex;
-         justify-content: center;
-         gap: 32px;
-         margin: 37px 0 51px 0;
-         flex-wrap: wrap;
-         align-items: end;
-      }
-      .filtros-bar .filtro-aplicar-btn,
-      .filtros-bar .filtro-limpiar-btn {
-         margin: 0;
-      }
-      .filtros-bar .filtros-botones {
-         display: flex;
-         gap: 3px; /* Espacio entre los botones */
-         align-items: center;
-      }
-
-    .filtro-opcion {
-        color:rgb(255, 255, 255);
-        font-size: 0.95rem;
-        font-weight: 400;
-        margin-bottom: 0;
-        text-align: left;
-    }
-    .filtro-opcion label {
-        display: block;
-        color: #ffffff;
-        font-size: 0.85rem;
-        margin-bottom: 2px;
-        letter-spacing: 1px;
-    }
-    .filtro-opcion select,
-    .filtro-opcion input[type="number"] {
-        background: transparent;
-        border: none;
-        color: #fff;
-        font-weight: 700;
-        font-size: 1.08rem;
-        outline: none;
-        border-bottom: 2px solid #444;
-        padding: 2px 6px 2px 0;
-        margin-right: 4px;
-        min-width: 60px;
-    }
-    .filtro-opcion select {
-        min-width: 120px;
-    }
-    .filtro-opcion input[type="number"]::-webkit-inner-spin-button,
-    .filtro-opcion input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    .filtro-opcion .filtro-sep {
-        color: #888;
-        margin: 0 6px;
-        font-weight: 400;
-    }
-    .filtro-opcion .filtro-igual {
-        color: #888;
-        margin-left: 6px;
-        font-weight: 400;
-    }
-    .filtro-aplicar-btn {
-        background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
-        color: #fff;
-        border: none;
-        border-radius: 6px;
-        padding: 8px 24px;
-        font-size: 1rem;
-        font-weight: 600;
-        margin-left: 18px;
-        cursor: pointer;
-        transition: background 0.2s, color 0.2s;
-    }
-    .filtro-aplicar-btn:hover {
-        background: #fff;
-        color: #e50914;
-    }
-
-    .filtro-opcion select {
-        background: #181818 !important;
-        color: #fff !important;
-        border: none;
-    }
-    .filtro-opcion select option {
-        background: #181818 !important;
-        color: #fff !important;
-    }
-    /* Quitar azul de opción seleccionada y hover, poner #f50b60 */
-    .filtro-opcion select option:hover,
-    .filtro-opcion select option:focus,
-    .filtro-opcion select option:checked,
-    .filtro-opcion select:focus option,
-    .filtro-opcion select:active option {
-        background:rgb(43, 43, 43) !important;
-        color: #fff !important;
-    }
-    .filtro-opcion select:focus,
-    .filtro-opcion select:hover {
-        border-bottom: 2px solid #f50b60;
-    }
-    /* Botón limpiar filtros */
-    .filtro-limpiar-btn {
-        background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
-        color: #fff;
-        border: none;
-        border-radius: 6px;
-        padding: 8px 18px;
-        font-size: 1rem;
-        font-weight: 600;
-        margin-left: 10px;
-        cursor: pointer;
-        transition: background 0.2s, color 0.2s;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .filtro-limpiar-btn:hover {
-        background: #fff;
-        color: #e50914;
-    }
-    .filtro-limpiar-btn i {
-        font-size: 1.1em;
-        margin-right: 2px;
-    }
-    .header__wrap,
-    .header__content {
-        background: #000 !important;
-    }
-    <?php if($backdrop_fondo): ?>
-    .main-bg-fondo {
-        min-height: 100vh;
-        background: url('<?php echo $backdrop_fondo; ?>') no-repeat center center fixed;
-        background-size: cover;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-    }
-    .main-bg-fondo:before {
-        content: "";
-        position: fixed;
-        z-index: 0;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        background: rgba(0,0,0,0.78);
-        pointer-events: none;
-    }
-    .main-bg-fondo > * {
-        position: relative;
-        z-index: 1;
-    }
-    
-    html, body {
-    height: 100%;
-    min-height: 100%;
+<?php if($backdrop_fondo): ?>
+<style>
+.main-bg-fondo {
+    background: url('<?php echo $backdrop_fondo; ?>') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
-    .card__cover img {
-    width: 100%;
-    height: 440px;      /* Puedes ajustar la altura según tu diseño */
-    object-fit: cover;
-    border-radius: 10px;
-    background: #232027;
-    display: block;
+.main-bg-fondo:before {
+    content: "";
+    position: fixed;
+    z-index: 0;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.78);
+    pointer-events: none;
 }
-/* Solo para POPULAR ESTE MES en desktop */
-.popular-img {
-    height: 280px !important; /* O el alto que prefieras */
+.main-bg-fondo > * {
+    position: relative;
+    z-index: 1;
 }
-@media (max-width: 600px) {
-  .card__cover img {
-    height: 260px !important;
-  }
-}
-
-@media only screen and (max-width: 600px) and (pointer: coarse) and (hover: none) {
-    .filtro-hide-mobile {
-        display: none !important;
-    }
-    .main-bg-fondo > div[style*="text-align:center"] {
-        margin-top: 80px !important;
-        margin-bottom: 18px !important;
-    }
-    /* Subir los filtros */
-    .filtros-bar {
-        margin-top: 0 !important;
-        margin-bottom: 18px !important;
-    }
-    /* Subir el catálogo de series */
-    .catalog.details {
-        margin-top: 0 !important;
-    }
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    background: none !important;
-}
-
-        @media (min-width: 601px) {
-            .header__logo img {
-                width: 240px !important;
-                height: 80px !important;
-                max-width: none !important;
-                object-fit: contain;
-            }
-        }
-        @media (max-width: 600px) {
-            .header__logo img {
-                width: 240px !important;
-                height: 60px !important;
-                max-width: 100% !important;
-                object-fit: contain;
-            }
-        }
-    <?php endif; ?>
-    </style>
+</style>
+<?php endif; ?>
 </head>
 <body class="body">
 <!-- HEADER estilo painel.php -->
@@ -543,14 +217,17 @@ body {
 
 <!-- CONTENIDO PRINCIPAL CON FONDO OSCURO -->
 <div class="main-bg-fondo">
-<!-- Título centrado arriba de los filtros -->
-<div style="width:100%;text-align:center;margin:130px 0 30px 0;">
-    <h2 style="font-size:2.5rem;font-weight:800;letter-spacing:2px;color:#fff;display:inline-block;padding:10px 40px;border-radius:12px;">SERIES</h2>
-</div>
-<!-- FILTROS EN ESPAÑOL -->
+    <div class="movies-page-title">
+        <h2>SERIES</h2>
+    </div>
+    
+<button type="button" class="filtros-toggle-btn" id="filtrosToggleBtn">
+    <i class="fa fa-filter"></i> <span id="filtrosToggleText">Ocultar Filtros</span>
+</button>
+
 <form id="filtrosForm" method="get" class="filtros-bar">
     <div class="filtro-opcion" style="position:relative;">
-        <label for="genero">GÉNERO:</label>
+        <label for="genero">GÉNERO</label>
         <select name="genero" id="genero">
             <option value="">Todos</option>
             <?php
@@ -573,51 +250,72 @@ body {
             }
             ?>
         </select>
-        <span class="filtro-igual"></span>
     </div>
-<!-- FILTRO CALIFICACIÓN -->
-<div class="filtro-opcion filtro-hide-mobile" style="position:relative;">
-    <label for="rating_min" id="label_rating" style="cursor:pointer;">CALIFICACIÓN:</label>
-    <span id="rating_range" style="cursor:pointer;">
-        <span id="rating_min_val"><?php echo isset($_GET['rating_min']) ? $_GET['rating_min'] : '0'; ?></span> - 
-        <span id="rating_max_val"><?php echo isset($_GET['rating_max']) ? $_GET['rating_max'] : '10'; ?></span>
-    </span>
-    <input type="hidden" name="rating_min" id="rating_min" value="<?php echo isset($_GET['rating_min']) ? $_GET['rating_min'] : '0'; ?>">
-    <input type="hidden" name="rating_max" id="rating_max" value="<?php echo isset($_GET['rating_max']) ? $_GET['rating_max'] : '10'; ?>">
-    <span class="filtro-igual"></span>
-    <div id="rating_slider_box" style="display:none;position:absolute;top:55px;left:0;z-index:10;width:220px;">
-        <div id="rating_slider"></div>
-    </div>
-</div>
-<div class="filtro-opcion filtro-hide-mobile" style="position:relative;">
-    <label for="year_min" id="label_year" style="cursor:pointer;">AÑO:</label>
-    <span id="year_range" style="cursor:pointer;">
-        <span id="year_min_val"><?php echo isset($_GET['year_min']) ? $_GET['year_min'] : '1900'; ?></span> - 
-        <span id="year_max_val"><?php echo isset($_GET['year_max']) ? $_GET['year_max'] : '2025'; ?></span>
-    </span>
-    <input type="hidden" name="year_min" id="year_min" value="<?php echo isset($_GET['year_min']) ? $_GET['year_min'] : '1900'; ?>">
-    <input type="hidden" name="year_max" id="year_max" value="<?php echo isset($_GET['year_max']) ? $_GET['year_max'] : '2025'; ?>">
-    <span class="filtro-igual"></span>
-    <div id="year_slider_box" style="display:none;position:absolute;top:55px;left:0;z-index:10;width:220px;">
-        <div id="year_slider"></div>
-    </div>
-</div>
     <div class="filtro-opcion">
-        <label for="orden">ORDENAR:</label>
-        <select name="orden" id="orden">
+        <label for="rating_display">CALIFICACIÓN</label>
+        <div class="movies-filter-display" id="rating_display">
+            <?php
+            $ratingMin = isset($_GET['rating_min']) ? floatval($_GET['rating_min']) : null;
+            $ratingMax = isset($_GET['rating_max']) ? floatval($_GET['rating_max']) : null;
+            if ($ratingMin !== null && $ratingMax !== null) {
+                if ($ratingMin == $ratingMax) {
+                    echo number_format($ratingMin, 1);
+                } else {
+                    echo number_format($ratingMin, 1) . ' - ' . number_format($ratingMax, 1);
+                }
+            } else {
+                echo 'Todos';
+            }
+            ?>
+        </div>
+        <input type="hidden" name="rating_min" id="rating_min" value="<?php echo isset($_GET['rating_min']) ? $_GET['rating_min'] : ''; ?>">
+        <input type="hidden" name="rating_max" id="rating_max" value="<?php echo isset($_GET['rating_max']) ? $_GET['rating_max'] : ''; ?>">
+    </div>
+    <div class="filtro-opcion">
+        <label for="year_display">AÑO</label>
+        <div class="movies-filter-display" id="year_display">
+            <?php
+            $yearMin = isset($_GET['year_min']) ? intval($_GET['year_min']) : null;
+            $yearMax = isset($_GET['year_max']) ? intval($_GET['year_max']) : null;
+            if ($yearMin !== null && $yearMax !== null) {
+                if ($yearMin == $yearMax) {
+                    echo $yearMin;
+                } else {
+                    echo $yearMin . ' - ' . $yearMax;
+                }
+            } else {
+                echo 'Todos';
+            }
+            ?>
+        </div>
+        <input type="hidden" name="year_min" id="year_min" value="<?php echo isset($_GET['year_min']) ? $_GET['year_min'] : ''; ?>">
+        <input type="hidden" name="year_max" id="year_max" value="<?php echo isset($_GET['year_max']) ? $_GET['year_max'] : ''; ?>">
+    </div>
+    <div class="filtro-opcion">
+        <label for="orden">ORDENAR</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <select name="orden" id="orden" style="flex: 1;">
             <option value="">Por defecto</option>
             <option value="nombre" <?php if(isset($_GET['orden']) && $_GET['orden']=='nombre') echo 'selected'; ?>>Nombre</option>
             <option value="año" <?php if(isset($_GET['orden']) && $_GET['orden']=='año') echo 'selected'; ?>>Año</option>
+            <option value="rating" <?php if(isset($_GET['orden']) && $_GET['orden']=='rating') echo 'selected'; ?>>Rating</option>
             <option value="recientes" <?php if(isset($_GET['orden']) && $_GET['orden']=='recientes') echo 'selected'; ?>>Más recientes</option>
             <option value="antiguas" <?php if(isset($_GET['orden']) && $_GET['orden']=='antiguas') echo 'selected'; ?>>Más antiguas</option>
         </select>
-        <span class="filtro-igual"></span>
+            <button type="button" class="filtro-orden-btn" id="ordenDirectionBtn" title="Cambiar dirección de ordenamiento" style="display: <?php echo (isset($_GET['orden']) && $_GET['orden'] != '') ? 'block' : 'none'; ?>;">
+                <i class="fa-solid fa-arrow-<?php echo (isset($_GET['orden_dir']) && $_GET['orden_dir'] == 'desc') ? 'down' : 'up'; ?>" id="ordenDirectionIcon"></i>
+            </button>
+        </div>
+        <input type="hidden" name="orden_dir" id="orden_dir" value="<?php echo isset($_GET['orden_dir']) ? $_GET['orden_dir'] : 'asc'; ?>">
     </div>
+    <div class="filtro-opcion">
+        <label style="opacity: 0; pointer-events: none;">&nbsp;</label>
     <div class="filtros-botones">
         <button type="submit" class="filtro-aplicar-btn">Aplicar</button>
-        <button type="button" class="filtro-limpiar-btn" id="limpiarFiltrosBtn" title="Limpiar filtros">
+            <button type="button" class="filtro-limpiar-btn" id="limpiarFiltrosBtn" title="Limpiar filtros" disabled>
             <i class="fa-solid fa-xmark"></i>
         </button>
+        </div>
     </div>
 </form>
 
@@ -784,6 +482,130 @@ foreach($populares as $pop) {
     </div>
 </section>
 
+</div>
+
+<div class="movies-filter-modal" id="ratingModal">
+    <div class="movies-filter-modal-content">
+        <div class="movies-filter-modal-header">
+            <h3>Filtrar por Calificación</h3>
+            <button type="button" class="movies-filter-modal-close" data-modal="ratingModal">&times;</button>
+        </div>
+        <div class="movies-filter-modal-body">
+            <div class="movies-filter-option-type">
+                <label>Tipo de filtro</label>
+                <div class="movies-filter-radio-group">
+                    <div class="movies-filter-radio-item">
+                        <input type="radio" name="rating_type" id="rating_type_single" value="single" checked>
+                        <label for="rating_type_single">Calificación específica</label>
+                    </div>
+                    <div class="movies-filter-radio-item">
+                        <input type="radio" name="rating_type" id="rating_type_range" value="range">
+                        <label for="rating_type_range">Rango</label>
+                    </div>
+                </div>
+            </div>
+            <div id="rating_single_inputs">
+                <div class="movies-filter-input-group">
+                    <label>Calificación</label>
+                    <select id="rating_single_value">
+                        <option value="">Seleccionar</option>
+                        <?php for ($r = 0.0; $r <= 10.0; $r += 0.1): $r = round($r, 1); ?>
+                        <option value="<?php echo $r; ?>"><?php echo number_format($r, 1); ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+            </div>
+            <div id="rating_range_inputs" style="display:none;">
+                <div class="movies-filter-inputs">
+                    <div class="movies-filter-input-group">
+                        <label>Mínimo</label>
+                        <select id="rating_range_min">
+                            <option value="">Mín</option>
+                            <?php for ($r = 0.0; $r <= 10.0; $r += 0.1): $r = round($r, 1); ?>
+                            <option value="<?php echo $r; ?>"><?php echo number_format($r, 1); ?></option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+                    <div class="movies-filter-input-group">
+                        <label>Máximo</label>
+                        <select id="rating_range_max">
+                            <option value="">Máx</option>
+                            <?php for ($r = 0.0; $r <= 10.0; $r += 0.1): $r = round($r, 1); ?>
+                            <option value="<?php echo $r; ?>"><?php echo number_format($r, 1); ?></option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="movies-filter-modal-footer">
+            <button type="button" class="movies-filter-btn movies-filter-btn-secondary" data-modal="ratingModal">Cancelar</button>
+            <button type="button" class="movies-filter-btn movies-filter-btn-primary" id="ratingModalApply">Aplicar</button>
+        </div>
+    </div>
+</div>
+
+<div class="movies-filter-modal" id="yearModal">
+    <div class="movies-filter-modal-content">
+        <div class="movies-filter-modal-header">
+            <h3>Filtrar por Año</h3>
+            <button type="button" class="movies-filter-modal-close" data-modal="yearModal">&times;</button>
+        </div>
+        <div class="movies-filter-modal-body">
+            <div class="movies-filter-option-type">
+                <label>Tipo de filtro</label>
+                <div class="movies-filter-radio-group">
+                    <div class="movies-filter-radio-item">
+                        <input type="radio" name="year_type" id="year_type_single" value="single" checked>
+                        <label for="year_type_single">Año específico</label>
+                    </div>
+                    <div class="movies-filter-radio-item">
+                        <input type="radio" name="year_type" id="year_type_range" value="range">
+                        <label for="year_type_range">Rango</label>
+                    </div>
+                </div>
+            </div>
+            <div id="year_single_inputs">
+                <div class="movies-filter-input-group">
+                    <label>Año</label>
+                    <select id="year_single_value">
+                        <option value="">Seleccionar</option>
+                        <?php for ($y = 1970; $y <= 2025; $y++): ?>
+                        <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+            </div>
+            <div id="year_range_inputs" style="display:none;">
+                <div class="movies-filter-inputs">
+                    <div class="movies-filter-input-group">
+                        <label>Mínimo</label>
+                        <select id="year_range_min">
+                            <option value="">Mín</option>
+                            <?php for ($y = 1970; $y <= 2025; $y++): ?>
+                            <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+                    <div class="movies-filter-input-group">
+                        <label>Máximo</label>
+                        <select id="year_range_max">
+                            <option value="">Máx</option>
+                            <?php for ($y = 1970; $y <= 2025; $y++): ?>
+                            <option value="<?php echo $y; ?>"><?php echo $y; ?></option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="movies-filter-modal-footer">
+            <button type="button" class="movies-filter-btn movies-filter-btn-secondary" data-modal="yearModal">Cancelar</button>
+            <button type="button" class="movies-filter-btn movies-filter-btn-primary" id="yearModalApply">Aplicar</button>
+        </div>
+    </div>
+</div>
+
 <script src="./scripts/vendors/jquery-3.5.1.min.js"></script>
 <script src="./scripts/vendors/bootstrap.bundle.min.js"></script>
 <script src="./scripts/vendors/owl.carousel.min.js"></script>
@@ -801,83 +623,27 @@ foreach($populares as $pop) {
 <script src="./scripts/vendors/jwplayer.core.controls.js"></script>
 <script src="./scripts/vendors/provider.hlsjs.js"></script>
 <script src="./scripts/core/main.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+<script src="./scripts/movies/filters.js"></script>
+<script src="./scripts/movies/modals.js"></script>
+
 <script>
-// Barra de año
-const yearSlider = document.getElementById('year_slider');
-const yearSliderBox = document.getElementById('year_slider_box');
-const yearMinInput = document.getElementById('year_min');
-const yearMaxInput = document.getElementById('year_max');
-const yearMinVal = document.getElementById('year_min_val');
-const yearMaxVal = document.getElementById('year_max_val');
-let yearMin = parseInt(yearMinInput.value) || 1900;
-let yearMax = parseInt(yearMaxInput.value) || 2025;
-noUiSlider.create(yearSlider, {
-    start: [yearMin, yearMax],
-    connect: true,
-    step: 1,
-    range: { min: 1900, max: 2025 },
-    tooltips: [true, true],
-    format: {
-        to: v => parseInt(v),
-        from: v => parseInt(v)
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('filtrosToggleBtn');
+    const filtrosForm = document.getElementById('filtrosForm');
+    const toggleText = document.getElementById('filtrosToggleText');
+    
+    if (toggleBtn && filtrosForm && toggleText) {
+        toggleBtn.addEventListener('click', function() {
+            if (filtrosForm.classList.contains('filtros-hidden')) {
+                filtrosForm.classList.remove('filtros-hidden');
+                toggleText.textContent = 'Ocultar Filtros';
+            } else {
+                filtrosForm.classList.add('filtros-hidden');
+                toggleText.textContent = 'Mostrar Filtros';
+            }
+        });
     }
 });
-yearSlider.noUiSlider.on('update', function(values) {
-    yearMinVal.textContent = values[0];
-    yearMaxVal.textContent = values[1];
-    yearMinInput.value = values[0];
-    yearMaxInput.value = values[1];
-});
-document.getElementById('label_year').onclick = document.getElementById('year_range').onclick = function(e) {
-    yearSliderBox.style.display = yearSliderBox.style.display === 'block' ? 'none' : 'block';
-    e.stopPropagation();
-};
-document.addEventListener('click', function() {
-    yearSliderBox.style.display = 'none';
-});
-yearSliderBox.onclick = function(e){ e.stopPropagation(); }
-
-// Barra de calificación
-const ratingSlider = document.getElementById('rating_slider');
-const ratingSliderBox = document.getElementById('rating_slider_box');
-const ratingMinInput = document.getElementById('rating_min');
-const ratingMaxInput = document.getElementById('rating_max');
-const ratingMinVal = document.getElementById('rating_min_val');
-const ratingMaxVal = document.getElementById('rating_max_val');
-let ratingMin = parseFloat(ratingMinInput.value) || 0;
-let ratingMax = parseFloat(ratingMaxInput.value) || 10;
-noUiSlider.create(ratingSlider, {
-    start: [ratingMin, ratingMax],
-    connect: true,
-    step: 0.1,
-    range: { min: 0, max: 10 },
-    tooltips: [true, true],
-    format: {
-        to: v => parseFloat(v).toFixed(1),
-        from: v => parseFloat(v)
-    }
-});
-ratingSlider.noUiSlider.on('update', function(values) {
-    ratingMinVal.textContent = values[0];
-    ratingMaxVal.textContent = values[1];
-    ratingMinInput.value = values[0];
-    ratingMaxInput.value = values[1];
-});
-document.getElementById('label_rating').onclick = document.getElementById('rating_range').onclick = function(e) {
-    ratingSliderBox.style.display = ratingSliderBox.style.display === 'block' ? 'none' : 'block';
-    e.stopPropagation();
-};
-document.addEventListener('click', function() {
-    ratingSliderBox.style.display = 'none';
-});
-ratingSliderBox.onclick = function(e){ e.stopPropagation(); }
-
-document.getElementById('limpiarFiltrosBtn').onclick = function() {
-    // Borra todos los filtros y recarga la página sin parámetros GET
-    window.location.href = window.location.pathname;
-};
-
 </script>
 
 </body>

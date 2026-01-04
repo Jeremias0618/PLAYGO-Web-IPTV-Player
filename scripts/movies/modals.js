@@ -1,4 +1,4 @@
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
     const ratingDisplay = document.getElementById('rating_display');
@@ -250,5 +250,4 @@
 
     updateRatingDisplay();
     updateYearDisplay();
-})();
-
+});

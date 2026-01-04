@@ -54,14 +54,14 @@ $populares = $data['popular'];
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
-    <link rel="stylesheet" href="./styles/movies/movies-layout.css">
-    <link rel="stylesheet" href="./styles/movies/movies-pagination.css">
-    <link rel="stylesheet" href="./styles/movies/movies-title.css">
-    <link rel="stylesheet" href="./styles/movies/movies-filters.css">
-    <link rel="stylesheet" href="./styles/movies/movies-modals.css">
-    <link rel="stylesheet" href="./styles/movies/movies-cards.css">
-    <link rel="stylesheet" href="./styles/movies/movies-popular.css">
-    <link rel="stylesheet" href="./styles/movies/movies-mobile.css">
+    <link rel="stylesheet" href="./styles/movies/layout.css">
+    <link rel="stylesheet" href="./styles/movies/pagination.css">
+    <link rel="stylesheet" href="./styles/movies/title.css">
+    <link rel="stylesheet" href="./styles/movies/filters.css">
+    <link rel="stylesheet" href="./styles/movies/modals.css">
+    <link rel="stylesheet" href="./styles/movies/cards.css">
+    <link rel="stylesheet" href="./styles/movies/popular.css">
+    <link rel="stylesheet" href="./styles/movies/mobile.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - Películas</title>
 <?php if($backdrop_fondo): ?>
@@ -146,6 +146,11 @@ $populares = $data['popular'];
     <div class="movies-page-title">
         <h2>PELÍCULAS</h2>
     </div>
+    
+    <button type="button" class="filtros-toggle-btn" id="filtrosToggleBtn">
+        <i class="fa fa-filter"></i> <span id="filtrosToggleText">Ocultar Filtros</span>
+    </button>
+    
 <form id="filtrosForm" method="get" class="filtros-bar">
     <div class="filtro-opcion" style="position:relative;">
         <label for="genero">GÉNERO</label>
@@ -462,6 +467,26 @@ foreach($populares as $pop) {
 <script src="./scripts/core/main.js"></script>
 <script src="./scripts/movies/filters.js"></script>
 <script src="./scripts/movies/modals.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('filtrosToggleBtn');
+    const filtrosForm = document.getElementById('filtrosForm');
+    const toggleText = document.getElementById('filtrosToggleText');
+    
+    if (toggleBtn && filtrosForm && toggleText) {
+        toggleBtn.addEventListener('click', function() {
+            if (filtrosForm.classList.contains('filtros-hidden')) {
+                filtrosForm.classList.remove('filtros-hidden');
+                toggleText.textContent = 'Ocultar Filtros';
+            } else {
+                filtrosForm.classList.add('filtros-hidden');
+                toggleText.textContent = 'Mostrar Filtros';
+            }
+        });
+    }
+});
+</script>
 
 </body>
 </html>

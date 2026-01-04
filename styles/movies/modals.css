@@ -121,7 +121,7 @@
     background: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 6px;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.7);
     text-align: center;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -134,7 +134,9 @@
 .movies-filter-radio-item input[type="radio"]:checked + label {
     background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
     border-color: transparent;
-    color: #fff;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
 }
 
 .movies-filter-radio-item label:hover {
@@ -276,16 +278,158 @@
 
 @media (max-width: 600px) {
     .movies-filter-modal-content {
-        padding: 20px;
-        width: 95%;
-        max-height: 85vh;
+        padding: 24px 20px;
+        width: calc(100% - 24px);
+        max-width: unset;
+        max-height: 90vh;
+        border-radius: 20px;
+        margin: 0 12px;
+        background: linear-gradient(135deg, #1c1c1c 0%, #2a2a2a 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
+    
+    .movies-filter-modal-header {
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+    }
+    
     .movies-filter-modal-header h3 {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
+        background: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
+    
+    .movies-filter-modal-close {
+        width: 36px;
+        height: 36px;
+        font-size: 2rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+    }
+    
+    .movies-filter-modal-close:hover {
+        background: rgba(229, 9, 20, 0.2);
+    }
+    
+    .movies-filter-modal-body {
+        margin-bottom: 20px;
+    }
+    
+    .movies-filter-option-type {
+        margin-bottom: 24px;
+    }
+    
+    .movies-filter-option-type label {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .movies-filter-radio-group {
+        gap: 12px;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 12px;
+        border-radius: 12px;
+    }
+    
+    .movies-filter-radio-item {
+        padding: 0;
+        background: transparent;
+        border-radius: 10px;
+    }
+    
+    .movies-filter-radio-item label {
+        padding: 14px 16px;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .movies-filter-radio-item input[type="radio"]:checked + label {
+        background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
+        border-color: transparent;
+        color: #ffffff;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+    }
+    
+    .movies-filter-input-group {
+        margin-bottom: 16px;
+    }
+    
+    .movies-filter-input-group label {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .movies-filter-input-group select {
+        width: 100%;
+        padding: 14px 40px 14px 16px;
+        font-size: 1rem;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        height: 50px;
+    }
+    
+    .movies-filter-input-group select:focus {
+        background: rgba(0, 0, 0, 0.7);
+        border-color: #e50914;
+        box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15);
+    }
+    
     .movies-filter-inputs {
         flex-direction: column;
-        gap: 15px;
+        gap: 16px;
+    }
+    
+    .movies-filter-modal-footer {
+        padding-top: 16px;
+        gap: 12px;
+    }
+    
+    .movies-filter-btn {
+        flex: 1;
+        padding: 14px 20px;
+        font-size: 1rem;
+        border-radius: 12px;
+        height: 50px;
+    }
+    
+    .movies-filter-btn-primary {
+        box-shadow: 0 4px 16px rgba(229, 9, 20, 0.3);
+    }
+    
+    .movies-filter-btn:active {
+        transform: scale(0.97);
+    }
+    
+    .movies-filter-display {
+        width: 100%;
+        min-width: unset;
+        padding: 14px 40px 14px 16px;
+        font-size: 1rem;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.5) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        height: 50px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .movies-filter-display:hover {
+        background: rgba(0, 0, 0, 0.7) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
     }
 }
 
