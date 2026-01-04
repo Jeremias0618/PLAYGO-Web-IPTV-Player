@@ -17,26 +17,6 @@ if (!defined('IP')) {
     }
 }
 
-if (!defined('HOME_BEMVINDO')) {
-    $idiomaPath = __DIR__ . '/idioma.php';
-    if (file_exists($idiomaPath)) {
-        require_once($idiomaPath);
-    } else {
-        $idiomaPath = dirname(__DIR__) . '/libs/idioma.php';
-        if (file_exists($idiomaPath)) {
-            require_once($idiomaPath);
-        }
-    }
-}
-
-if (isset($valor1) && isset($valor2) && isset($valor3) && isset($valor4)) {
-    $vl1 = explode(".",$valor1);
-    $vl2 = explode(".",$valor2);
-    $vl3 = explode(".",$valor3);
-    $vl4 = explode(".",$valor4);
-} else {
-    $vl1 = $vl2 = $vl3 = $vl4 = [];
-}
 
 function apixtream($url_api){	
 $ch = curl_init();	
@@ -81,53 +61,6 @@ function ds($ds) {
 	
 }
 
-function avaliacao($avs) {
-	
-	if($avs == 0){
-		$res = '<i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>';
-	}
-	if(($avs >= 1) && ($media <= 1.99)){
-		$res = '<i class="fa fa-star"></i>
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>';
-	}
-	if(($avs >= 2) && ($media <= 2.99)){
-		$res = '<i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>';
-	}
-	if(($avs >= 3) && ($media <= 3.99)){
-		$res = '<i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>';
-	}
-	if(($avs >= 4) && ($media <= 4.99)){
-		$res = '<i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star-o"></i>';
-	}
-	if(($avs >= 5)){
-		$res = '<i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>';
-	}
-	return $res;
-
-}
 
 if($_GET['acao'] == 'sair') {
   session_unset();
@@ -141,20 +74,4 @@ if($_GET['acao'] == 'sair') {
   header("Location: login.php");	
 }
 
-function thor($action, $string) {
-    $output = false;
-    $encrypt_method = "AES-256-CBC";
-    $secret_key = '9991';
-    $secret_iv = '1119';
-    $key = hash('sha256', $secret_key);
-    
-    $iv = substr(hash('sha256', $secret_iv), 0, 16);
-    if ( $action == 'encode' ) {
-        $output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);
-        $output = base64_encode($output);
-    } else if( $action == 'decode' ) {
-        $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
-    }
-    return $output;
-}
 ?>
