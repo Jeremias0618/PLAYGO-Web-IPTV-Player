@@ -117,30 +117,65 @@ function sortMovies($movies, $order, $direction = 'asc') {
         });
     } elseif ($order == 'año') {
         usort($sorted, function($a, $b) use ($dir) {
-            $yearA = 0;
-            $yearB = 0;
+            $getYearMonth = function($item) {
+                $year = 0;
+                $month = 0;
+                
+                if (isset($item['releaseDate']) && !empty($item['releaseDate'])) {
+                    $dateStr = $item['releaseDate'];
+                    if (preg_match('/^(\d{4})-(\d{2})/', $dateStr, $matches)) {
+                        $year = intval($matches[1]);
+                        $month = intval($matches[2]);
+                    } elseif (preg_match('/^(\d{4})/', $dateStr, $matches)) {
+                        $year = intval($matches[1]);
+                    }
+                } elseif (isset($item['releasedate']) && !empty($item['releasedate'])) {
+                    $dateStr = $item['releasedate'];
+                    if (preg_match('/^(\d{4})-(\d{2})/', $dateStr, $matches)) {
+                        $year = intval($matches[1]);
+                        $month = intval($matches[2]);
+                    } elseif (preg_match('/^(\d{4})/', $dateStr, $matches)) {
+                        $year = intval($matches[1]);
+                    }
+                } elseif (isset($item['year']) && !empty($item['year'])) {
+                    if (is_numeric($item['year'])) {
+                        $year = intval($item['year']);
+                    } else {
+                        $yearStr = $item['year'];
+                        if (preg_match('/^(\d{4})-(\d{2})/', $yearStr, $matches)) {
+                            $year = intval($matches[1]);
+                            $month = intval($matches[2]);
+                        } elseif (preg_match('/^(\d{4})/', $yearStr, $matches)) {
+                            $year = intval($matches[1]);
+                        }
+                    }
+                } elseif (isset($item['name']) && preg_match('/\((\d{4})\)/', $item['name'], $matches)) {
+                    $year = intval($matches[1]);
+                }
+                
+                return ['year' => $year, 'month' => $month];
+            };
             
-            if (isset($a['year']) && !empty($a['year'])) {
-                $yearA = is_numeric($a['year']) ? intval($a['year']) : intval(substr($a['year'], 0, 4));
-            } elseif (isset($a['releaseDate']) && !empty($a['releaseDate'])) {
-                $yearA = intval(substr($a['releaseDate'], 0, 4));
-            } elseif (isset($a['releasedate']) && !empty($a['releasedate'])) {
-                $yearA = intval(substr($a['releasedate'], 0, 4));
-            } elseif (isset($a['name']) && preg_match('/\((\d{4})\)/', $a['name'], $matches)) {
-                $yearA = intval($matches[1]);
+            $dateA = $getYearMonth($a);
+            $dateB = $getYearMonth($b);
+            
+            if ($dateA['year'] != $dateB['year']) {
+                return ($dateB['year'] <=> $dateA['year']) * $dir;
             }
             
-            if (isset($b['year']) && !empty($b['year'])) {
-                $yearB = is_numeric($b['year']) ? intval($b['year']) : intval(substr($b['year'], 0, 4));
-            } elseif (isset($b['releaseDate']) && !empty($b['releaseDate'])) {
-                $yearB = intval(substr($b['releaseDate'], 0, 4));
-            } elseif (isset($b['releasedate']) && !empty($b['releasedate'])) {
-                $yearB = intval(substr($b['releasedate'], 0, 4));
-            } elseif (isset($b['name']) && preg_match('/\((\d{4})\)/', $b['name'], $matches)) {
-                $yearB = intval($matches[1]);
+            if ($dateA['month'] == 0 && $dateB['month'] == 0) {
+                return 0;
             }
             
-            return ($yearB <=> $yearA) * $dir;
+            if ($dateA['month'] == 0) {
+                return 1 * $dir;
+            }
+            
+            if ($dateB['month'] == 0) {
+                return -1 * $dir;
+            }
+            
+            return ($dateB['month'] <=> $dateA['month']) * $dir;
         });
     } elseif ($order == 'rating') {
         usort($sorted, function($a, $b) use ($dir) {

@@ -623,8 +623,8 @@ foreach($populares as $pop) {
 <script src="./scripts/vendors/jwplayer.core.controls.js"></script>
 <script src="./scripts/vendors/provider.hlsjs.js"></script>
 <script src="./scripts/core/main.js"></script>
-<script src="./scripts/movies/filters.js"></script>
-<script src="./scripts/movies/modals.js"></script>
+<script src="./scripts/series/filters.js"></script>
+<script src="./scripts/series/modals.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

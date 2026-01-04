@@ -11,10 +11,29 @@ if (!function_exists('getMoviesData')) {
 function getMoviesPageData($user, $pwd, $params = []) {
     $categoryId = isset($params['id']) ? trim($params['id']) : null;
     $genre = isset($params['genero']) && $params['genero'] != '' ? $params['genero'] : null;
-    $ratingMin = isset($params['rating_min']) && $params['rating_min'] !== '' ? trim($params['rating_min']) : null;
-    $ratingMax = isset($params['rating_max']) && $params['rating_max'] !== '' ? trim($params['rating_max']) : null;
-    $yearMin = isset($params['year_min']) && $params['year_min'] !== '' ? trim($params['year_min']) : null;
-    $yearMax = isset($params['year_max']) && $params['year_max'] !== '' ? trim($params['year_max']) : null;
+    
+    $ratingMin = null;
+    $ratingMax = null;
+    if (isset($params['rating']) && $params['rating'] !== '' && $params['rating'] !== null) {
+        $rating = intval($params['rating']);
+        $ratingMin = $rating;
+        $ratingMax = $rating + 0.9;
+    } elseif (isset($params['rating_min']) && $params['rating_min'] !== '' && isset($params['rating_max']) && $params['rating_max'] !== '') {
+        $ratingMin = intval($params['rating_min']);
+        $ratingMax = intval($params['rating_max']) + 0.9;
+    }
+    
+    $yearMin = null;
+    $yearMax = null;
+    if (isset($params['year']) && $params['year'] !== '' && $params['year'] !== null) {
+        $year = intval($params['year']);
+        $yearMin = $year;
+        $yearMax = $year;
+    } elseif (isset($params['year_min']) && $params['year_min'] !== '' && isset($params['year_max']) && $params['year_max'] !== '') {
+        $yearMin = intval($params['year_min']);
+        $yearMax = intval($params['year_max']);
+    }
+    
     $order = isset($params['orden']) && $params['orden'] != '' ? $params['orden'] : null;
     $orderDir = isset($params['orden_dir']) && in_array($params['orden_dir'], ['asc', 'desc']) ? $params['orden_dir'] : 'asc';
     $page = isset($params['pagina']) ? max(1, intval($params['pagina'])) : 1;
@@ -25,11 +44,11 @@ function getMoviesPageData($user, $pwd, $params = []) {
         $movies = filterMoviesByGenre($movies, $genre);
     }
     
-    if ($ratingMin !== null && $ratingMin !== '' && $ratingMax !== null && $ratingMax !== '') {
+    if ($ratingMin !== null && $ratingMax !== null) {
         $movies = filterMoviesByRating($movies, $ratingMin, $ratingMax);
     }
     
-    if ($yearMin !== null && $yearMin !== '' && $yearMax !== null && $yearMax !== '') {
+    if ($yearMin !== null && $yearMax !== null) {
         $movies = filterMoviesByYear($movies, $yearMin, $yearMax);
     }
     

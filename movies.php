@@ -19,8 +19,10 @@ $pwd = $_COOKIE['xpwdm'];
 $params = [
     'id' => isset($_REQUEST['id']) ? trim($_REQUEST['id']) : null,
     'genero' => isset($_GET['genero']) ? $_GET['genero'] : null,
+    'rating' => isset($_GET['rating']) ? $_GET['rating'] : null,
     'rating_min' => isset($_GET['rating_min']) ? $_GET['rating_min'] : null,
     'rating_max' => isset($_GET['rating_max']) ? $_GET['rating_max'] : null,
+    'year' => isset($_GET['year']) ? $_GET['year'] : null,
     'year_min' => isset($_GET['year_min']) ? $_GET['year_min'] : null,
     'year_max' => isset($_GET['year_max']) ? $_GET['year_max'] : null,
     'orden' => isset($_GET['orden']) ? $_GET['orden'] : null,
@@ -168,19 +170,20 @@ $populares = $data['popular'];
         <label for="rating_display">CALIFICACIÓN</label>
         <div class="movies-filter-display" id="rating_display">
             <?php
-            $ratingMin = isset($_GET['rating_min']) ? floatval($_GET['rating_min']) : null;
-            $ratingMax = isset($_GET['rating_max']) ? floatval($_GET['rating_max']) : null;
-            if ($ratingMin !== null && $ratingMax !== null) {
-                if ($ratingMin == $ratingMax) {
-                    echo number_format($ratingMin, 1);
-                } else {
-                    echo number_format($ratingMin, 1) . ' - ' . number_format($ratingMax, 1);
-                }
+            if (isset($_GET['rating']) && $_GET['rating'] !== '') {
+                echo intval($_GET['rating']);
             } else {
-                echo 'Todos';
+                $ratingMin = isset($_GET['rating_min']) ? intval($_GET['rating_min']) : null;
+                $ratingMax = isset($_GET['rating_max']) ? intval($_GET['rating_max']) : null;
+                if ($ratingMin !== null && $ratingMax !== null) {
+                    echo $ratingMin . ' - ' . $ratingMax;
+                } else {
+                    echo 'Todos';
+                }
             }
             ?>
         </div>
+        <input type="hidden" name="rating" id="rating" value="<?php echo isset($_GET['rating']) ? $_GET['rating'] : ''; ?>">
         <input type="hidden" name="rating_min" id="rating_min" value="<?php echo isset($_GET['rating_min']) ? $_GET['rating_min'] : ''; ?>">
         <input type="hidden" name="rating_max" id="rating_max" value="<?php echo isset($_GET['rating_max']) ? $_GET['rating_max'] : ''; ?>">
     </div>
@@ -188,19 +191,20 @@ $populares = $data['popular'];
         <label for="year_display">AÑO</label>
         <div class="movies-filter-display" id="year_display">
             <?php
-            $yearMin = isset($_GET['year_min']) ? intval($_GET['year_min']) : null;
-            $yearMax = isset($_GET['year_max']) ? intval($_GET['year_max']) : null;
-            if ($yearMin !== null && $yearMax !== null) {
-                if ($yearMin == $yearMax) {
-                    echo $yearMin;
-                } else {
-                    echo $yearMin . ' - ' . $yearMax;
-                }
+            if (isset($_GET['year']) && $_GET['year'] !== '') {
+                echo intval($_GET['year']);
             } else {
-                echo 'Todos';
+                $yearMin = isset($_GET['year_min']) ? intval($_GET['year_min']) : null;
+                $yearMax = isset($_GET['year_max']) ? intval($_GET['year_max']) : null;
+                if ($yearMin !== null && $yearMax !== null) {
+                    echo $yearMin . ' - ' . $yearMax;
+                } else {
+                    echo 'Todos';
+                }
             }
             ?>
         </div>
+        <input type="hidden" name="year" id="year" value="<?php echo isset($_GET['year']) ? $_GET['year'] : ''; ?>">
         <input type="hidden" name="year_min" id="year_min" value="<?php echo isset($_GET['year_min']) ? $_GET['year_min'] : ''; ?>">
         <input type="hidden" name="year_max" id="year_max" value="<?php echo isset($_GET['year_max']) ? $_GET['year_max'] : ''; ?>">
     </div>
@@ -351,8 +355,8 @@ foreach($populares as $pop) {
                     <label>Calificación</label>
                     <select id="rating_single_value">
                         <option value="">Seleccionar</option>
-                        <?php for ($r = 0.0; $r <= 10.0; $r += 0.1): $r = round($r, 1); ?>
-                        <option value="<?php echo $r; ?>"><?php echo number_format($r, 1); ?></option>
+                        <?php for ($r = 1; $r <= 10; $r++): ?>
+                        <option value="<?php echo $r; ?>"><?php echo $r; ?></option>
                         <?php endfor; ?>
                     </select>
                 </div>
@@ -363,8 +367,8 @@ foreach($populares as $pop) {
                         <label>Mínimo</label>
                         <select id="rating_range_min">
                             <option value="">Mín</option>
-                            <?php for ($r = 0.0; $r <= 10.0; $r += 0.1): $r = round($r, 1); ?>
-                            <option value="<?php echo $r; ?>"><?php echo number_format($r, 1); ?></option>
+                            <?php for ($r = 1; $r <= 10; $r++): ?>
+                            <option value="<?php echo $r; ?>"><?php echo $r; ?></option>
                             <?php endfor; ?>
                         </select>
                     </div>
@@ -372,8 +376,8 @@ foreach($populares as $pop) {
                         <label>Máximo</label>
                         <select id="rating_range_max">
                             <option value="">Máx</option>
-                            <?php for ($r = 0.0; $r <= 10.0; $r += 0.1): $r = round($r, 1); ?>
-                            <option value="<?php echo $r; ?>"><?php echo number_format($r, 1); ?></option>
+                            <?php for ($r = 1; $r <= 10; $r++): ?>
+                            <option value="<?php echo $r; ?>"><?php echo $r; ?></option>
                             <?php endfor; ?>
                         </select>
                     </div>
@@ -470,6 +474,85 @@ foreach($populares as $pop) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cleanedParams = new URLSearchParams();
+    let hasChanges = false;
+    
+    const rating = urlParams.get('rating') || '';
+    const year = urlParams.get('year') || '';
+    
+    for (const [key, value] of urlParams.entries()) {
+        if (value === null || value === '' || value === undefined) {
+            hasChanges = true;
+            continue;
+        }
+        
+        if (key === 'rating') {
+            cleanedParams.append('rating', value);
+            continue;
+        }
+        
+        if (key === 'rating_min' || key === 'rating_max') {
+            if (rating === '') {
+                const min = urlParams.get('rating_min') || '';
+                const max = urlParams.get('rating_max') || '';
+                if (min !== '' && max !== '') {
+                    if (key === 'rating_min') {
+                        cleanedParams.append('rating_min', min);
+                        cleanedParams.append('rating_max', max);
+                    }
+                } else {
+                    hasChanges = true;
+                }
+            } else {
+                hasChanges = true;
+            }
+            continue;
+        }
+        
+        if (key === 'year') {
+            cleanedParams.append('year', value);
+            continue;
+        }
+        
+        if (key === 'year_min' || key === 'year_max') {
+            if (year === '') {
+                const min = urlParams.get('year_min') || '';
+                const max = urlParams.get('year_max') || '';
+                if (min !== '' && max !== '') {
+                    if (key === 'year_min') {
+                        cleanedParams.append('year_min', min);
+                        cleanedParams.append('year_max', max);
+                    }
+                } else {
+                    hasChanges = true;
+                }
+            } else {
+                hasChanges = true;
+            }
+            continue;
+        }
+        
+        if (key === 'orden_dir') {
+            const orden = urlParams.get('orden') || '';
+            if (orden !== '') {
+                cleanedParams.append(key, value);
+            } else {
+                hasChanges = true;
+            }
+            continue;
+        }
+        
+        cleanedParams.append(key, value);
+    }
+    
+    if (hasChanges) {
+        const newUrl = cleanedParams.toString() 
+            ? `${window.location.pathname}?${cleanedParams.toString()}`
+            : window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+    }
+    
     const toggleBtn = document.getElementById('filtrosToggleBtn');
     const filtrosForm = document.getElementById('filtrosForm');
     const toggleText = document.getElementById('filtrosToggleText');

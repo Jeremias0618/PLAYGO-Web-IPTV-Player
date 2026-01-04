@@ -33,59 +33,57 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateRatingDisplay() {
-        const ratingInput = document.getElementById('rating');
-        if (ratingInput && ratingInput.value) {
-            ratingDisplay.textContent = ratingInput.value;
-        } else {
-            const min = ratingMinInput.value;
-            const max = ratingMaxInput.value;
-            if (min && max) {
-                const minVal = parseInt(min);
-                const maxVal = parseInt(max);
-                ratingDisplay.textContent = minVal + ' - ' + maxVal;
+        const min = ratingMinInput.value;
+        const max = ratingMaxInput.value;
+        if (min && max) {
+            const minVal = parseFloat(min);
+            const maxVal = parseFloat(max);
+            if (minVal === maxVal) {
+                ratingDisplay.textContent = minVal.toFixed(1);
             } else {
-                ratingDisplay.textContent = 'Todos';
+                ratingDisplay.textContent = minVal.toFixed(1) + ' - ' + maxVal.toFixed(1);
             }
+        } else {
+            ratingDisplay.textContent = 'Todos';
         }
     }
 
     function updateYearDisplay() {
-        const yearInput = document.getElementById('year');
-        if (yearInput && yearInput.value) {
-            yearDisplay.textContent = yearInput.value;
-        } else {
-            const min = yearMinInput.value;
-            const max = yearMaxInput.value;
-            if (min && max) {
-                const minVal = parseInt(min);
-                const maxVal = parseInt(max);
-                yearDisplay.textContent = minVal + ' - ' + maxVal;
+        const min = yearMinInput.value;
+        const max = yearMaxInput.value;
+        if (min && max) {
+            const minVal = parseInt(min);
+            const maxVal = parseInt(max);
+            if (minVal === maxVal) {
+                yearDisplay.textContent = minVal;
             } else {
-                yearDisplay.textContent = 'Todos';
+                yearDisplay.textContent = minVal + ' - ' + maxVal;
             }
+        } else {
+            yearDisplay.textContent = 'Todos';
         }
     }
 
     if (ratingDisplay) {
         ratingDisplay.addEventListener('click', function() {
-            const ratingInput = document.getElementById('rating');
-            const currentRating = ratingInput ? ratingInput.value : '';
             const currentMin = ratingMinInput.value;
             const currentMax = ratingMaxInput.value;
 
-            if (currentRating) {
-                document.getElementById('rating_type_single').checked = true;
-                document.getElementById('rating_single_value').value = currentRating;
-                document.getElementById('rating_range_inputs').style.display = 'none';
-                document.getElementById('rating_single_inputs').style.display = 'block';
-            } else if (currentMin && currentMax) {
-                const minVal = parseInt(currentMin);
-                const maxVal = parseInt(currentMax);
-                document.getElementById('rating_type_range').checked = true;
-                document.getElementById('rating_range_min').value = minVal;
-                document.getElementById('rating_range_max').value = maxVal;
-                document.getElementById('rating_single_inputs').style.display = 'none';
-                document.getElementById('rating_range_inputs').style.display = 'block';
+            if (currentMin && currentMax) {
+                const minVal = parseFloat(currentMin);
+                const maxVal = parseFloat(currentMax);
+                if (minVal === maxVal) {
+                    document.getElementById('rating_type_single').checked = true;
+                    document.getElementById('rating_single_value').value = currentMin;
+                    document.getElementById('rating_range_inputs').style.display = 'none';
+                    document.getElementById('rating_single_inputs').style.display = 'block';
+                } else {
+                    document.getElementById('rating_type_range').checked = true;
+                    document.getElementById('rating_range_min').value = currentMin;
+                    document.getElementById('rating_range_max').value = currentMax;
+                    document.getElementById('rating_single_inputs').style.display = 'none';
+                    document.getElementById('rating_range_inputs').style.display = 'block';
+                }
             } else {
                 document.getElementById('rating_type_single').checked = true;
                 document.getElementById('rating_single_value').value = '';
@@ -101,24 +99,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (yearDisplay) {
         yearDisplay.addEventListener('click', function() {
-            const yearInput = document.getElementById('year');
-            const currentYear = yearInput ? yearInput.value : '';
             const currentMin = yearMinInput.value;
             const currentMax = yearMaxInput.value;
 
-            if (currentYear) {
-                document.getElementById('year_type_single').checked = true;
-                document.getElementById('year_single_value').value = currentYear;
-                document.getElementById('year_range_inputs').style.display = 'none';
-                document.getElementById('year_single_inputs').style.display = 'block';
-            } else if (currentMin && currentMax) {
+            if (currentMin && currentMax) {
                 const minVal = parseInt(currentMin);
                 const maxVal = parseInt(currentMax);
-                document.getElementById('year_type_range').checked = true;
-                document.getElementById('year_range_min').value = minVal;
-                document.getElementById('year_range_max').value = maxVal;
-                document.getElementById('year_single_inputs').style.display = 'none';
-                document.getElementById('year_range_inputs').style.display = 'block';
+                if (minVal === maxVal) {
+                    document.getElementById('year_type_single').checked = true;
+                    document.getElementById('year_single_value').value = currentMin;
+                    document.getElementById('year_range_inputs').style.display = 'none';
+                    document.getElementById('year_single_inputs').style.display = 'block';
+                } else {
+                    document.getElementById('year_type_range').checked = true;
+                    document.getElementById('year_range_min').value = currentMin;
+                    document.getElementById('year_range_max').value = currentMax;
+                    document.getElementById('year_single_inputs').style.display = 'none';
+                    document.getElementById('year_range_inputs').style.display = 'block';
+                }
             } else {
                 document.getElementById('year_type_single').checked = true;
                 document.getElementById('year_single_value').value = '';
@@ -177,23 +175,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('ratingModalApply').addEventListener('click', function() {
         const type = document.querySelector('input[name="rating_type"]:checked').value;
-        const ratingInput = document.getElementById('rating');
-        
         if (type === 'single') {
             const value = document.getElementById('rating_single_value').value;
             if (value) {
-                ratingInput.value = value;
-                ratingMinInput.value = '';
-                ratingMaxInput.value = '';
+                ratingMinInput.value = value;
+                ratingMaxInput.value = value;
             } else {
-                ratingInput.value = '';
                 ratingMinInput.value = '';
                 ratingMaxInput.value = '';
             }
         } else {
             const min = document.getElementById('rating_range_min').value;
             const max = document.getElementById('rating_range_max').value;
-            ratingInput.value = '';
             ratingMinInput.value = min || '';
             ratingMaxInput.value = max || '';
         }
@@ -214,23 +207,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('yearModalApply').addEventListener('click', function() {
         const type = document.querySelector('input[name="year_type"]:checked').value;
-        const yearInput = document.getElementById('year');
-        
         if (type === 'single') {
             const value = document.getElementById('year_single_value').value;
             if (value) {
-                yearInput.value = value;
-                yearMinInput.value = '';
-                yearMaxInput.value = '';
+                yearMinInput.value = value;
+                yearMaxInput.value = value;
             } else {
-                yearInput.value = '';
                 yearMinInput.value = '';
                 yearMaxInput.value = '';
             }
         } else {
             const min = document.getElementById('year_range_min').value;
             const max = document.getElementById('year_range_max').value;
-            yearInput.value = '';
             yearMinInput.value = min || '';
             yearMaxInput.value = max || '';
         }
