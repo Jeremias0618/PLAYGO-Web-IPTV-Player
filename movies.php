@@ -16,27 +16,16 @@ if (!function_exists('limitar_texto')) {
 $user = $_COOKIE['xuserm'];
 $pwd = $_COOKIE['xpwdm'];
 
-$params = [
-    'id' => isset($_REQUEST['id']) ? trim($_REQUEST['id']) : null,
-    'genero' => isset($_GET['genero']) ? $_GET['genero'] : null,
-    'rating' => isset($_GET['rating']) ? $_GET['rating'] : null,
-    'rating_min' => isset($_GET['rating_min']) ? $_GET['rating_min'] : null,
-    'rating_max' => isset($_GET['rating_max']) ? $_GET['rating_max'] : null,
-    'year' => isset($_GET['year']) ? $_GET['year'] : null,
-    'year_min' => isset($_GET['year_min']) ? $_GET['year_min'] : null,
-    'year_max' => isset($_GET['year_max']) ? $_GET['year_max'] : null,
-    'orden' => isset($_GET['orden']) ? $_GET['orden'] : null,
-    'orden_dir' => isset($_GET['orden_dir']) ? $_GET['orden_dir'] : 'asc',
-    'pagina' => isset($_GET['pagina']) ? $_GET['pagina'] : 1
-];
+$params = getMoviesParams();
+$data = getMoviesPageWithPopular($user, $pwd, $params);
 
-$data = getMoviesPageData($user, $pwd, $params);
 $peliculas_pagina = $data['movies'];
 $total_paginas = $data['totalPages'];
 $pagina_actual = $data['currentPage'];
 $generos = $data['genres'];
 $backdrop_fondo = $data['backdrop'];
 $populares = $data['popular'];
+$hasFilters = $data['hasFilters'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -284,49 +273,51 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
             </div>
         </div>
     </div>
-    <section class="section section-popular">
+    <?php if (!$hasFilters): ?>
+    <section class="section section-popular" id="popularSection">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <h1 class="home__title bottom-margin-sml">POPULAR <b>ESTE MES</b></h1>
                 </div>
                 <?php
-foreach($populares as $pop) {
-    $filme_nome = $pop['name'];
-    $filme_img = $pop['stream_icon'];
-    $filme_ano = isset($pop['year']) ? $pop['year'] : '';
-    $filme_rat = $pop['rating'];
-    $filme_id = $pop['stream_id'];
-    $filme_type = $pop['stream_type'];
-?>
-<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-    <div class="card">
-        <div class="card__cover">
-        <img loading="lazy" class="popular-img" src="<?php echo $filme_img; ?>" alt="">
-            <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>" class="card__play">
-                <i class="fa-solid fa-circle-play"></i>
-            </a>
-        </div>
-        <div class="card__content">
-            <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>">
-                <span class="card__title" style="display:block;color:#fff;font-weight:600;font-size:1.05rem;margin-bottom:2px;">
-                    <?php
-                    $titulo_sin_anio = preg_replace('/\s*\(\d{4}\)$/', '', $filme_nome);
-                    echo limitar_texto($titulo_sin_anio, 40);
-                    ?>
-                </span>
-                <span class="card__rate"><?php echo $filme_ano; ?> &nbsp; <i class="fa-solid fa-star"></i><?php echo $filme_rat; ?></span>
-            </a>
-        </div>
-    </div>
-</div>
+                foreach($populares as $pop) {
+                    $filme_nome = $pop['name'];
+                    $filme_img = $pop['stream_icon'];
+                    $filme_ano = isset($pop['year']) ? $pop['year'] : '';
+                    $filme_rat = $pop['rating'];
+                    $filme_id = $pop['stream_id'];
+                    $filme_type = $pop['stream_type'];
+                ?>
+                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                    <div class="card">
+                        <div class="card__cover">
+                        <img loading="lazy" class="popular-img" src="<?php echo $filme_img; ?>" alt="">
+                            <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>" class="card__play">
+                                <i class="fa-solid fa-circle-play"></i>
+                            </a>
+                        </div>
+                        <div class="card__content">
+                            <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>">
+                                <span class="card__title" style="display:block;color:#fff;font-weight:600;font-size:1.05rem;margin-bottom:2px;">
+                                    <?php
+                                    $titulo_sin_anio = preg_replace('/\s*\(\d{4}\)$/', '', $filme_nome);
+                                    echo limitar_texto($titulo_sin_anio, 40);
+                                    ?>
+                                </span>
+                                <span class="card__rate"><?php echo $filme_ano; ?> &nbsp; <i class="fa-solid fa-star"></i><?php echo $filme_rat; ?></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 <?php } ?>
                 <div class="col-12 d-flex justify-content-center">
                     <a href="populares.php" class="section__btn">Ver más</a>
                 </div>
             </div>
         </div>
-</section>
+    </section>
+    <?php endif; ?>
 
 </div>
 
@@ -471,105 +462,8 @@ foreach($populares as $pop) {
 <script src="./scripts/core/main.js"></script>
 <script src="./scripts/movies/filters.js"></script>
 <script src="./scripts/movies/modals.js"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const cleanedParams = new URLSearchParams();
-    let hasChanges = false;
-    
-    const rating = urlParams.get('rating') || '';
-    const year = urlParams.get('year') || '';
-    
-    for (const [key, value] of urlParams.entries()) {
-        if (value === null || value === '' || value === undefined) {
-            hasChanges = true;
-            continue;
-        }
-        
-        if (key === 'rating') {
-            cleanedParams.append('rating', value);
-            continue;
-        }
-        
-        if (key === 'rating_min' || key === 'rating_max') {
-            if (rating === '') {
-                const min = urlParams.get('rating_min') || '';
-                const max = urlParams.get('rating_max') || '';
-                if (min !== '' && max !== '') {
-                    if (key === 'rating_min') {
-                        cleanedParams.append('rating_min', min);
-                        cleanedParams.append('rating_max', max);
-                    }
-                } else {
-                    hasChanges = true;
-                }
-            } else {
-                hasChanges = true;
-            }
-            continue;
-        }
-        
-        if (key === 'year') {
-            cleanedParams.append('year', value);
-            continue;
-        }
-        
-        if (key === 'year_min' || key === 'year_max') {
-            if (year === '') {
-                const min = urlParams.get('year_min') || '';
-                const max = urlParams.get('year_max') || '';
-                if (min !== '' && max !== '') {
-                    if (key === 'year_min') {
-                        cleanedParams.append('year_min', min);
-                        cleanedParams.append('year_max', max);
-                    }
-                } else {
-                    hasChanges = true;
-                }
-            } else {
-                hasChanges = true;
-            }
-            continue;
-        }
-        
-        if (key === 'orden_dir') {
-            const orden = urlParams.get('orden') || '';
-            if (orden !== '') {
-                cleanedParams.append(key, value);
-            } else {
-                hasChanges = true;
-            }
-            continue;
-        }
-        
-        cleanedParams.append(key, value);
-    }
-    
-    if (hasChanges) {
-        const newUrl = cleanedParams.toString() 
-            ? `${window.location.pathname}?${cleanedParams.toString()}`
-            : window.location.pathname;
-        window.history.replaceState({}, '', newUrl);
-    }
-    
-    const toggleBtn = document.getElementById('filtrosToggleBtn');
-    const filtrosForm = document.getElementById('filtrosForm');
-    const toggleText = document.getElementById('filtrosToggleText');
-    
-    if (toggleBtn && filtrosForm && toggleText) {
-        toggleBtn.addEventListener('click', function() {
-            if (filtrosForm.classList.contains('filtros-hidden')) {
-                filtrosForm.classList.remove('filtros-hidden');
-                toggleText.textContent = 'Ocultar Filtros';
-            } else {
-                filtrosForm.classList.add('filtros-hidden');
-                toggleText.textContent = 'Mostrar Filtros';
-            }
-        });
-    }
-});
-</script>
+<script src="./scripts/movies/popular.js"></script>
+<script src="./scripts/movies/url-cleaner.js"></script>
 
 </body>
 </html>

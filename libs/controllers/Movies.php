@@ -8,6 +8,31 @@ if (!function_exists('getMoviesData')) {
     require_once(__DIR__ . '/../services/movies.php');
 }
 
+function getMoviesParams() {
+    return [
+        'id' => isset($_REQUEST['id']) ? trim($_REQUEST['id']) : null,
+        'genero' => isset($_GET['genero']) ? $_GET['genero'] : null,
+        'rating' => isset($_GET['rating']) ? $_GET['rating'] : null,
+        'rating_min' => isset($_GET['rating_min']) ? $_GET['rating_min'] : null,
+        'rating_max' => isset($_GET['rating_max']) ? $_GET['rating_max'] : null,
+        'year' => isset($_GET['year']) ? $_GET['year'] : null,
+        'year_min' => isset($_GET['year_min']) ? $_GET['year_min'] : null,
+        'year_max' => isset($_GET['year_max']) ? $_GET['year_max'] : null,
+        'orden' => isset($_GET['orden']) ? $_GET['orden'] : null,
+        'orden_dir' => isset($_GET['orden_dir']) ? $_GET['orden_dir'] : 'asc',
+        'pagina' => isset($_GET['pagina']) ? $_GET['pagina'] : 1
+    ];
+}
+
+function hasActiveFilters($params) {
+    return !empty($params['genero']) || 
+           !empty($params['rating']) || 
+           (!empty($params['rating_min']) && !empty($params['rating_max'])) ||
+           !empty($params['year']) ||
+           (!empty($params['year_min']) && !empty($params['year_max'])) ||
+           !empty($params['orden']);
+}
+
 function getMoviesPageData($user, $pwd, $params = []) {
     $categoryId = isset($params['id']) ? trim($params['id']) : null;
     $genre = isset($params['genero']) && $params['genero'] != '' ? $params['genero'] : null;
@@ -70,6 +95,28 @@ function getMoviesPageData($user, $pwd, $params = []) {
         'backdrop' => $backdrop,
         'popular' => $popular,
         'allMovies' => $movies
+    ];
+}
+
+function getMoviesPageWithPopular($user, $pwd, $params = []) {
+    $hasFilters = hasActiveFilters($params);
+    $data = getMoviesPageData($user, $pwd, $params);
+    
+    if (!$hasFilters) {
+        $allMovies = getMoviesData($user, $pwd, null);
+        $populares = getPopularMovies($allMovies, 6);
+    } else {
+        $populares = [];
+    }
+    
+    return [
+        'movies' => $data['movies'],
+        'totalPages' => $data['totalPages'],
+        'currentPage' => $data['currentPage'],
+        'genres' => $data['genres'],
+        'backdrop' => $data['backdrop'],
+        'popular' => $populares,
+        'hasFilters' => $hasFilters
     ];
 }
 

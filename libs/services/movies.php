@@ -228,12 +228,43 @@ function getPopularMovies($movies, $limit = 6) {
         return [];
     }
     
-    $populares = $movies;
-    usort($populares, function($a, $b) {
-        return floatval($b['rating']) <=> floatval($a['rating']);
-    });
+    $generos = getMoviesGenres($movies);
+    if (empty($generos)) {
+        return [];
+    }
     
-    return array_slice($populares, 0, $limit);
+    $populares = [];
+    $generosUsados = [];
+    
+    shuffle($generos);
+    
+    foreach ($generos as $genero) {
+        if (count($populares) >= $limit) {
+            break;
+        }
+        
+        $peliculasGenero = filterMoviesByGenre($movies, $genero);
+        
+        $peliculasFiltradas = array_filter($peliculasGenero, function($p) {
+            $r = isset($p['rating_5based']) ? floatval($p['rating_5based'])*2 : (isset($p['rating']) ? floatval($p['rating']) : 0);
+            return $r >= 5.0 && $r <= 10.0;
+        });
+        
+        if (!empty($peliculasFiltradas)) {
+            usort($peliculasFiltradas, function($a, $b) {
+                $ra = isset($a['rating_5based']) ? floatval($a['rating_5based'])*2 : (isset($a['rating']) ? floatval($a['rating']) : 0);
+                $rb = isset($b['rating_5based']) ? floatval($b['rating_5based'])*2 : (isset($b['rating']) ? floatval($b['rating']) : 0);
+                return $rb <=> $ra;
+            });
+            
+            $peliculasFiltradas = array_values($peliculasFiltradas);
+            $peliculaAleatoria = $peliculasFiltradas[array_rand($peliculasFiltradas)];
+            $populares[] = $peliculaAleatoria;
+            $generosUsados[] = $genero;
+        }
+    }
+    
+    return $populares;
 }
 
 function paginateMovies($movies, $page, $perPage = 48) {

@@ -837,7 +837,7 @@ $nota = $output['info']['rating'];
                                 <a href="./channels.php" class="header__nav-link">TV en Vivo</a>
                             </li>
                             <li class="header__nav-item">
-                                <a href="movies.php" class="header__nav-link">Películas</a>
+                                <a href="movies.php" class="header__nav-link header__nav-link--active">Películas</a>
                             </li>
                             <li class="header__nav-item">
                                 <a href="series.php" class="header__nav-link">Series</a>
@@ -1026,13 +1026,61 @@ $nota = $output['info']['rating'];
                         <h2 class="section__title section__title--sidebar">Usuarios también vieron</h2>
                 </div>
                 <?php
+                require_once(__DIR__ . '/libs/services/movies.php');
+                
                 $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams&category_id=$idcategoria";
                 $resposta = apixtream($url);
-                $output = json_decode($resposta,true);
-                shuffle($output);
-                $i = 1;
-                foreach(array_rand($output,6) as $index) {
-                    $row = $output[$index];
+                $output = json_decode($resposta, true);
+                
+                if (!is_array($output)) {
+                    $output = [];
+                }
+                
+                $moviesWithInfo = [];
+                $totalMovies = count($output);
+                
+                if ($totalMovies > 0) {
+                    $limit = min(50, $totalMovies);
+                    
+                    if ($limit > 0) {
+                        $randomIndices = [];
+                        if ($limit == 1) {
+                            $randomIndices = [array_rand($output)];
+                        } else {
+                            $randomIndices = array_rand($output, $limit);
+                            if (!is_array($randomIndices)) {
+                                $randomIndices = [$randomIndices];
+                            }
+                        }
+                        
+                        foreach ($randomIndices as $idx) {
+                            if (!isset($output[$idx])) continue;
+                            $movie = $output[$idx];
+                            if (isset($movie['stream_id']) && $movie['stream_id'] != $id) {
+                                $vod_id = $movie['stream_id'];
+                                $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$vod_id";
+                                $res_info = apixtream($url_info);
+                                $data_info = json_decode($res_info, true);
+                                
+                                if (isset($data_info['info']) && isset($data_info['movie_data'])) {
+                                    $movie['genre'] = isset($data_info['info']['genre']) ? $data_info['info']['genre'] : '';
+                                    $movie['rating'] = isset($data_info['info']['rating']) ? $data_info['info']['rating'] : '';
+                                    $movie['rating_5based'] = isset($data_info['info']['rating_5based']) ? $data_info['info']['rating_5based'] : '';
+                                }
+                                $moviesWithInfo[] = $movie;
+                            }
+                        }
+                    }
+                }
+                
+                $recomendadas = getPopularMovies($moviesWithInfo, 6);
+                
+                if (empty($recomendadas) && !empty($moviesWithInfo)) {
+                    shuffle($moviesWithInfo);
+                    $recomendadas = array_slice($moviesWithInfo, 0, 6);
+                }
+                
+                foreach($recomendadas as $row) {
                     $filme_nome = $row['name'];
                     $filme_nome = preg_replace('/\s*\(\d{4}\)$/', '', $filme_nome);
                     $filme_type = $row['stream_type'];
@@ -1068,7 +1116,7 @@ $nota = $output['info']['rating'];
         </div>
     </div>
 </div>
-                <?php $i++; } ?>
+                <?php } ?>
                 </div>
                 </div>
             </div>
