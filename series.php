@@ -90,22 +90,7 @@ $total_series = is_array($output) ? count($output) : 0;
 $total_paginas = ceil($total_series / $series_por_pagina);
 $series_pagina = ($output && is_array($output)) ? array_slice(array_values($output), $inicio, $series_por_pagina) : [];
 
-// --- FONDO ALEATORIO DE SERIE ---
 $backdrop_fondo = '';
-if ($output && is_array($output) && count($output) > 0) {
-    $serie_aleatoria = $output[array_rand($output)];
-    $series_id = $serie_aleatoria['series_id'];
-    $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_series_info&series_id=$series_id";
-    $res_info = apixtream($url_info);
-    $data_info = json_decode($res_info, true);
-    if (
-        isset($data_info['info']['backdrop_path']) &&
-        is_array($data_info['info']['backdrop_path']) &&
-        count($data_info['info']['backdrop_path']) > 0
-    ) {
-        $backdrop_fondo = $data_info['info']['backdrop_path'][0];
-    }
-}
 ?>
 
 <!DOCTYPE html>

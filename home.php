@@ -278,7 +278,7 @@ $series = getSeries($user, $pwd, 1000);
                 <div class="tab-pane fade show active" id="movies" role="tabpanel" aria-labelledby="movies-tab">
                     <div class="row" id="movies-grid">
                         <?php
-                        $movies_list = getMovies($user, $pwd, 16);
+                        $movies_list = array_slice($movies, 0, 16);
                         foreach($movies_list as $row) {
     $filme_nome = $row['name'];
     $filme_id = $row['stream_id'];
@@ -312,7 +312,7 @@ $series = getSeries($user, $pwd, 1000);
                 <div class="tab-pane fade" id="series" role="tabpanel" aria-labelledby="series-tab">
                     <div class="row" id="series-grid">
                         <?php
-                        $series_list = getSeries($user, $pwd, 16);
+                        $series_list = array_slice($series, 0, 16);
                         foreach($series_list as $row) {
     $serie_nome = $row['name'];
     $serie_id = $row['series_id'];
@@ -346,7 +346,43 @@ $series = getSeries($user, $pwd, 1000);
                 <div class="tab-pane fade" id="estrenos" role="tabpanel" aria-labelledby="estrenos-tab">
                     <div class="row" id="estrenos-grid">
                         <?php
-                        $estrenos = getPremieres($user, $pwd, 'movie', 16);
+                        $currentYear = date('Y');
+                        $estrenos = [];
+                        foreach($movies as $row) {
+                            $rowYear = isset($row['year']) ? $row['year'] : (isset($row['releaseDate']) ? substr($row['releaseDate'], 0, 4) : 'N/A');
+                            if ($rowYear == $currentYear) {
+                                $estrenos[] = $row;
+                            }
+                        }
+                        usort($estrenos, function($a, $b) {
+                            $dateA = 0;
+                            $dateB = 0;
+                            if (isset($a['releasedate']) && !empty($a['releasedate'])) {
+                                $dateA = strtotime($a['releasedate']);
+                            } elseif (isset($a['releaseDate']) && !empty($a['releaseDate'])) {
+                                $dateA = strtotime($a['releaseDate']);
+                            } elseif (isset($a['added']) && !empty($a['added'])) {
+                                $dateA = is_numeric($a['added']) ? (int)$a['added'] : strtotime($a['added']);
+                            } elseif (isset($a['year']) && !empty($a['year'])) {
+                                $dateA = strtotime($a['year'] . '-01-01');
+                            }
+                            if (isset($b['releasedate']) && !empty($b['releasedate'])) {
+                                $dateB = strtotime($b['releasedate']);
+                            } elseif (isset($b['releaseDate']) && !empty($b['releaseDate'])) {
+                                $dateB = strtotime($b['releaseDate']);
+                            } elseif (isset($b['added']) && !empty($b['added'])) {
+                                $dateB = is_numeric($b['added']) ? (int)$b['added'] : strtotime($b['added']);
+                            } elseif (isset($b['year']) && !empty($b['year'])) {
+                                $dateB = strtotime($b['year'] . '-01-01');
+                            }
+                            if ($dateA == $dateB) {
+                                $ratingA = isset($a['rating_5based']) ? (float)$a['rating_5based'] : (isset($a['rating']) ? (float)$a['rating'] : 0);
+                                $ratingB = isset($b['rating_5based']) ? (float)$b['rating_5based'] : (isset($b['rating']) ? (float)$b['rating'] : 0);
+                                return $ratingB <=> $ratingA;
+                            }
+                            return $dateB <=> $dateA;
+                        });
+                        $estrenos = array_slice($estrenos, 0, 16);
                         foreach($estrenos as $row) {
                             $filme_nome = $row['name'];
                             $filme_id = $row['stream_id'];
@@ -380,7 +416,27 @@ $series = getSeries($user, $pwd, 1000);
                 <div class="tab-pane fade" id="recientes" role="tabpanel" aria-labelledby="recientes-tab">
                     <div class="row" id="recientes-grid">
                         <?php
-                        $recientes = getRecentContent($user, $pwd, 'movie', 16);
+                        $recientes = $movies;
+                        usort($recientes, function($a, $b) {
+                            $dateA = 0;
+                            $dateB = 0;
+                            if (isset($a['added']) && !empty($a['added'])) {
+                                $dateA = is_numeric($a['added']) ? (int)$a['added'] : strtotime($a['added']);
+                            } elseif (isset($a['releasedate']) && !empty($a['releasedate'])) {
+                                $dateA = strtotime($a['releasedate']);
+                            } elseif (isset($a['releaseDate']) && !empty($a['releaseDate'])) {
+                                $dateA = strtotime($a['releaseDate']);
+                            }
+                            if (isset($b['added']) && !empty($b['added'])) {
+                                $dateB = is_numeric($b['added']) ? (int)$b['added'] : strtotime($b['added']);
+                            } elseif (isset($b['releasedate']) && !empty($b['releasedate'])) {
+                                $dateB = strtotime($b['releasedate']);
+                            } elseif (isset($b['releaseDate']) && !empty($b['releaseDate'])) {
+                                $dateB = strtotime($b['releaseDate']);
+                            }
+                            return $dateB <=> $dateA;
+                        });
+                        $recientes = array_slice($recientes, 0, 16);
                         foreach($recientes as $row) {
                             $filme_nome = $row['name'];
                             $filme_id = $row['stream_id'];

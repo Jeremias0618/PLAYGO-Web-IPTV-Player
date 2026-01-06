@@ -1,8 +1,8 @@
 <?php
 
-define('IP','https://URL'); 
-
-define('TMDB_API_KEY', 'api_here');
+define('IP','URL_SERVER'); 
+define('TMDB_API_KEY', 'API_KEY_TMDB');
+define('LANGUAGE', 'LANGUAGE_DEFAULT'); // es-ES, en-US, etc.
 
 $customChannelLogos = [];
 
@@ -34,3 +34,4 @@ define("CORPO_EMAIL", "Hola %NOME%, tu prueba fue creada con éxito.<br><br>
     Gracias<br>
     PLAYGO.
     
+    ");

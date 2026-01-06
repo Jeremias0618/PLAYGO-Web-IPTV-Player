@@ -1,0 +1,301 @@
+.modal-buscador-bg {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0;
+    width: 100vw; height: 100vh;
+    background: linear-gradient(135deg, rgba(15,32,39,0.95) 0%, rgba(44,83,100,0.95) 100%);
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-buscador-bg.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-buscador {
+    background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 20px;
+    padding: 0;
+    max-width: 800px;
+    width: 90vw;
+    max-height: 85vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    border: 1px solid rgba(229,9,20,0.3);
+}
+
+.modal-buscador-bg.active .modal-buscador {
+    transform: scale(1);
+}
+
+.modal-buscador-header {
+    background: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+    padding: 20px 24px;
+    border-radius: 20px 20px 0 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-buscador-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+}
+
+.modal-buscador-title {
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.modal-buscador-close {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-buscador-close:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.1);
+}
+
+.modal-buscador-body {
+    padding: 24px;
+    max-height: calc(85vh - 100px);
+    overflow-y: auto;
+}
+
+.modal-buscador-inputbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 4px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.modal-buscador-inputbox input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 1.1rem;
+    margin: 0;
+    outline: none;
+}
+
+.modal-buscador-inputbox input::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+
+.modal-buscador-inputbox button {
+    background: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+    border: none;
+    color: #fff;
+    border-radius: 12px;
+    padding: 16px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 4px;
+    white-space: nowrap;
+}
+
+.modal-buscador-inputbox button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(229,9,20,0.4);
+}
+
+.modal-buscador-inputbox button:active {
+    transform: translateY(0);
+}
+
+.modal-buscador-section {
+    margin-bottom: 32px;
+}
+
+.modal-buscador-section h3 {
+    color: #e50914;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    margin-top: 0;
+    font-weight: 700;
+    text-align: left;
+    padding-left: 8px;
+    border-left: 4px solid #e50914;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-buscador-section h3::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #e50914;
+    border-radius: 50%;
+}
+
+.modal-buscador-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 16px;
+    justify-content: start;
+}
+
+.modal-buscador-card {
+    text-align: center;
+    transition: transform 0.2s ease;
+    animation: fadeInUp 0.4s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.modal-buscador-card:nth-child(1) { animation-delay: 0.1s; }
+.modal-buscador-card:nth-child(2) { animation-delay: 0.15s; }
+.modal-buscador-card:nth-child(3) { animation-delay: 0.2s; }
+.modal-buscador-card:nth-child(4) { animation-delay: 0.25s; }
+.modal-buscador-card:nth-child(5) { animation-delay: 0.3s; }
+.modal-buscador-card:nth-child(6) { animation-delay: 0.35s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-buscador-card:hover {
+    transform: translateY(-4px);
+}
+
+.modal-buscador-card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.modal-buscador-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    background: #232027;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.modal-buscador-card:hover img {
+    border-color: #e50914;
+    box-shadow: 0 8px 24px rgba(229,9,20,0.3);
+}
+
+.modal-buscador-card span {
+    color: #fff;
+    font-size: 0.9rem;
+    display: block;
+    font-weight: 500;
+    line-height: 1.3;
+    padding: 0 4px;
+    word-break: break-word;
+}
+
+.modal-buscador-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255,255,255,0.7);
+}
+
+.modal-buscador-empty i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.modal-buscador-empty p {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.modal-buscador-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn.active {
+    background: #e50914;
+    border-color: #e50914;
+}
+
+.filter-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.filter-btn.active:hover {
+    background: #c8008f;
+}
+
+.modal-buscador-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255,255,255,0.7);
+}
+
+.modal-buscador-loading i {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+

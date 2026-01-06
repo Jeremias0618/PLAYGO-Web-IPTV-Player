@@ -1,0 +1,28 @@
+@supports (-webkit-touch-callout: none) {
+    video::-webkit-media-controls-fullscreen-button {
+        display: block !important;
+    }
+    
+    video:fullscreen ~ .header,
+    video:fullscreen ~ .navbar-overlay,
+    video:-webkit-full-screen ~ .header,
+    video:-webkit-full-screen ~ .navbar-overlay,
+    video:-moz-full-screen ~ .header,
+    video:-moz-full-screen ~ .navbar-overlay {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+    
+    :fullscreen .header,
+    :fullscreen .navbar-overlay,
+    :-webkit-full-screen .header,
+    :-webkit-full-screen .navbar-overlay,
+    :-moz-full-screen .header,
+    :-moz-full-screen .navbar-overlay {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+}
+

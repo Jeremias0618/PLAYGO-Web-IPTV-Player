@@ -1,0 +1,65 @@
+.seasons__cover, .details__bg, .home__bg {
+    filter: blur(0px) !important;
+    opacity: 10%;
+}
+
+.header__content {
+    background: #000 !important;
+    border-radius: 12px;
+    padding: 12px 24px;
+}
+
+.header__wrap {
+    background: #000 !important;
+}
+
+.navbar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 80px;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(90deg, #0f2027 0%, #2c5364 100%);
+    opacity: 0.85;
+    transition: opacity 0.4s;
+}
+
+.bg-animate {
+    animation: navbarBgMove 8s linear infinite alternate;
+    background-size: 200% 100%;
+}
+
+@keyframes navbarBgMove {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+.card.card--details {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.card.card--details .card__content,
+.card.card--details .card__cover {
+    background: transparent !important;
+}
+
+.content .card {
+    background: #181818 !important;
+    border: none !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.45) !important;
+    overflow: hidden;
+}
+
+.content .card .card__content {
+    background: transparent !important;
+}
+
+.content .card .card__cover {
+    background: transparent !important;
+}
+
