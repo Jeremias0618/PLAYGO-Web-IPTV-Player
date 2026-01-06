@@ -3874,7 +3874,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .plyr--video .plyr__progress__buffer {
 }
 .plyr--full-ui input[type="range"] {
-  color: #1f8377;
+  color: #1aafff;
+}
+.plyr--video .plyr__progress input[type="range"] {
+  color: #1aafff !important;
 }
 .plyr__tab-focus {
   outline: none;

@@ -139,10 +139,10 @@ $hasFilters = $data['hasFilters'];
     </div>
     
     <button type="button" class="filtros-toggle-btn" id="filtrosToggleBtn">
-        <i class="fa fa-filter"></i> <span id="filtrosToggleText">Ocultar Filtros</span>
+        <i class="fa fa-filter"></i> <span id="filtrosToggleText">Mostrar Filtros</span>
     </button>
     
-<form id="filtrosForm" method="get" class="filtros-bar">
+<form id="filtrosForm" method="get" class="filtros-bar filtros-hidden">
     <div class="filtro-opcion" style="position:relative;">
         <label for="genero">GÉNERO</label>
         <select name="genero" id="genero">

@@ -33,7 +33,13 @@ function getMovieData($user, $pwd, $id) {
         if (!empty($ano)) {
             $tmdb_search_url .= "&year=" . urlencode(substr($ano,0,4));
         }
-        $tmdb_search_json = @file_get_contents($tmdb_search_url);
+        $context = stream_context_create([
+            'http' => [
+                'timeout' => 3,
+                'ignore_errors' => true
+            ]
+        ]);
+        $tmdb_search_json = @file_get_contents($tmdb_search_url, false, $context);
         $tmdb_search_data = json_decode($tmdb_search_json, true);
         if (!empty($tmdb_search_data['results'][0]['id'])) {
             $tmdb_id = $tmdb_search_data['results'][0]['id'];
@@ -45,10 +51,26 @@ function getMovieData($user, $pwd, $id) {
     $wallpaper_tmdb = '';
     $poster_tmdb = '';
     
+    $tmdb_movie_data = null;
+    $tmdb_videos = null;
+    
     if ($tmdb_id) {
-        $tmdb_images_url = "https://api.themoviedb.org/3/movie/$tmdb_id/images?api_key=" . TMDB_API_KEY;
-        $tmdb_images_json = @file_get_contents($tmdb_images_url);
-        $tmdb_images_data = json_decode($tmdb_images_json, true);
+        $language = defined('LANGUAGE') ? LANGUAGE : 'es-ES';
+        $tmdb_movie_url = "https://api.themoviedb.org/3/movie/$tmdb_id?api_key=" . TMDB_API_KEY . "&language=" . $language . "&append_to_response=credits,videos,images";
+        $context = stream_context_create([
+            'http' => [
+                'timeout' => 5,
+                'ignore_errors' => true
+            ]
+        ]);
+        $tmdb_movie_json = @file_get_contents($tmdb_movie_url, false, $context);
+        $tmdb_movie_data = json_decode($tmdb_movie_json, true);
+        
+        if (!empty($tmdb_movie_data['videos'])) {
+            $tmdb_videos = $tmdb_movie_data['videos'];
+        }
+        
+        $tmdb_images_data = !empty($tmdb_movie_data['images']) ? $tmdb_movie_data['images'] : null;
         
         if (!empty($tmdb_images_data['backdrops'])) {
             $langCode = defined('LANGUAGE') ? substr(LANGUAGE, 0, 2) : 'es';
@@ -89,7 +111,7 @@ function getMovieData($user, $pwd, $id) {
         }
     }
     
-    $trailer = $output['info']['youtube_trailer'];
+    $trailer = $output['info']['youtube_trailer'] ?? '';
     $youtube_id = '';
     if (!empty($trailer)) {
         if (preg_match('/^[A-Za-z0-9_\-]{11}$/', $trailer)) {
@@ -97,6 +119,81 @@ function getMovieData($user, $pwd, $id) {
         } else if (preg_match('/(?:youtube\.com\/(?:embed\/|watch\?v=)|youtu\.be\/)([A-Za-z0-9_\-]+)/', $trailer, $matches)) {
             $youtube_id = $matches[1];
         }
+    }
+    
+    if (empty($youtube_id) && !empty($tmdb_videos['results'])) {
+        foreach ($tmdb_videos['results'] as $video) {
+            if (isset($video['type']) && $video['type'] === 'Trailer' && isset($video['site']) && $video['site'] === 'YouTube' && !empty($video['key'])) {
+                $youtube_id = $video['key'];
+                break;
+            }
+        }
+    }
+    
+    $director = $output['info']['director'] ?? '';
+    if (empty($director) && !empty($tmdb_movie_data['credits']['crew'])) {
+        foreach ($tmdb_movie_data['credits']['crew'] as $crew) {
+            if (isset($crew['job']) && $crew['job'] === 'Director') {
+                $director = $crew['name'];
+                break;
+            }
+        }
+    }
+    
+    $cast = $output['info']['cast'] ?? '';
+    if (empty($cast) && !empty($tmdb_movie_data['credits']['cast'])) {
+        $cast_array = [];
+        $max_cast = min(5, count($tmdb_movie_data['credits']['cast']));
+        for ($i = 0; $i < $max_cast; $i++) {
+            if (!empty($tmdb_movie_data['credits']['cast'][$i]['name'])) {
+                $cast_array[] = $tmdb_movie_data['credits']['cast'][$i]['name'];
+            }
+        }
+        $cast = implode(', ', $cast_array);
+    }
+    
+    $plot = $output['info']['plot'] ?? '';
+    if (empty($plot) && !empty($tmdb_movie_data['overview'])) {
+        $plot = $tmdb_movie_data['overview'];
+    }
+    
+    $genero = $output['info']['genre'] ?? '';
+    if (empty($genero) && !empty($tmdb_movie_data['genres'])) {
+        $genres_array = [];
+        foreach ($tmdb_movie_data['genres'] as $genre) {
+            if (!empty($genre['name'])) {
+                $genres_array[] = $genre['name'];
+            }
+        }
+        $genero = implode(', ', $genres_array);
+    }
+    
+    $duracao = $output['info']['duration'] ?? '';
+    if (empty($duracao) && !empty($tmdb_movie_data['runtime'])) {
+        $runtime_minutes = intval($tmdb_movie_data['runtime']);
+        $hours = floor($runtime_minutes / 60);
+        $minutes = $runtime_minutes % 60;
+        $duracao = sprintf('%02d:%02d:%02d', $hours, $minutes, 0);
+    }
+    
+    $pais = $output['info']['country'] ?? '';
+    if (empty($pais) && !empty($tmdb_movie_data['production_countries'])) {
+        $countries_array = [];
+        foreach ($tmdb_movie_data['production_countries'] as $country) {
+            if (!empty($country['name'])) {
+                $countries_array[] = $country['name'];
+            }
+        }
+        $pais = implode(', ', $countries_array);
+    }
+    
+    $nota = $output['info']['rating'] ?? '';
+    if (empty($nota) && !empty($tmdb_movie_data['vote_average'])) {
+        $nota = number_format($tmdb_movie_data['vote_average'], 2);
+    }
+    
+    if (empty($ano) && !empty($tmdb_movie_data['release_date'])) {
+        $ano = substr($tmdb_movie_data['release_date'], 0, 4);
     }
     
     return [
@@ -110,13 +207,13 @@ function getMovieData($user, $pwd, $id) {
         'category_id' => $output['movie_data']['category_id'],
         'container_extension' => $output['movie_data']['container_extension'],
         'youtube_id' => $youtube_id,
-        'director' => $output['info']['director'] ?? '',
-        'cast' => $output['info']['cast'] ?? '',
-        'plot' => $output['info']['plot'] ?? '',
-        'genre' => $output['info']['genre'] ?? '',
-        'duration' => $output['info']['duration'] ?? '',
-        'country' => $output['info']['country'] ?? '',
-        'rating' => $output['info']['rating'] ?? '',
+        'director' => $director,
+        'cast' => $cast,
+        'plot' => $plot,
+        'genre' => $genero,
+        'duration' => $duracao,
+        'country' => $pais,
+        'rating' => $nota,
         'year' => $ano
     ];
 }

@@ -63,3 +63,82 @@
     background: transparent !important;
 }
 
+.plyr--video .plyr__controls {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+}
+
+.plyr--video .plyr__controls > .plyr__control[data-plyr="play"] {
+    order: 1 !important;
+    margin-left: 0 !important;
+    margin-right: 2px !important;
+    flex-shrink: 0 !important;
+}
+
+.plyr--video .plyr__controls > .plyr__control[data-plyr="rewind"] {
+    order: 2 !important;
+    margin-left: 0 !important;
+    margin-right: 2px !important;
+    flex-shrink: 0 !important;
+}
+
+.plyr--video .plyr__controls > .plyr__control[data-plyr="fast-forward"] {
+    order: 3 !important;
+    margin-left: 0 !important;
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
+}
+
+.plyr--video .plyr__progress__container {
+    order: 4 !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 10px !important;
+}
+
+.plyr--video .plyr__progress {
+    left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+.plyr--video .plyr__progress input[type="range"],
+.plyr--video .plyr__progress__buffer {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.plyr--video .plyr__time {
+    order: 5 !important;
+    margin-left: 0 !important;
+    margin-right: 5px !important;
+    flex-shrink: 0 !important;
+}
+
+.plyr--video .plyr__controls > .plyr__control[data-plyr="mute"],
+.plyr--video .plyr__volume {
+    order: 6 !important;
+    margin-left: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+.plyr--video .plyr__volume {
+    max-width: 110px !important;
+}
+
+.plyr--video .plyr__controls > .plyr__menu {
+    order: 7 !important;
+    flex-shrink: 0 !important;
+}
+
+.plyr--video .plyr__controls > .plyr__control[data-plyr="fullscreen"] {
+    order: 8 !important;
+    flex-shrink: 0 !important;
+}
+

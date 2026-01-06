@@ -6,6 +6,8 @@ if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['x
     exit;
 }
 
+session_write_close();
+
 require_once(__DIR__ . '/libs/controllers/Movie.php');
 
 $user = $_COOKIE['xuserm'];
@@ -58,6 +60,7 @@ $ano = $movieData['year'];
     <link rel="stylesheet" href="./styles/vendors/default-skin.css">
     <link rel="stylesheet" href="./styles/vendors/jBox.all.min.css">
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
+    <link rel="stylesheet" href="./styles/vendors/plyr.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
     <link rel="stylesheet" href="./styles/movie/layout.css">
@@ -208,7 +211,6 @@ window.movieRating = <?php echo json_encode($nota); ?>;
                         <?php
                             $ext = strtolower($exts);
                             if ($ext == 'mp4'): ?>
-                                <link rel="stylesheet" href="./styles/vendors/plyr.css" />
                                 <video
                                     id="plyr-video"
                                     playsinline
@@ -225,11 +227,12 @@ window.movieRating = <?php echo json_encode($nota); ?>;
                                 <script>
                                 const player = new Plyr('#plyr-video', {
                                     controls: [
-                                        'play-large', 'play', 'rewind', 'fast-forward', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'
+                                        'play', 'rewind', 'fast-forward', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'
                                     ],
                                     seekTime: 10,
                                 });
                                 window.player = player;
+                                
                                 </script>
                             <?php else: ?>
                                 <div style="width:100%;max-width:1100px;margin:auto;">
