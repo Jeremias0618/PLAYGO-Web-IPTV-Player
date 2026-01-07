@@ -27,6 +27,7 @@ function getMovieData($user, $pwd, $id) {
     $ano = $output['info']['releasedate'] ?? '';
     
     if (!$tmdb_id && !empty($filme)) {
+        $tmdb_search_start = microtime(true);
         $query = urlencode($filme);
         $language = defined('LANGUAGE') ? LANGUAGE : 'es-ES';
         $tmdb_search_url = "https://api.themoviedb.org/3/search/movie?api_key=" . TMDB_API_KEY . "&language=" . $language . "&query=$query";
@@ -46,68 +47,91 @@ function getMovieData($user, $pwd, $id) {
         }
     }
     
-    $tmdb_backdrops = [];
-    $tmdb_posters = [];
     $wallpaper_tmdb = '';
     $poster_tmdb = '';
     
     $tmdb_movie_data = null;
     $tmdb_videos = null;
     
-    if ($tmdb_id) {
+    $needs_backdrop = empty($backdrop);
+    $needs_poster = empty($poster_img);
+    
+    $needs_tmdb_data = empty($output['info']['director']) || 
+                       empty($output['info']['cast']) || 
+                       empty($output['info']['plot']) || 
+                       empty($output['info']['youtube_trailer']);
+    
+    $tmdb_critical = $needs_backdrop || $needs_poster;
+    
+    if ($tmdb_id && ($tmdb_critical || $needs_tmdb_data)) {
+        $tmdb_movie_start = microtime(true);
         $language = defined('LANGUAGE') ? LANGUAGE : 'es-ES';
-        $tmdb_movie_url = "https://api.themoviedb.org/3/movie/$tmdb_id?api_key=" . TMDB_API_KEY . "&language=" . $language . "&append_to_response=credits,videos,images";
-        $context = stream_context_create([
-            'http' => [
-                'timeout' => 5,
-                'ignore_errors' => true
-            ]
-        ]);
-        $tmdb_movie_json = @file_get_contents($tmdb_movie_url, false, $context);
+        $append_params = [];
+        if ($needs_backdrop || $needs_poster) {
+            $append_params[] = 'images';
+        }
+        if ($needs_tmdb_data) {
+            $append_params[] = 'credits';
+            $append_params[] = 'videos';
+        }
+        $append_str = !empty($append_params) ? '&append_to_response=' . implode(',', $append_params) : '';
+        $tmdb_movie_url = "https://api.themoviedb.org/3/movie/$tmdb_id?api_key=" . TMDB_API_KEY . "&language=" . $language . $append_str;
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $tmdb_movie_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $tmdb_critical ? 2 : 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $tmdb_critical ? 2 : 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+        $tmdb_movie_json = @curl_exec($ch);
+        curl_close($ch);
+        
         $tmdb_movie_data = json_decode($tmdb_movie_json, true);
         
         if (!empty($tmdb_movie_data['videos'])) {
             $tmdb_videos = $tmdb_movie_data['videos'];
         }
         
-        $tmdb_images_data = !empty($tmdb_movie_data['images']) ? $tmdb_movie_data['images'] : null;
-        
-        if (!empty($tmdb_images_data['backdrops'])) {
+        if ($needs_backdrop && !empty($tmdb_movie_data['images']['backdrops'])) {
             $langCode = defined('LANGUAGE') ? substr(LANGUAGE, 0, 2) : 'es';
-            foreach ($tmdb_images_data['backdrops'] as $img) {
-                if (!empty($img['file_path']) && $img['iso_639_1'] === $langCode) {
-                    $tmdb_backdrops[] = "https://image.tmdb.org/t/p/original" . $img['file_path'];
+            foreach ($tmdb_movie_data['images']['backdrops'] as $img) {
+                if (!empty($img['file_path'])) {
+                    if ($img['iso_639_1'] === $langCode || empty($img['iso_639_1'])) {
+                        $wallpaper_tmdb = "https://image.tmdb.org/t/p/original" . $img['file_path'];
+                        break;
+                    }
                 }
             }
-            if (empty($tmdb_backdrops)) {
-                foreach ($tmdb_images_data['backdrops'] as $img) {
+            if (empty($wallpaper_tmdb)) {
+                foreach ($tmdb_movie_data['images']['backdrops'] as $img) {
                     if (!empty($img['file_path'])) {
-                        $tmdb_backdrops[] = "https://image.tmdb.org/t/p/original" . $img['file_path'];
+                        $wallpaper_tmdb = "https://image.tmdb.org/t/p/original" . $img['file_path'];
+                        break;
                     }
                 }
             }
         }
-        if (!empty($tmdb_backdrops)) {
-            $wallpaper_tmdb = $tmdb_backdrops[array_rand($tmdb_backdrops)];
-        }
         
-        if (!empty($tmdb_images_data['posters'])) {
+        if ($needs_poster && !empty($tmdb_movie_data['images']['posters'])) {
             $langCode = defined('LANGUAGE') ? substr(LANGUAGE, 0, 2) : 'es';
-            foreach ($tmdb_images_data['posters'] as $img) {
-                if (!empty($img['file_path']) && $img['iso_639_1'] === $langCode) {
-                    $tmdb_posters[] = "https://image.tmdb.org/t/p/w500" . $img['file_path'];
-                }
-            }
-            if (empty($tmdb_posters)) {
-                foreach ($tmdb_images_data['posters'] as $img) {
-                    if (!empty($img['file_path'])) {
-                        $tmdb_posters[] = "https://image.tmdb.org/t/p/w500" . $img['file_path'];
+            foreach ($tmdb_movie_data['images']['posters'] as $img) {
+                if (!empty($img['file_path'])) {
+                    if ($img['iso_639_1'] === $langCode || empty($img['iso_639_1'])) {
+                        $poster_tmdb = "https://image.tmdb.org/t/p/w500" . $img['file_path'];
+                        break;
                     }
                 }
             }
-        }
-        if (!empty($tmdb_posters)) {
-            $poster_tmdb = $tmdb_posters[array_rand($tmdb_posters)];
+            if (empty($poster_tmdb)) {
+                foreach ($tmdb_movie_data['images']['posters'] as $img) {
+                    if (!empty($img['file_path'])) {
+                        $poster_tmdb = "https://image.tmdb.org/t/p/w500" . $img['file_path'];
+                        break;
+                    }
+                }
+            }
         }
     }
     

@@ -18,13 +18,23 @@ if (!defined('IP')) {
 }
 
 
-function apixtream($url_api){	
+function apixtream($url_api){
+$start_time = microtime(true);
 $ch = curl_init();	
 $timeout = 10;	
 curl_setopt ($ch, CURLOPT_URL, $url_api);	
 curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);	
 curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);	
-$retorno = curl_exec($ch);	
+$retorno = curl_exec($ch);
+$exec_time = (microtime(true) - $start_time) * 1000;
+if ($exec_time > 500) {
+    $action = '';
+    if (strpos($url_api, 'get_vod_info') !== false) $action = 'get_vod_info';
+    elseif (strpos($url_api, 'get_vod_streams') !== false) $action = 'get_vod_streams';
+    elseif (strpos($url_api, 'get_series') !== false) $action = 'get_series';
+    else $action = 'other';
+    error_log("[apixtream] Llamada lenta ($action): " . number_format($exec_time, 2) . "ms - URL: " . substr($url_api, 0, 100));
+}
 curl_close($ch);	
 return $retorno;
 }

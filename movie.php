@@ -47,6 +47,8 @@ $ano = $movieData['year'];
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://api.themoviedb.org">
+    <link rel="preconnect" href="https://image.tmdb.org">
     <link rel="stylesheet" href="./styles/vendors/bootstrap.min.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
     <link rel="stylesheet" href="./styles/vendors/bootstrap-reboot.min.css">
@@ -281,89 +283,73 @@ window.movieRating = <?php echo json_encode($nota); ?>;
                 <div class="col-12">
                         <h2 class="section__title section__title--sidebar">Usuarios también vieron</h2>
                 </div>
-                <?php
-                $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams&category_id=$idcategoria";
-                $resposta = apixtream($url);
-                $output = json_decode($resposta, true);
-                
-                if (!is_array($output)) {
-                    $output = [];
-                }
-                
-                shuffle($output);
-                $i = 1;
-                $recomendadas_indices = array_rand($output, min(6, count($output)));
-                if (!is_array($recomendadas_indices)) {
-                    $recomendadas_indices = [$recomendadas_indices];
-                }
-                
-                foreach($recomendadas_indices as $index) {
-                    $row = $output[$index];
-                    $filme_id = $row['stream_id'];
-                    
-                    if ($filme_id == $id) {
-                        continue;
-                    }
-                    
-                    $filme_nome = $row['name'];
-                    $filme_nome = preg_replace('/\s*\(\d{4}\)$/', '', $filme_nome);
-                    $filme_type = $row['stream_type'];
-                    $filme_img = $row['stream_icon'];
-                    $filme_rat = isset($row['rating']) ? $row['rating'] : '';
-                    $filme_ano = isset($row['year']) ? $row['year'] : '';
-                ?>
-                <div class="col-4 col-sm-4 col-lg-2">
-    <div class="card">
-        <div class="card__cover">
-                            <img loading="lazy" src="<?php echo $filme_img; ?>" alt="">
-                            <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>" class="card__play">
-                                <i class="fas fa-play"></i>
-            </a>
-        </div>
-        <div class="card__content">
-                            <h3 class="card__title">
-                                <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>">
-                                    <?php echo $filme_nome; ?>
-                                </a>
-                            </h3>
-                            <span class="card__rate">
-                    <?php
-                                if ($filme_ano) {
-                                    echo $filme_ano;
-                                }
-                                if ($filme_rat !== '') {
-                                    echo ' <i class="fa-solid fa-star"></i> ' . $filme_rat;
-                                }
-                    ?>
-                </span>
-        </div>
-    </div>
-</div>
-                <?php $i++; } ?>
+                <div id="recomendadas-container" class="row">
+                    <div class="col-12 text-center" style="color: #fff; padding: 40px;">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    </div>
+                </div>
                 </div>
                 </div>
             </div>
         </div>
 </section>
 <script src="./scripts/vendors/jquery-3.5.1.min.js"></script>
-<script src="./scripts/vendors/bootstrap.bundle.min.js"></script>
-<script src="./scripts/vendors/owl.carousel.min.js"></script>
-<script src="./scripts/vendors/jquery.mousewheel.min.js"></script>
-<script src="./scripts/vendors/jquery.mcustomscrollbar.min.js"></script>
-<script src="./scripts/vendors/wnumb.js"></script>
-<script src="./scripts/vendors/nouislider.min.js"></script>
-<script src="./scripts/vendors/jquery.morelines.min.js"></script>
-<script src="./scripts/vendors/photoswipe.min.js"></script>
-<script src="./scripts/vendors/photoswipe-ui-default.min.js"></script>
-<script src="./scripts/vendors/glightbox.min.js"></script>
-<script src="./scripts/vendors/jBox.all.min.js"></script>
-<script src="./scripts/vendors/select2.min.js"></script>
-<script src="./scripts/core/main.js"></script>
-<script src="./scripts/movie/trailer.js"></script>
-<script src="./scripts/movie/fullscreen.js"></script>
+<script src="./scripts/vendors/bootstrap.bundle.min.js" defer></script>
+<script src="./scripts/vendors/owl.carousel.min.js" defer></script>
+<script src="./scripts/vendors/jquery.mousewheel.min.js" defer></script>
+<script src="./scripts/vendors/jquery.mcustomscrollbar.min.js" defer></script>
+<script src="./scripts/vendors/wnumb.js" defer></script>
+<script src="./scripts/vendors/nouislider.min.js" defer></script>
+<script src="./scripts/vendors/jquery.morelines.min.js" defer></script>
+<script src="./scripts/vendors/photoswipe.min.js" defer></script>
+<script src="./scripts/vendors/photoswipe-ui-default.min.js" defer></script>
+<script src="./scripts/vendors/glightbox.min.js" defer></script>
+<script src="./scripts/vendors/jBox.all.min.js" defer></script>
+<script src="./scripts/vendors/select2.min.js" defer></script>
+<script src="./scripts/core/main.js" defer></script>
+<script src="./scripts/movie/trailer.js" defer></script>
+<script src="./scripts/movie/fullscreen.js" defer></script>
 <script src="./scripts/movie/resume.js"></script>
 <script src="./scripts/movie/favorites.js"></script>
 <script src="./scripts/movie/history.js"></script>
+<script>
+(function() {
+    function loadRecomendadas() {
+        if (typeof jQuery === 'undefined') {
+            setTimeout(loadRecomendadas, 50);
+            return;
+        }
+        
+        const loadStart = performance.now();
+        jQuery.ajax({
+            url: 'libs/endpoints/MovieRecommended.php',
+            method: 'POST',
+            data: {
+                category_id: <?php echo $idcategoria; ?>,
+                current_id: <?php echo $id; ?>
+            },
+            success: function(response) {
+                const data = typeof response === 'string' ? JSON.parse(response) : response;
+                if (data.html) {
+                    jQuery('#recomendadas-container').html(data.html);
+                } else if (data.error) {
+                    jQuery('#recomendadas-container').html('<div class="col-12 text-center" style="color: #ff4444; padding: 40px;">Error: ' + data.error + '</div>');
+                }
+            },
+            error: function(xhr, status, error) {
+                jQuery('#recomendadas-container').html('<div class="col-12 text-center" style="color: #ff4444; padding: 40px;">Error al cargar recomendaciones</div>');
+            }
+        });
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadRecomendadas);
+    } else {
+        loadRecomendadas();
+    }
+})();
+</script>
+
 
 </body>
 </html>
