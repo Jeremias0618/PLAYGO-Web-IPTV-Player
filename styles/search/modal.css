@@ -12,7 +12,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-buscador-bg.active {
@@ -30,13 +30,15 @@
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0,0,0,0.8);
     position: relative;
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
+    transform: scale(0.85) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
     border: 1px solid rgba(229,9,20,0.3);
 }
 
 .modal-buscador-bg.active .modal-buscador {
-    transform: scale(1);
+    transform: scale(1) translateY(0);
+    opacity: 1;
 }
 
 .modal-buscador-header {

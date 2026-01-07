@@ -42,7 +42,7 @@
             modalBuscadorInput.value = '';
             modalBuscadorResults.innerHTML = '';
             resetFilters();
-        }, 300);
+        }, 400);
     }
 
     function resetFilters() {

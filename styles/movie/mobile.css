@@ -101,13 +101,21 @@
         flex-direction: column !important;
         gap: 10px !important;
         margin-top: 18px !important;
+        width: 100% !important;
+    }
+    
+    .card__content > div[style*="position: relative"] {
+        width: 100% !important;
+        display: block !important;
     }
     
     #btnTrailer,
     #btnFavorito,
+    #btnPlaylist,
     a[href="predator.php"] {
         width: 100% !important;
         min-width: 0 !important;
+        display: flex !important;
         justify-content: center !important;
         align-items: center !important;
         font-size: 1.08rem !important;
@@ -121,6 +129,7 @@
     
     #btnTrailer i,
     #btnFavorito i,
+    #btnPlaylist i,
     a[href="predator.php"] i {
         font-size: 1.35rem !important;
         margin-right: 8px !important;
@@ -128,6 +137,7 @@
     
     #btnTrailer span,
     #btnFavorito span,
+    #btnPlaylist span,
     a[href="predator.php"] span {
         font-size: 1.08rem !important;
         font-weight: 500;
@@ -141,7 +151,28 @@
     
     #btnFavorito {
         background: linear-gradient(90deg,#232027 60%,#444 100%) !important;
-        color: #ffd700 !important;
+        color: #fff !important;
+    }
+    
+    #btnFavorito i.fa-star {
+        color: #fff !important;
+    }
+    
+    #btnFavorito span {
+        color: #fff !important;
+    }
+    
+    #btnPlaylist {
+        background: linear-gradient(90deg,#232027 60%,#444 100%) !important;
+        color: #fff !important;
+    }
+    
+    #btnPlaylist i.fa-bookmark {
+        color: #fff !important;
+    }
+    
+    #btnPlaylist span {
+        color: #fff !important;
     }
     
     a[href="predator.php"] {
@@ -152,6 +183,7 @@
     
     #btnTrailer:active,
     #btnFavorito:active,
+    #btnPlaylist:active,
     a[href="predator.php"]:active {
         opacity: 0.85;
     }

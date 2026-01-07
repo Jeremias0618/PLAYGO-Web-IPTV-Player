@@ -185,10 +185,19 @@ window.movieRating = <?php echo json_encode($nota); ?>;
                                         <?php endif; ?>
 
                     <button id="btnFavorito"
-                        style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#232027 60%,#444 100%);color:#ffd700;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
-                        <i class="fa fa-star" style="font-size:1.4rem;"></i>
-                        <span id="favText">Agregar a Favoritos</span>
+                        style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#232027 60%,#444 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
+                        <i class="fa fa-star" style="font-size:1.4rem;color:#fff;"></i>
+                        <span id="favText" style="color:#fff;">Agregar a Favoritos</span>
                     </button>
+
+                    <div style="position: relative; display: inline-block;">
+                        <button id="btnPlaylist"
+                            style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#232027 60%,#444 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
+                            <i class="fa fa-bookmark" style="font-size:1.4rem;color:#fff;"></i>
+                            <span style="color:#fff;">Guardar</span>
+                        </button>
+                        <div id="playlistTooltip" style="display: none; position: absolute; top: 100%; left: 0; margin-top: 8px; z-index: 10000;"></div>
+                    </div>
 <?php
                     $saga_predator_ids = [7716, 2693, 2690, 2689, 2692, 2691, 2450, 2449];
                     if (in_array((int)$id, $saga_predator_ids)): ?>
@@ -313,6 +322,7 @@ window.movieRating = <?php echo json_encode($nota); ?>;
 <script src="./scripts/movie/resume.js"></script>
 <script src="./scripts/movie/favorites.js"></script>
 <script src="./scripts/movie/history.js"></script>
+<script src="./scripts/movie/playlist.js"></script>
 <script>
 (function() {
     function loadRecomendadas() {

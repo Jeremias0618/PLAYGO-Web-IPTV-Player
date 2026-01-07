@@ -41,6 +41,7 @@ try {
     $historialFile = $storageDir . '/historial.json';
     $favoritosFile = $storageDir . '/favoritos.json';
     $progressFile = $storageDir . '/progress.json';
+    $playlistsFile = $storageDir . '/playlists.json';
 
     function loadJsonFile($file, $default = []) {
         if (!file_exists($file)) {
@@ -164,6 +165,111 @@ try {
             saveJsonFile($progressFile, $progress);
         }
         echo json_encode(['success'=>true]);
+        exit;
+    }
+
+    if ($action == 'playlist_list') {
+        $playlists = loadJsonFile($playlistsFile, []);
+        if (empty($playlists)) {
+            $playlists = ['VER MÁS TARDE' => []];
+            saveJsonFile($playlistsFile, $playlists);
+        }
+        echo json_encode(['success'=>true, 'playlists'=>$playlists]);
+        exit;
+    }
+
+    if ($action == 'playlist_create') {
+        $playlistName = trim($_POST['playlist_name'] ?? '');
+        if (empty($playlistName)) {
+            echo json_encode(['success'=>false, 'error'=>'empty_name']);
+            exit;
+        }
+        $playlists = loadJsonFile($playlistsFile, []);
+        if (empty($playlists)) {
+            $playlists = ['VER MÁS TARDE' => []];
+        }
+        if (isset($playlists[$playlistName])) {
+            echo json_encode(['success'=>false, 'error'=>'playlist_exists']);
+            exit;
+        }
+        $playlists[$playlistName] = [];
+        saveJsonFile($playlistsFile, $playlists);
+        echo json_encode(['success'=>true, 'playlists'=>$playlists]);
+        exit;
+    }
+
+    if ($action == 'playlist_add') {
+        $playlistName = trim($_POST['playlist_name'] ?? '');
+        if (empty($playlistName)) {
+            $playlistName = 'VER MÁS TARDE';
+        }
+        $playlists = loadJsonFile($playlistsFile, []);
+        if (empty($playlists)) {
+            $playlists = ['VER MÁS TARDE' => []];
+        }
+        if (!isset($playlists[$playlistName])) {
+            $playlists[$playlistName] = [];
+        }
+        $exists = false;
+        foreach ($playlists[$playlistName] as $item) {
+            if ($item['id'] == $id && $item['tipo'] == $tipo) {
+                $exists = true;
+                break;
+            }
+        }
+        if (!$exists) {
+            $playlists[$playlistName][] = [
+                'id' => $id,
+                'tipo' => $tipo,
+                'nombre' => $nombre,
+                'img' => $img,
+                'ano' => $ano,
+                'rate' => $rate,
+                'fecha' => date('Y-m-d H:i:s')
+            ];
+            saveJsonFile($playlistsFile, $playlists);
+        }
+        echo json_encode(['success'=>true]);
+        exit;
+    }
+
+    if ($action == 'playlist_remove') {
+        $playlistName = trim($_POST['playlist_name'] ?? '');
+        if (empty($playlistName)) {
+            echo json_encode(['success'=>false, 'error'=>'empty_name']);
+            exit;
+        }
+        $playlists = loadJsonFile($playlistsFile, []);
+        if (isset($playlists[$playlistName])) {
+            $playlists[$playlistName] = array_filter($playlists[$playlistName], function($item) use ($id, $tipo) {
+                return !($item['id'] == $id && $item['tipo'] == $tipo);
+            });
+            $playlists[$playlistName] = array_values($playlists[$playlistName]);
+            saveJsonFile($playlistsFile, $playlists);
+        }
+        echo json_encode(['success'=>true]);
+        exit;
+    }
+
+    if ($action == 'playlist_check') {
+        $playlistName = trim($_POST['playlist_name'] ?? '');
+        if (empty($playlistName)) {
+            $playlistName = 'VER MÁS TARDE';
+        }
+        $playlists = loadJsonFile($playlistsFile, []);
+        if (empty($playlists)) {
+            $playlists = ['VER MÁS TARDE' => []];
+        }
+        $isInPlaylist = false;
+        if (isset($playlists[$playlistName])) {
+            foreach ($playlists[$playlistName] as $item) {
+                if ($item['id'] == $id && $item['tipo'] == $tipo) {
+                    $isInPlaylist = true;
+                    break;
+                }
+            }
+        }
+        echo json_encode(['success'=>true, 'is_in_playlist'=>$isInPlaylist]);
         exit;
     }
 
