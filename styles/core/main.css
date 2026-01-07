@@ -3847,37 +3847,46 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   transition: 0s ease;
 }
 .plyr__control--overlaid {
-  background-image: -moz-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: -webkit-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: -ms-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
+  background-image: -moz-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: -webkit-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: -ms-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
   padding: 20px;
   -webkit-transition: 0.4s ease;
   -moz-transition: 0.4s ease;
   transition: 0.4s ease;
 }
 .plyr__control--overlaid:hover {
-  background-image: -moz-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: -webkit-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: -ms-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
+  background-image: -moz-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: -webkit-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: -ms-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
 }
 .plyr--video .plyr__control.plyr__tab-focus,
 .plyr--video .plyr__control:hover,
 .plyr--video .plyr__control[aria-expanded="true"] {
   background: none;
-  background-image: -moz-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: -webkit-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: -ms-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
+  background-image: -moz-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: -webkit-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: -ms-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
 }
 .plyr--video .plyr__progress__buffer {
 }
 .plyr--full-ui input[type="range"] {
-  color: #1aafff;
+  color: #e50914;
 }
 .plyr--video .plyr__progress input[type="range"] {
-  color: #1aafff !important;
+  color: #e50914 !important;
+}
+.plyr--video .plyr__volume input[type="range"] {
+  color: #e50914 !important;
+}
+.plyr--audio .plyr__control.plyr__tab-focus,
+.plyr--audio .plyr__control:hover,
+.plyr--audio .plyr__control[aria-expanded="true"] {
+  background: #e50914 !important;
+  color: #fff !important;
 }
 .plyr__tab-focus {
   outline: none;
@@ -3887,10 +3896,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .plyr__menu__container .plyr__control[role="menuitemradio"][aria-checked="true"]::before {
   background: none;
-  background-image: -moz-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: -webkit-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: -ms-linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
-  background-image: linear-gradient(90deg, #1f8377 0%, #1f6d83 100%);
+  background-image: -moz-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: -webkit-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: -ms-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+  background-image: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
 }
 .plyr--video .plyr__control svg {
   filter: none;

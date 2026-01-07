@@ -71,16 +71,35 @@
         const movieId = window.movieId || '';
         const movieTipo = window.movieTipo || 'movie';
         let saveProgressTimeout = null;
+        let lastSavedTime = 0;
         
-        function saveProgressToServer(time) {
-            if (saveProgressTimeout) clearTimeout(saveProgressTimeout);
-            saveProgressTimeout = setTimeout(function() {
+        function saveProgressToServer(time, immediate) {
+            if (time === lastSavedTime && !immediate) return;
+            
+            if (saveProgressTimeout && !immediate) {
+                clearTimeout(saveProgressTimeout);
+            }
+            
+            const saveFunction = function() {
                 fetch('libs/endpoints/UserData.php', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     body: `action=progress_save&id=${movieId}&tipo=${movieTipo}&time=${time}`
-                }).catch(function() {});
-            }, 2000);
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        lastSavedTime = time;
+                    }
+                })
+                .catch(function() {});
+            };
+            
+            if (immediate) {
+                saveFunction();
+            } else {
+                saveProgressTimeout = setTimeout(saveFunction, 1000);
+            }
         }
         
         function getProgressFromServer(callback) {
@@ -94,18 +113,16 @@
                 if (data.success && data.time > 0) {
                     callback(data.time);
                 } else {
-                    const localTime = parseInt(localStorage.getItem(movieKey) || "0");
-                    if (localTime > 0) callback(localTime);
+                    callback(0);
                 }
             })
             .catch(function() {
-                const localTime = parseInt(localStorage.getItem(movieKey) || "0");
-                if (localTime > 0) callback(localTime);
+                callback(0);
             });
         }
         
         function removeProgress() {
-            localStorage.removeItem(movieKey);
+            lastSavedTime = 0;
             fetch('libs/endpoints/UserData.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -122,18 +139,69 @@
                     getProgressFromServer(function(serverTime) {
                         const lastTime = serverTime;
                         if (lastTime > 10) {
+                            const videoElement = plyrPlayer.media;
+                            if (!videoElement) {
+                                return;
+                            }
+                            
+                            const resumePlayback = function() {
+                                const setTimeAndPlay = function() {
+                                    if (videoElement.readyState >= 2 && videoElement.duration > 0) {
+                                        videoElement.currentTime = lastTime;
+                                        const onSeeked = function() {
+                                            videoElement.removeEventListener('seeked', onSeeked);
+                                            setTimeout(function() {
+                                                plyrPlayer.play();
+                                            }, 100);
+                                        };
+                                        videoElement.addEventListener('seeked', onSeeked);
+                                        if (Math.abs(videoElement.currentTime - lastTime) < 1) {
+                                            setTimeout(function() {
+                                                plyrPlayer.play();
+                                            }, 100);
+                                        }
+                                    } else {
+                                        const onCanPlay = function() {
+                                            videoElement.removeEventListener('canplay', onCanPlay);
+                                            videoElement.currentTime = lastTime;
+                                            const onSeeked = function() {
+                                                videoElement.removeEventListener('seeked', onSeeked);
+                                                setTimeout(function() {
+                                                    plyrPlayer.play();
+                                                }, 100);
+                                            };
+                                            videoElement.addEventListener('seeked', onSeeked);
+                                        };
+                                        videoElement.addEventListener('canplay', onCanPlay);
+                                    }
+                                };
+                                
+                                if (videoElement.readyState >= 2 && videoElement.duration > 0) {
+                                    setTimeAndPlay();
+                                } else {
+                                    const onMetadataLoaded = function() {
+                                        videoElement.removeEventListener('loadedmetadata', onMetadataLoaded);
+                                        setTimeAndPlay();
+                                    };
+                                    videoElement.addEventListener('loadedmetadata', onMetadataLoaded);
+                                }
+                            };
+                            
                             plyrPlayer.pause();
                             showResumeNotification(lastTime, function() {
-                                plyrPlayer.currentTime = lastTime;
-                                plyrPlayer.play();
+                                resumePlayback();
                             });
                         }
                     });
                     
                     plyrPlayer.on('timeupdate', function() {
                         const currentTime = Math.floor(plyrPlayer.currentTime);
-                        localStorage.setItem(movieKey, currentTime);
-                        saveProgressToServer(currentTime);
+                        saveProgressToServer(currentTime, false);
+                    });
+                    
+                    plyrPlayer.on('seeked', function() {
+                        const currentTime = Math.floor(plyrPlayer.currentTime);
+                        saveProgressToServer(currentTime, true);
                     });
                     
                     plyrPlayer.on('ended', function() {
@@ -147,18 +215,64 @@
             getProgressFromServer(function(serverTime) {
                 const lastTime = serverTime;
                 if (lastTime > 10) {
+                    const resumePlayback = function() {
+                        const setTimeAndPlay = function() {
+                            if (video.readyState >= 2 && video.duration > 0) {
+                                video.currentTime = lastTime;
+                                const onSeeked = function() {
+                                    video.removeEventListener('seeked', onSeeked);
+                                    setTimeout(function() {
+                                        video.play();
+                                    }, 100);
+                                };
+                                video.addEventListener('seeked', onSeeked);
+                                if (Math.abs(video.currentTime - lastTime) < 1) {
+                                    setTimeout(function() {
+                                        video.play();
+                                    }, 100);
+                                }
+                            } else {
+                                const onCanPlay = function() {
+                                    video.removeEventListener('canplay', onCanPlay);
+                                    video.currentTime = lastTime;
+                                    const onSeeked = function() {
+                                        video.removeEventListener('seeked', onSeeked);
+                                        setTimeout(function() {
+                                            video.play();
+                                        }, 100);
+                                    };
+                                    video.addEventListener('seeked', onSeeked);
+                                };
+                                video.addEventListener('canplay', onCanPlay);
+                            }
+                        };
+                        
+                        if (video.readyState >= 2 && video.duration > 0) {
+                            setTimeAndPlay();
+                        } else {
+                            const onMetadataLoaded = function() {
+                                video.removeEventListener('loadedmetadata', onMetadataLoaded);
+                                setTimeAndPlay();
+                            };
+                            video.addEventListener('loadedmetadata', onMetadataLoaded);
+                        }
+                    };
+                    
                     video.pause();
                     showResumeNotification(lastTime, function() {
-                        video.currentTime = lastTime;
-                        video.play();
+                        resumePlayback();
                     });
                 }
             });
             
             video.addEventListener('timeupdate', function() {
                 const currentTime = Math.floor(video.currentTime);
-                localStorage.setItem(movieKey, currentTime);
-                saveProgressToServer(currentTime);
+                saveProgressToServer(currentTime, false);
+            });
+            
+            video.addEventListener('seeked', function() {
+                const currentTime = Math.floor(video.currentTime);
+                saveProgressToServer(currentTime, true);
             });
             
             video.addEventListener('ended', function() {
