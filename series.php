@@ -232,7 +232,6 @@ $hasFilters = $data['hasFilters'];
 <?php
 if ($series_pagina && is_array($series_pagina)) {
     foreach($series_pagina as $index) {
-        // Elimina el año entre paréntesis del nombre
         $serie_nome = preg_replace('/\s*\(\d{4}\)$/', '', $index['name']);
         $serie_id = $index['series_id'];
         $serie_img = $index['cover'];
@@ -269,7 +268,6 @@ if ($series_pagina && is_array($series_pagina)) {
 }
 ?>
         </div>
-        <!-- PAGINADOR COMPACTO -->
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
                 <?php echo renderSeriesPagination($pagina_actual, $total_paginas, $_GET); ?>
@@ -278,57 +276,47 @@ if ($series_pagina && is_array($series_pagina)) {
     </div>
 </div>
 
-<!-- POPULAR ESTE MES ESTILO -->
-<section class="section section-popular">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="home__title bottom-margin-sml">POPULAR <b>ESTE MES</b></h1>
-            </div>
-            <?php
-            if (!$hasFilters) {
+    <?php if (!$hasFilters): ?>
+    <section class="section section-popular" id="popularSection">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="home__title bottom-margin-sml">POPULAR <b>ESTE MES</b></h1>
+                </div>
+                <?php
                 foreach($populares as $pop) {
-    // Elimina el año entre paréntesis del nombre
-    $serie_nome = preg_replace('/\s*\(\d{4}\)$/', '', $pop['name']);
-    $serie_img = $pop['cover'];
-    $serie_ano = isset($pop['releaseDate']) ? substr($pop['releaseDate'],0,4) : (isset($pop['year']) ? $pop['year'] : '');
-    $serie_id = $pop['series_id'];
-    $serie_rate = isset($pop['rating']) ? $pop['rating'] : '';
-?>
-    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-        <div class="card">
-            <div class="card__cover">
-            <img loading="lazy" class="popular-img" src="<?php echo $serie_img; ?>" alt="">
-            <a href="serie.php?stream=<?php echo $serie_id; ?>&streamtipo=serie" class="card__play">
-                    <i class="fa-solid fa-circle-play"></i>
-                </a>
-            </div>
-            <div class="card__content">
-                <h3 class="card__title">
-                    <a href="serie.php?stream=<?php echo $serie_id; ?>&streamtipo=serie">
-                        <?php echo limitar_texto($serie_nome, 40); ?>
-                    </a>
-                </h3>
-                <span class="card__rate">
-                    <?php echo $serie_ano; ?>
-                    <?php if($serie_rate !== ''): ?>
-                        &nbsp; <i class="fa-solid fa-star"></i><?php echo $serie_rate; ?>
-                    <?php endif; ?>
-                </span>
+                    $serie_nome = preg_replace('/\s*\(\d{4}\)$/', '', $pop['name']);
+                    $serie_img = $pop['cover'];
+                    $serie_ano = isset($pop['releaseDate']) ? substr($pop['releaseDate'],0,4) : (isset($pop['year']) ? $pop['year'] : '');
+                    $serie_id = $pop['series_id'];
+                    $serie_rate = isset($pop['rating']) ? $pop['rating'] : '';
+                ?>
+                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                    <div class="card">
+                        <div class="card__cover">
+                        <img loading="lazy" class="popular-img" src="<?php echo $serie_img; ?>" alt="">
+                            <a href="serie.php?stream=<?php echo $serie_id; ?>&streamtipo=serie" class="card__play">
+                                <i class="fa-solid fa-circle-play"></i>
+                            </a>
+                        </div>
+                        <div class="card__content">
+                            <a href="serie.php?stream=<?php echo $serie_id; ?>&streamtipo=serie">
+                                <span class="card__title" style="display:block;color:#fff;font-weight:600;font-size:1.05rem;margin-bottom:2px;">
+                                    <?php echo limitar_texto($serie_nome, 40); ?>
+                                </span>
+                                <span class="card__rate"><?php echo $serie_ano; ?> &nbsp; <i class="fa-solid fa-star"></i><?php echo $serie_rate; ?></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <?php } ?>
+                <div class="col-12 d-flex justify-content-center">
+                    <a href="series_popular.php" class="section__btn">Ver más</a>
+                </div>
             </div>
         </div>
-    </div>
-<?php 
-                }
-            }
-            if (!$hasFilters): ?>
-            <div class="col-12 d-flex justify-content-center">
-                <a href="series_popular.php" class="section__btn">Ver más</a>
-            </div>
-            <?php endif; ?>
-        </div>
-    </div>
-</section>
+    </section>
+    <?php endif; ?>
 
 </div>
 

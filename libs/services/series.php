@@ -151,14 +151,43 @@ function getPopularSeries($series, $limit = 6) {
         return [];
     }
     
-    $sorted = $series;
-    usort($sorted, function($a, $b) {
-        $ra = isset($a['rating']) ? floatval($a['rating']) : 0;
-        $rb = isset($b['rating']) ? floatval($b['rating']) : 0;
-        return $rb <=> $ra;
-    });
+    $generos = getSeriesGenres($series);
+    if (empty($generos)) {
+        return [];
+    }
     
-    return array_slice($sorted, 0, $limit);
+    $populares = [];
+    $generosUsados = [];
+    
+    shuffle($generos);
+    
+    foreach ($generos as $genero) {
+        if (count($populares) >= $limit) {
+            break;
+        }
+        
+        $seriesGenero = filterSeriesByGenre($series, $genero);
+        
+        $seriesFiltradas = array_filter($seriesGenero, function($s) {
+            $r = isset($s['rating']) ? floatval($s['rating']) : 0;
+            return $r >= 5.0 && $r <= 10.0;
+        });
+        
+        if (!empty($seriesFiltradas)) {
+            usort($seriesFiltradas, function($a, $b) {
+                $ra = isset($a['rating']) ? floatval($a['rating']) : 0;
+                $rb = isset($b['rating']) ? floatval($b['rating']) : 0;
+                return $rb <=> $ra;
+            });
+            
+            $seriesFiltradas = array_values($seriesFiltradas);
+            $serieAleatoria = $seriesFiltradas[array_rand($seriesFiltradas)];
+            $populares[] = $serieAleatoria;
+            $generosUsados[] = $genero;
+        }
+    }
+    
+    return $populares;
 }
 
 function paginateSeries($series, $page, $perPage = 48) {
