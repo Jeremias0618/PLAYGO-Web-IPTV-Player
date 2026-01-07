@@ -474,6 +474,7 @@ if ($series_pagina && is_array($series_pagina)) {
 <script src="./scripts/series/filters.js"></script>
 <script src="./scripts/series/modals.js"></script>
 <script src="./scripts/series/toggle.js"></script>
+<script src="./scripts/series/url-cleaner.js"></script>
 
 </body>
 </html>
