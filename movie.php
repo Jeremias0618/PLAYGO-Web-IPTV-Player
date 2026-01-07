@@ -229,7 +229,7 @@ window.movieRating = <?php echo json_encode($nota); ?>;
                                 <script>
                                 const player = new Plyr('#plyr-video', {
                                     controls: [
-                                        'play', 'rewind', 'fast-forward', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'
+                                        'play-large', 'play', 'rewind', 'fast-forward', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'
                                     ],
                                     seekTime: 10,
                                 });
