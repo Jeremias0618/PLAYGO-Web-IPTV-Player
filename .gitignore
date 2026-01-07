@@ -1,5 +1,6 @@
 libs/config.php
 db/data.json
+storage/
 assets/channels/
 .DS_Store
 Thumbs.db

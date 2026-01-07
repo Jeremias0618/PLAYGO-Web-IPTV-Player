@@ -1152,7 +1152,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // --- GUARDAR EN HISTORIAL ---
-    fetch('db/base.php', {
+    fetch('libs/endpoints/UserData.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: `action=hist_add&id=<?php echo $serie_id; ?>&nombre=<?php echo urlencode(preg_replace('/\s*\(\d{4}\)$/', '', $serie_nome)); ?>&img=<?php echo urlencode($poster_img); ?>&ano=<?php echo urlencode($ano); ?>&rate=<?php echo urlencode($nota); ?>&tipo=serie`

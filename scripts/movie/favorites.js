@@ -15,7 +15,7 @@
         
         if (!movieId) return;
         
-        fetch('db/base.php', {
+        fetch('libs/endpoints/UserData.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `action=fav_check&id=${movieId}&tipo=pelicula`
@@ -31,7 +31,7 @@
         
         btnFav.addEventListener('click', function() {
             const action = isFav ? 'fav_remove' : 'fav_add';
-            fetch('db/base.php', {
+            fetch('libs/endpoints/UserData.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: `action=${action}&id=${movieId}&nombre=${encodeURIComponent(movieName)}&img=${encodeURIComponent(movieImg)}&ano=${encodeURIComponent(movieYear)}&rate=${encodeURIComponent(movieRating)}&tipo=pelicula`

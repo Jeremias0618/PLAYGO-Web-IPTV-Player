@@ -76,6 +76,7 @@ $ano = $movieData['year'];
 window.movieId = <?php echo json_encode($id); ?>;
 window.movieYoutubeId = <?php echo json_encode($youtube_id); ?>;
 window.movieKey = "movie_time_<?php echo $id; ?>";
+window.movieTipo = <?php echo json_encode($tipo); ?>;
 window.movieTitle = <?php echo json_encode($filme); ?>;
 window.movieName = <?php echo json_encode($filme); ?>;
 window.movieImg = <?php echo json_encode($poster_tmdb ?: $poster_img); ?>;

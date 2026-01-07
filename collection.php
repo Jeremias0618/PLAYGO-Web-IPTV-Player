@@ -1398,7 +1398,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const favText = btn.querySelector('.fav-text-' + movieId);
         let isFav = false;
 
-        fetch('db/base.php', {
+        fetch('libs/endpoints/UserData.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: 'action=fav_check&id=' + movieId + '&tipo=pelicula'
@@ -1420,7 +1420,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const movieYear = btn.getAttribute('data-movie-year');
             const movieRating = btn.getAttribute('data-movie-rating');
 
-            fetch('db/base.php', {
+            fetch('libs/endpoints/UserData.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: 'action=' + action + '&id=' + movieId + '&nombre=' + encodeURIComponent(movieName) + '&img=' + encodeURIComponent(movieImg) + '&ano=' + encodeURIComponent(movieYear) + '&rate=' + encodeURIComponent(movieRating) + '&tipo=pelicula'

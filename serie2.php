@@ -505,7 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let isFav = false;
 
     // Consultar estado inicial
-    fetch('db/base.php', {
+    fetch('libs/endpoints/UserData.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: `action=fav_check&id=<?php echo $id; ?>&tipo=serie`
@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     btnFav.addEventListener('click', function() {
         const action = isFav ? 'fav_remove' : 'fav_add';
-        fetch('db/base.php', {
+        fetch('libs/endpoints/UserData.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `action=${action}&id=<?php echo $id; ?>&nombre=<?php echo urlencode($serie_nome); ?>&img=<?php echo urlencode($poster_img); ?>&ano=<?php echo urlencode($ano); ?>&rate=<?php echo urlencode($nota); ?>&tipo=serie`

@@ -14,7 +14,7 @@
         function guardarHistorial() {
             if (historialGuardado) return;
             historialGuardado = true;
-            fetch('db/base.php', {
+            fetch('libs/endpoints/UserData.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: `action=hist_add&id=${movieId}&nombre=${encodeURIComponent(movieName)}&img=${encodeURIComponent(movieImg)}&ano=${encodeURIComponent(movieYear)}&rate=${encodeURIComponent(movieRating)}&tipo=pelicula`

@@ -68,43 +68,102 @@
             });
         }
         
+        const movieId = window.movieId || '';
+        const movieTipo = window.movieTipo || 'movie';
+        let saveProgressTimeout = null;
+        
+        function saveProgressToServer(time) {
+            if (saveProgressTimeout) clearTimeout(saveProgressTimeout);
+            saveProgressTimeout = setTimeout(function() {
+                fetch('libs/endpoints/UserData.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: `action=progress_save&id=${movieId}&tipo=${movieTipo}&time=${time}`
+                }).catch(function() {});
+            }, 2000);
+        }
+        
+        function getProgressFromServer(callback) {
+            fetch('libs/endpoints/UserData.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `action=progress_get&id=${movieId}&tipo=${movieTipo}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.time > 0) {
+                    callback(data.time);
+                } else {
+                    const localTime = parseInt(localStorage.getItem(movieKey) || "0");
+                    if (localTime > 0) callback(localTime);
+                }
+            })
+            .catch(function() {
+                const localTime = parseInt(localStorage.getItem(movieKey) || "0");
+                if (localTime > 0) callback(localTime);
+            });
+        }
+        
+        function removeProgress() {
+            localStorage.removeItem(movieKey);
+            fetch('libs/endpoints/UserData.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `action=progress_remove&id=${movieId}&tipo=${movieTipo}`
+            }).catch(function() {});
+        }
+        
         if (document.getElementById('plyr-video') && window.Plyr) {
             let plyrInterval = setInterval(function() {
                 if (window.player && typeof window.player.on === "function") {
                     clearInterval(plyrInterval);
                     const plyrPlayer = window.player;
+                    
+                    getProgressFromServer(function(serverTime) {
+                        const lastTime = serverTime;
+                        if (lastTime > 10) {
+                            plyrPlayer.pause();
+                            showResumeNotification(lastTime, function() {
+                                plyrPlayer.currentTime = lastTime;
+                                plyrPlayer.play();
+                            });
+                        }
+                    });
+                    
                     plyrPlayer.on('timeupdate', function() {
-                        localStorage.setItem(movieKey, Math.floor(plyrPlayer.currentTime));
+                        const currentTime = Math.floor(plyrPlayer.currentTime);
+                        localStorage.setItem(movieKey, currentTime);
+                        saveProgressToServer(currentTime);
                     });
+                    
                     plyrPlayer.on('ended', function() {
-                        localStorage.removeItem(movieKey);
+                        removeProgress();
                     });
-                    const lastTime = parseInt(localStorage.getItem(movieKey) || "0");
-                    if (lastTime > 10) {
-                        plyrPlayer.pause();
-                        showResumeNotification(lastTime, function() {
-                            plyrPlayer.currentTime = lastTime;
-                            plyrPlayer.play();
-                        });
-                    }
                 }
             }, 200);
         } else if (document.querySelector('video#plyr-video') === null && document.querySelector('video')) {
             const video = document.querySelector('video');
+            
+            getProgressFromServer(function(serverTime) {
+                const lastTime = serverTime;
+                if (lastTime > 10) {
+                    video.pause();
+                    showResumeNotification(lastTime, function() {
+                        video.currentTime = lastTime;
+                        video.play();
+                    });
+                }
+            });
+            
             video.addEventListener('timeupdate', function() {
-                localStorage.setItem(movieKey, Math.floor(video.currentTime));
+                const currentTime = Math.floor(video.currentTime);
+                localStorage.setItem(movieKey, currentTime);
+                saveProgressToServer(currentTime);
             });
+            
             video.addEventListener('ended', function() {
-                localStorage.removeItem(movieKey);
+                removeProgress();
             });
-            const lastTime = parseInt(localStorage.getItem(movieKey) || "0");
-            if (lastTime > 10) {
-                video.pause();
-                showResumeNotification(lastTime, function() {
-                    video.currentTime = lastTime;
-                    video.play();
-                });
-            }
         }
     });
 })();

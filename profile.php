@@ -2299,7 +2299,7 @@ $recomendados = array_slice($recomendados, 0, 8);
 <script>
 // HISTORIAL
 $(document).ready(function(){
-    fetch('db/base.php', {
+    fetch('libs/endpoints/UserData.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'action=get_historial'
@@ -2361,7 +2361,7 @@ $(document).ready(function(){
     });
 
     // FAVORITOS
-    fetch('db/base.php', {
+    fetch('libs/endpoints/UserData.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'action=get_favoritos'
