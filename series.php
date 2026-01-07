@@ -1,96 +1,31 @@
 <?php
 require_once("libs/lib.php");
 
-// Redirigir si no hay sesión iniciada
 if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['xuserm']) || empty($_COOKIE['xpwdm'])) {
     header("Location: login.php");
     exit;
 }
 
+require_once(__DIR__ . '/libs/controllers/Series.php');
+require_once(__DIR__ . '/libs/controllers/SeriesPagination.php');
+
+if (!function_exists('limitar_texto')) {
+    require_once(__DIR__ . '/libs/lib.php');
+}
+
 $user = $_COOKIE['xuserm'];
 $pwd = $_COOKIE['xpwdm'];
 
-$categoria = isset($_REQUEST['catg']) ? urldecode($_REQUEST['catg']) : 'Series';
-$id = isset($_REQUEST['id']) ? trim($_REQUEST['id']) : '';
-$adulto = isset($_REQUEST['adulto']) ? trim($_REQUEST['adulto']) : '';
-$sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
+$params = getSeriesParams();
+$data = getSeriesPageWithPopular($user, $pwd, $params);
 
-// --- Paginación ---
-$series_por_pagina = 48;
-$pagina_actual = isset($_GET['pagina']) ? max(1, intval($_GET['pagina'])) : 1;
-$inicio = ($pagina_actual - 1) * $series_por_pagina;
-
-// Obtener series
-$url = IP."/player_api.php?username=$user&password=$pwd&action=get_series".($id ? "&category_id=$id" : "");
-$resposta = apixtream($url);
-$output = json_decode($resposta,true);
-
-// FILTROS
-if (isset($_GET['genero']) && $_GET['genero'] != '') {
-    $output = array_filter($output, function($s) {
-        $g = isset($_GET['genero']) ? $_GET['genero'] : '';
-        if (!isset($s['genre'])) return false;
-        $gs = is_array($s['genre']) ? $s['genre'] : explode(',', $s['genre']);
-        foreach ($gs as $gg) {
-            if (trim($gg) == $g) return true;
-        }
-        return false;
-    });
-}
-if (isset($_GET['rating_min']) && isset($_GET['rating_max'])) {
-    $min = floatval($_GET['rating_min']);
-    $max = floatval($_GET['rating_max']);
-    $output = array_filter($output, function($s) use ($min, $max) {
-        $r = isset($s['rating']) ? floatval($s['rating']) : 0;
-        return $r >= $min && $r <= $max;
-    });
-}
-if (isset($_GET['year_min']) && isset($_GET['year_max'])) {
-    $min = intval($_GET['year_min']);
-    $max = intval($_GET['year_max']);
-    $output = array_filter($output, function($s) use ($min, $max) {
-        $y = isset($s['releaseDate']) ? intval(substr($s['releaseDate'],0,4)) : (isset($s['year']) ? intval($s['year']) : 0);
-        return $y >= $min && $y <= $max;
-    });
-}
-if (isset($_GET['orden']) && $_GET['orden'] != '') {
-    if ($_GET['orden'] == 'nombre') {
-        usort($output, function($a, $b) {
-            return strcmp($a['name'], $b['name']);
-        });
-    } elseif ($_GET['orden'] == 'año') {
-        usort($output, function($a, $b) {
-            $ya = isset($a['releaseDate']) ? intval(substr($a['releaseDate'],0,4)) : (isset($a['year']) ? intval($a['year']) : 0);
-            $yb = isset($b['releaseDate']) ? intval(substr($b['releaseDate'],0,4)) : (isset($b['year']) ? intval($b['year']) : 0);
-            return $yb <=> $ya;
-        });
-    } elseif ($_GET['orden'] == 'rating') {
-        usort($output, function($a, $b) {
-            $ra = isset($a['rating']) ? floatval($a['rating']) : 0;
-            $rb = isset($b['rating']) ? floatval($b['rating']) : 0;
-            return $rb <=> $ra;
-        });
-    } elseif ($_GET['orden'] == 'recientes') {
-        usort($output, function($a, $b) {
-            $timeA = isset($a['last_modified']) ? intval($a['last_modified']) : (isset($a['added']) ? intval($a['added']) : 0);
-            $timeB = isset($b['last_modified']) ? intval($b['last_modified']) : (isset($b['added']) ? intval($b['added']) : 0);
-            return $timeB <=> $timeA;
-        });
-    } elseif ($_GET['orden'] == 'antiguas') {
-        usort($output, function($a, $b) {
-            $timeA = isset($a['last_modified']) ? intval($a['last_modified']) : (isset($a['added']) ? intval($a['added']) : 0);
-            $timeB = isset($b['last_modified']) ? intval($b['last_modified']) : (isset($b['added']) ? intval($b['added']) : 0);
-            return $timeA <=> $timeB;
-        });
-    }
-}
-
-// Recalcular paginación después de filtrar
-$total_series = is_array($output) ? count($output) : 0;
-$total_paginas = ceil($total_series / $series_por_pagina);
-$series_pagina = ($output && is_array($output)) ? array_slice(array_values($output), $inicio, $series_por_pagina) : [];
-
-$backdrop_fondo = '';
+$series_pagina = $data['series'];
+$total_paginas = $data['totalPages'];
+$pagina_actual = $data['currentPage'];
+$generos = $data['genres'];
+$backdrop_fondo = $data['backdrop'];
+$populares = $data['popular'];
+$hasFilters = $data['hasFilters'];
 ?>
 
 <!DOCTYPE html>
@@ -111,14 +46,15 @@ $backdrop_fondo = '';
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
-    <link rel="stylesheet" href="./styles/movies/layout.css">
-    <link rel="stylesheet" href="./styles/movies/pagination.css">
-    <link rel="stylesheet" href="./styles/movies/title.css">
-    <link rel="stylesheet" href="./styles/movies/filters.css">
-    <link rel="stylesheet" href="./styles/movies/modals.css">
-    <link rel="stylesheet" href="./styles/movies/cards.css">
-    <link rel="stylesheet" href="./styles/movies/popular.css">
-    <link rel="stylesheet" href="./styles/movies/mobile.css">
+    <link rel="stylesheet" href="./styles/series/layout.css">
+    <link rel="stylesheet" href="./styles/series/pagination.css">
+    <link rel="stylesheet" href="./styles/series/title.css">
+    <link rel="stylesheet" href="./styles/series/filters.css">
+    <link rel="stylesheet" href="./styles/series/modals.css">
+    <link rel="stylesheet" href="./styles/series/cards.css">
+    <link rel="stylesheet" href="./styles/series/popular.css">
+    <link rel="stylesheet" href="./styles/series/mobile.css">
+    <link rel="stylesheet" href="./styles/series/background.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - Series</title>
 <?php if($backdrop_fondo): ?>
@@ -200,7 +136,6 @@ $backdrop_fondo = '';
 </header>
 <?php include_once __DIR__ . '/libs/views/search.php'; ?>
 
-<!-- CONTENIDO PRINCIPAL CON FONDO OSCURO -->
 <div class="main-bg-fondo">
     <div class="movies-page-title">
         <h2>SERIES</h2>
@@ -216,19 +151,6 @@ $backdrop_fondo = '';
         <select name="genero" id="genero">
             <option value="">Todos</option>
             <?php
-            $generos = [];
-            if ($output && is_array($output)) {
-                foreach ($output as $serie) {
-                    if (!empty($serie['genre'])) {
-                        $gs = is_array($serie['genre']) ? $serie['genre'] : explode(',', $serie['genre']);
-                        foreach ($gs as $g) {
-                            $g = trim($g);
-                            if ($g && !in_array($g, $generos)) $generos[] = $g;
-                        }
-                    }
-                }
-            }
-            sort($generos);
             foreach ($generos as $g) {
                 $sel = (isset($_GET['genero']) && $_GET['genero'] == $g) ? 'selected' : '';
                 echo "<option value=\"".htmlspecialchars($g)."\" $sel>".htmlspecialchars($g)."</option>";
@@ -350,62 +272,7 @@ if ($series_pagina && is_array($series_pagina)) {
         <!-- PAGINADOR COMPACTO -->
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
-                <ul class="custom-paginator">
-                    <?php
-                    $total_paginas = max(1, $total_paginas);
-                    if($pagina_actual > 1) {
-                        echo '<li><a class="arrow" href="?'.http_build_query(array_merge($_GET, ['pagina'=>($pagina_actual-1)])).'">&#60;</a></li>';
-                    } else {
-                        echo '<li class="disabled"><span class="arrow">&#60;</span></li>';
-                    }
-                    if($pagina_actual == 1) {
-                        echo '<li class="active"><span>1</span></li>';
-                    } else {
-                        echo '<li><a href="?'.http_build_query(array_merge($_GET, ['pagina'=>1])).'">1</a></li>';
-                    }
-                    if($total_paginas >= 2) {
-                        if($pagina_actual == 2) {
-                            echo '<li class="active"><span>2</span></li>';
-                        } else {
-                            echo '<li><a href="?'.http_build_query(array_merge($_GET, ['pagina'=>2])).'">2</a></li>';
-                        }
-                    }
-                    if($total_paginas >= 3) {
-                        if($pagina_actual == 3) {
-                            echo '<li class="active"><span>3</span></li>';
-                        } else {
-                            echo '<li><a href="?'.http_build_query(array_merge($_GET, ['pagina'=>3])).'">3</a></li>';
-                        }
-                    }
-                    if($total_paginas > 4) {
-                        if($pagina_actual > 3 && $pagina_actual < $total_paginas - 1) {
-                            echo '<li class="disabled"><span>...</span></li>';
-                            if($pagina_actual != $total_paginas && $pagina_actual != 1 && $pagina_actual != 2 && $pagina_actual != 3) {
-                                echo '<li class="active"><span>'.$pagina_actual.'</span></li>';
-                                echo '<li class="disabled"><span>...</span></li>';
-                            }
-                        } else {
-                            echo '<li class="disabled"><span>...</span></li>';
-                        }
-                        if($pagina_actual == $total_paginas) {
-                            echo '<li class="active"><span>'.$total_paginas.'</span></li>';
-                        } else {
-                            echo '<li><a href="?'.http_build_query(array_merge($_GET, ['pagina'=>$total_paginas])).'">'.$total_paginas.'</a></li>';
-                        }
-                    } elseif($total_paginas == 4) {
-                        if($pagina_actual == 4) {
-                            echo '<li class="active"><span>4</span></li>';
-                        } else {
-                            echo '<li><a href="?'.http_build_query(array_merge($_GET, ['pagina'=>4])).'">4</a></li>';
-                        }
-                    }
-                    if($pagina_actual < $total_paginas) {
-                        echo '<li><a class="arrow" href="?'.http_build_query(array_merge($_GET, ['pagina'=>($pagina_actual+1)])).'">&#62;</a></li>';
-                    } else {
-                        echo '<li class="disabled"><span class="arrow">&#62;</span></li>';
-                    }
-                    ?>
-                </ul>
+                <?php echo renderSeriesPagination($pagina_actual, $total_paginas, $_GET); ?>
             </div>
         </div>
     </div>
@@ -419,16 +286,8 @@ if ($series_pagina && is_array($series_pagina)) {
                 <h1 class="home__title bottom-margin-sml">POPULAR <b>ESTE MES</b></h1>
             </div>
             <?php
-            // Selecciona 6 películas populares (por rating descendente)
-            $populares = [];
-            if ($output && is_array($output)) {
-                $populares = $output;
-                usort($populares, function($a, $b) {
-                    return floatval($b['rating']) <=> floatval($a['rating']);
-                });
-                $populares = array_slice($populares, 0, 6);
-            }
-foreach($populares as $pop) {
+            if (!$hasFilters) {
+                foreach($populares as $pop) {
     // Elimina el año entre paréntesis del nombre
     $serie_nome = preg_replace('/\s*\(\d{4}\)$/', '', $pop['name']);
     $serie_img = $pop['cover'];
@@ -459,10 +318,14 @@ foreach($populares as $pop) {
             </div>
         </div>
     </div>
-<?php } ?>
+<?php 
+                }
+            }
+            if (!$hasFilters): ?>
             <div class="col-12 d-flex justify-content-center">
                 <a href="series_popular.php" class="section__btn">Ver más</a>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
@@ -610,26 +473,7 @@ foreach($populares as $pop) {
 <script src="./scripts/core/main.js"></script>
 <script src="./scripts/series/filters.js"></script>
 <script src="./scripts/series/modals.js"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleBtn = document.getElementById('filtrosToggleBtn');
-    const filtrosForm = document.getElementById('filtrosForm');
-    const toggleText = document.getElementById('filtrosToggleText');
-    
-    if (toggleBtn && filtrosForm && toggleText) {
-        toggleBtn.addEventListener('click', function() {
-            if (filtrosForm.classList.contains('filtros-hidden')) {
-                filtrosForm.classList.remove('filtros-hidden');
-                toggleText.textContent = 'Ocultar Filtros';
-            } else {
-                filtrosForm.classList.add('filtros-hidden');
-                toggleText.textContent = 'Mostrar Filtros';
-            }
-        });
-    }
-});
-</script>
+<script src="./scripts/series/toggle.js"></script>
 
 </body>
 </html>
