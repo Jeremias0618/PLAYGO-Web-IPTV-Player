@@ -1,0 +1,39 @@
+.video-player-container {
+    margin: 32px auto 0 auto;
+    max-width: 1100px;
+    width: 100%;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.video-player-container video {
+    width: 100%;
+    display: block;
+    background: #000;
+}
+.player-nav-btns {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin: 32px 0;
+}
+.player-nav-btns .nav-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-shadow: 0 4px 16px #0002;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.player-nav-btns .nav-btn:hover {
+    box-shadow: 0 8px 24px #0003;
+    transform: translateY(-3px) scale(1.07);
+    background: #f0f0f0;
+}
+.player-nav-btns a[style*="pointer-events:none"] .nav-btn {
+    cursor: not-allowed;
+}
+

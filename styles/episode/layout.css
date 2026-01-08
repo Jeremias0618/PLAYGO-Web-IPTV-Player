@@ -1,0 +1,186 @@
+.mobile-menu {
+    display: none;
+}
+#mobileMenuOverlay {
+    display: none;
+}
+body {
+    color: #fff;
+}
+.header__content {
+    background: #000 !important;
+    border-radius: 12px;
+    padding: 12px 24px;
+}
+.header__wrap {
+    background: #000 !important;
+}
+.navbar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 80px;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(90deg, #0f2027 0%, #2c5364 100%);
+    opacity: 0.85;
+    transition: opacity 0.4s;
+}
+.bg-animate {
+    animation: navbarBgMove 8s linear infinite alternate;
+    background-size: 200% 100%;
+}
+@keyframes navbarBgMove {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+.card__cover img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px #000a;
+}
+.card__content {
+    color: #fff;
+}
+.card__rate {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+.card__meta {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px 0;
+}
+.card__meta li {
+    margin-bottom: 6px;
+}
+.card__description {
+    color: rgb(255, 255, 255);
+    margin-bottom: 10px;
+}
+.btn-back {
+    background: #e50914;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+.btn-back:hover {
+    background: #fff;
+    color: #e50914;
+}
+.details__title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+@media (max-width: 900px) {
+    .details__title {
+        font-size: 1.3rem;
+    }
+    .card__cover img {
+        max-width: 320px;
+        margin: 0 auto;
+    }
+}
+@media (max-width: 600px) {
+    .header__logo {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+    .header__content {
+        padding-left: 4px !important;
+    }
+}
+@media (min-width: 601px) {
+    .header__logo img {
+        width: 240px !important;
+        height: 80px !important;
+        max-width: none !important;
+        object-fit: contain !important;
+    }
+}
+@media (max-width: 600px) {
+    .header__logo img {
+        width: 120px !important;
+        height: 40px !important;
+        max-width: 100% !important;
+        object-fit: contain !important;
+    }
+}
+.plyr--video .plyr__controls {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+}
+.plyr--video .plyr__controls > .plyr__control[data-plyr="play"] {
+    order: 1 !important;
+    margin-left: 0 !important;
+    margin-right: 2px !important;
+    flex-shrink: 0 !important;
+}
+.plyr--video .plyr__controls > .plyr__control[data-plyr="rewind"] {
+    order: 2 !important;
+    margin-left: 0 !important;
+    margin-right: 2px !important;
+    flex-shrink: 0 !important;
+}
+.plyr--video .plyr__controls > .plyr__control[data-plyr="fast-forward"] {
+    order: 3 !important;
+    margin-left: 0 !important;
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
+}
+.plyr--video .plyr__progress__container {
+    order: 4 !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 10px !important;
+}
+.plyr--video .plyr__progress {
+    left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+.plyr--video .plyr__progress input[type="range"],
+.plyr--video .plyr__progress__buffer {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.plyr--video .plyr__time {
+    order: 5 !important;
+    margin-left: 0 !important;
+    margin-right: 5px !important;
+    flex-shrink: 0 !important;
+}
+.plyr--video .plyr__controls > .plyr__control[data-plyr="mute"],
+.plyr--video .plyr__volume {
+    order: 6 !important;
+    margin-left: 0 !important;
+    flex-shrink: 0 !important;
+}
+.plyr--video .plyr__volume {
+    max-width: 110px !important;
+}
+.plyr--video .plyr__controls > .plyr__menu {
+    order: 7 !important;
+    flex-shrink: 0 !important;
+}
+.plyr--video .plyr__controls > .plyr__control[data-plyr="fullscreen"] {
+    order: 8 !important;
+    flex-shrink: 0 !important;
+}
+
