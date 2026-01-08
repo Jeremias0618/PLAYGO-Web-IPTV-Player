@@ -142,16 +142,44 @@ try {
         $time = isset($_POST['time']) ? (int)$_POST['time'] : 0;
         $progress = loadJsonFile($progressFile, []);
         $key = $tipo . '_' . $id;
-        $progress[$key] = [
-            'id' => $id,
-            'type' => $tipo,
-            'name' => $nombre,
-            'img' => $img,
-            'backdrop' => $backdrop,
-            'time' => $time,
-            'duration' => $duration,
-            'updated' => date('Y-m-d H:i:s')
-        ];
+        
+        if ($tipo == 'serie') {
+            $serie_id = $_POST['serie_id'] ?? '';
+            $serie_name = $_POST['serie_name'] ?? '';
+            $serie_img = $_POST['serie_img'] ?? '';
+            $serie_backdrop = $_POST['serie_backdrop'] ?? '';
+            
+            $progressData = [
+                'type' => $tipo,
+                'serie' => [
+                    'id' => $serie_id,
+                    'name' => $serie_name,
+                    'img' => $serie_img,
+                    'backdrop' => $serie_backdrop
+                ],
+                'episode' => [
+                    'id' => $id,
+                    'name' => $nombre,
+                    'img' => $img,
+                    'time' => $time,
+                    'duration' => $duration
+                ],
+                'updated' => date('Y-m-d H:i:s')
+            ];
+        } else {
+            $progressData = [
+                'id' => $id,
+                'type' => $tipo,
+                'name' => $nombre,
+                'img' => $img,
+                'backdrop' => $backdrop,
+                'time' => $time,
+                'duration' => $duration,
+                'updated' => date('Y-m-d H:i:s')
+            ];
+        }
+        
+        $progress[$key] = $progressData;
         saveJsonFile($progressFile, $progress);
         echo json_encode(['success'=>true]);
         exit;
@@ -160,7 +188,17 @@ try {
     if ($action == 'progress_get') {
         $progress = loadJsonFile($progressFile, []);
         $key = $tipo . '_' . $id;
-        $time = isset($progress[$key]) ? (int)$progress[$key]['time'] : 0;
+        $time = 0;
+        
+        if (isset($progress[$key])) {
+            $progressItem = $progress[$key];
+            if ($tipo == 'serie' && isset($progressItem['episode']['time'])) {
+                $time = (int)$progressItem['episode']['time'];
+            } elseif (isset($progressItem['time'])) {
+                $time = (int)$progressItem['time'];
+            }
+        }
+        
         echo json_encode(['success'=>true, 'time'=>$time]);
         exit;
     }

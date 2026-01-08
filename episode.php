@@ -49,8 +49,18 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>PLAYGO - <?php echo htmlspecialchars($serie_nome); ?> - <?php echo htmlspecialchars($ep_name); ?></title>
     <script>
-        window.episodeKey = <?php echo json_encode($episodeKey); ?>;
+        window.episodeId = <?php echo json_encode($episode_id); ?>;
+        window.episodeKey = "serie_time_<?php echo $episode_id; ?>";
         window.episodeTitle = <?php echo json_encode($episodeTitle); ?>;
+        window.episodeTipo = "serie";
+        window.episodeName = <?php echo json_encode($episodeTitle); ?>;
+        window.episodeImg = <?php echo json_encode($ep_poster); ?>;
+        window.episodeBackdrop = <?php echo json_encode($ep_backdrop ?: $wallpaper_img); ?>;
+        window.episodeDuration = <?php echo json_encode($ep_dur); ?>;
+        window.serieId = <?php echo json_encode($serie_id); ?>;
+        window.serieName = <?php echo json_encode($serie_nome_limpio); ?>;
+        window.serieImg = <?php echo json_encode($poster_img); ?>;
+        window.serieBackdrop = <?php echo json_encode($wallpaper_img); ?>;
         window.episodeHistoryData = {
             serieId: <?php echo json_encode($serie_id); ?>,
             serieName: <?php echo json_encode($serie_nome_limpio); ?>,
