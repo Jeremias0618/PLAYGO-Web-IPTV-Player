@@ -111,8 +111,7 @@
     
     #btnTrailer,
     #btnFavorito,
-    #btnPlaylist,
-    a[href="predator.php"] {
+    #btnPlaylist {
         width: 100% !important;
         min-width: 0 !important;
         display: flex !important;
@@ -129,16 +128,14 @@
     
     #btnTrailer i,
     #btnFavorito i,
-    #btnPlaylist i,
-    a[href="predator.php"] i {
+    #btnPlaylist i {
         font-size: 1.35rem !important;
         margin-right: 8px !important;
     }
     
     #btnTrailer span,
     #btnFavorito span,
-    #btnPlaylist span,
-    a[href="predator.php"] span {
+    #btnPlaylist span {
         font-size: 1.08rem !important;
         font-weight: 500;
         letter-spacing: 0.5px;
@@ -185,16 +182,9 @@
         color: #5dc1b9 !important;
     }
     
-    a[href="predator.php"] {
-        background: linear-gradient(90deg,#0f2027 60%,#2c5364 100%) !important;
-        color: #fff !important;
-        text-decoration: none !important;
-    }
-    
     #btnTrailer:active,
     #btnFavorito:active,
-    #btnPlaylist:active,
-    a[href="predator.php"]:active {
+    #btnPlaylist:active {
         opacity: 0.85;
     }
     

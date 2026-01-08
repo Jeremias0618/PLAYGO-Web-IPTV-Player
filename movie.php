@@ -200,14 +200,6 @@ window.movieDuration = <?php echo json_encode($duracao); ?>;
                         </button>
                         <div id="playlistTooltip" style="display: none; position: absolute; top: 100%; left: 0; margin-top: 8px; z-index: 10000;"></div>
                     </div>
-<?php
-                    $saga_predator_ids = [7716, 2693, 2690, 2689, 2692, 2691, 2450, 2449];
-                    if (in_array((int)$id, $saga_predator_ids)): ?>
-                        <a href="predator.php" style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#0f2027 60%,#2c5364 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;text-decoration:none;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
-                            <i class="fa fa-film" style="font-size:1.4rem;"></i>
-                            <span>Saga Predator</span>
-                        </a>
-                    <?php endif; ?>
             </div>
             </div>
         </div>
