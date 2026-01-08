@@ -1,0 +1,111 @@
+.season-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    justify-content: flex-start;
+    margin-bottom: 24px;
+    padding-left: 0;
+}
+.season-tabs .nav-item {
+    margin-bottom: 0 !important;
+}
+.season-tabs .nav-link {
+    color: #fff;
+    background: #232027;
+    border-radius: 8px 8px 0 0;
+    margin-right: 6px;
+    font-weight: 600;
+    min-width: 120px;
+    text-align: center;
+    margin: 0 !important;
+    font-size: 1rem;
+    padding: 10px 0;
+    border-radius: 8px !important;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: 0 2px 8px #0002;
+}
+.season-tabs .nav-link.active {
+    background: linear-gradient(90deg,#e50914 60%,#c8008f 100%);
+    color: #fff;
+}
+.episode-card {
+    background: #232027;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0005;
+    margin-bottom: 28px;
+    transition: transform 0.15s;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.episode-card:hover {
+    transform: translateY(-6px) scale(1.025);
+    box-shadow: 0 8px 32px #000a;
+}
+.episode-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+    background: #181818;
+}
+.episode-card .card-body {
+    padding: 14px 14px 10px 14px;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+.episode-card .card-title {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+}
+.episode-card .card-text {
+    font-size: 0.98rem;
+    color: #ccc;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+.episode-card .btn-play {
+    background: linear-gradient(90deg,#e50914 60%,#c8008f 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: auto;
+    transition: background 0.2s;
+}
+.episode-card .btn-play:hover {
+    background: #fff;
+    color: #e50914;
+}
+@media (max-width: 900px) {
+    .season-tabs .nav-link {
+        min-width: 90px;
+        font-size: 0.98rem;
+        padding: 8px 0;
+    }
+}
+@media (max-width: 600px) {
+    .season-tabs {
+        gap: 7px 7px;
+    }
+    .season-tabs .nav-link {
+        min-width: 70px;
+        font-size: 0.93rem;
+        padding: 7px 0;
+    }
+    .episode-card img {
+        height: 120px;
+    }
+}
+
