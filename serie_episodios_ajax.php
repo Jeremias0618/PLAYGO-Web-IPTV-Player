@@ -71,7 +71,7 @@ foreach ($episodios[$season] as $ep) {
     if ($duracion_valida) {
         $html .= '<div class="mb-2" style="color:#ffd700;">'.htmlspecialchars($ep_dur).'</div>';
     }
-    $html .= '<a href="serie_play.php?serie_id='.$id.'&ep_id='.$ep_id.'&streamtipo=serie" class="btn-play mt-auto"><i class="fa-solid fa-circle-play"></i> Ver episodio</a>
+    $html .= '<a href="episode.php?serie_id='.$id.'&episode_id='.$ep_id.'" class="btn-play mt-auto"><i class="fa-solid fa-circle-play"></i> Ver episodio</a>
           </div>
         </div>
       </div>';

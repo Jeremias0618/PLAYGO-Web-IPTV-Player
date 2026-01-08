@@ -10,7 +10,7 @@ if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['x
 $user = $_COOKIE['xuserm'];
 $pwd = $_COOKIE['xpwdm'];
 $serie_id = trim($_GET['serie_id'] ?? '');
-$ep_id = trim($_GET['ep_id'] ?? '');
+$ep_id = trim($_GET['episode_id'] ?? '');
 
 // Obtener info de la serie y episodio
 $url = IP."/player_api.php?username=$user&password=$pwd&action=get_series_info&series_id=$serie_id";
@@ -863,8 +863,8 @@ foreach ($episodios as $temporada) {
     }
 }
 $serie_url = "serie.php?stream=" . urlencode($serie_id) . "&streamtipo=serie";
-$prev_url = $prev_ep_id ? "serie_play.php?serie_id=" . urlencode($serie_id) . "&ep_id=" . urlencode($prev_ep_id) : "#";
-$next_url = $next_ep_id ? "serie_play.php?serie_id=" . urlencode($serie_id) . "&ep_id=" . urlencode($next_ep_id) : "#";
+$prev_url = $prev_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&episode_id=" . urlencode($prev_ep_id) : "#";
+$next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&episode_id=" . urlencode($next_ep_id) : "#";
 ?>
 
 <div class="player-nav-btns" style="display:flex;justify-content:center;gap:32px;margin:32px 0;">
@@ -919,7 +919,7 @@ $next_url = $next_ep_id ? "serie_play.php?serie_id=" . urlencode($serie_id) . "&
                 }
             }
             // Enlace al episodio
-            $ep_url = "serie_play.php?serie_id=" . urlencode($serie_id) . "&ep_id=" . urlencode($ep['id']);
+            $ep_url = "episode.php?serie_id=" . urlencode($serie_id) . "&episode_id=" . urlencode($ep['id']);
             if (!empty($ep_img)) {
                 $ep_url .= "&ep_img=" . urlencode($ep_img);
             }

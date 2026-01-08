@@ -45,7 +45,8 @@ PLAYGO/
 ├── home.php             
 ├── install.sh             # Initial setup script
 ├── php7.2-ext.sh          # PHP extensions installer
-├── connection.php         
+├── libs/
+│   ├── connection.php (future database implementation)         
 ├── LICENSE
 ├── README.md
 ├── assets/                # Assets organized by type
