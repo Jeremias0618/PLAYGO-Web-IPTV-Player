@@ -81,9 +81,9 @@
     background-clip: text;
     text-fill-color: transparent;
 }
-#btnFavorito.favorito-active {
-    background: linear-gradient(90deg,#ffd700 60%,#e50914 100%) !important;
-    color: #232027 !important;
+#btnFavorito.favorito-active i.fa-star,
+#btnFavorito.favorito-active span {
+    color: #ffd700 !important;
 }
 @media (max-width: 900px) {
     .serie-hero .info {

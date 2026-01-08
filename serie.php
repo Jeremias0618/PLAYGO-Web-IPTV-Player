@@ -21,25 +21,11 @@ if (!$pageData) {
     exit;
 }
 
-$serie_nome = $pageData['serie_nome'];
-$poster_img = $pageData['poster_img'];
-$poster_tmdb = $pageData['poster_tmdb'];
-$wallpaper_tmdb = $pageData['wallpaper_tmdb'];
-$backdrop = $pageData['backdrop'];
-$sinopsis = $pageData['sinopsis'];
-$genero = $pageData['genero'];
-$ano = $pageData['ano'];
-$pais = $pageData['pais'];
-$nota = $pageData['nota'];
-$cast = $pageData['cast'];
-$diretor = $pageData['diretor'];
-$duracao = $pageData['duracao'];
-$youtube_id = $pageData['youtube_id'];
-$tmdb_id = $pageData['tmdb_id'];
-$episodios = $pageData['episodios'];
-$tmdb_episodios_imgs = $pageData['tmdb_episodios_imgs'];
-$total_temporadas = $pageData['total_temporadas'];
-$total_episodios = $pageData['total_episodios'];
+extract($pageData, EXTR_SKIP);
+$generos_array = !empty($genero) ? array_map('trim', explode(',', $genero)) : [];
+$ano_short = $ano ? substr($ano, 0, 4) : '';
+$poster_final = $poster_tmdb ?: $poster_img;
+$backdrop_final = $wallpaper_tmdb ?: ($backdrop ?: $poster_final);
 
 ?>
 <!DOCTYPE html>
@@ -52,8 +38,8 @@ $total_episodios = $pageData['total_episodios'];
 window.serieId = <?php echo json_encode($id); ?>;
 window.serieYoutubeId = <?php echo json_encode($youtube_id); ?>;
 window.serieName = <?php echo json_encode($serie_nome); ?>;
-window.serieImg = <?php echo json_encode($poster_tmdb ?: $poster_img); ?>;
-window.serieBackdrop = <?php echo json_encode($wallpaper_tmdb ?: ($backdrop ?: ($poster_tmdb ?: $poster_img))); ?>;
+window.serieImg = <?php echo json_encode($poster_final); ?>;
+window.serieBackdrop = <?php echo json_encode($backdrop_final); ?>;
 window.serieYear = <?php echo json_encode($ano); ?>;
 window.serieRating = <?php echo json_encode($nota); ?>;
     </script>
@@ -80,7 +66,7 @@ window.serieRating = <?php echo json_encode($nota); ?>;
     <link rel="stylesheet" href="./styles/serie/mobile.css">
     <style>
 body {
-    background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo $wallpaper_tmdb ?: ($backdrop ?: ($poster_tmdb ?: $poster_img)); ?>') center center/cover no-repeat;
+    background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo $backdrop_final; ?>') center center/cover no-repeat;
     color: #fff;
     background-attachment: fixed;
 }
@@ -155,18 +141,18 @@ body {
   <div class="container">
     <div class="row align-items-center">
       <div class="col-12 col-md-auto d-flex justify-content-center">
-        <img src="<?php echo $poster_tmdb ?: $poster_img; ?>" class="poster" alt="">
+        <img src="<?php echo $poster_final; ?>" class="poster" alt="">
       </div>
       <div class="col info">
         <div class="title"><?php echo htmlspecialchars($serie_nome); ?></div>
         <div class="meta">
-          <?php echo ($ano ? substr($ano, 0, 4) : ''); ?>
+          <?php echo $ano_short; ?>
           <?php if($nota !== ''): ?>
             <span class="rate"><i class="fa-solid fa-star"></i> <?php echo $nota; ?></span>
           <?php endif; ?>
           <span class="genres">
-            <?php foreach (explode(',', $genero) as $g): ?>
-              <span><?php echo htmlspecialchars(trim($g)); ?></span>
+            <?php foreach ($generos_array as $g): ?>
+              <span><?php echo htmlspecialchars($g); ?></span>
             <?php endforeach; ?>
           </span>
         </div>
@@ -187,10 +173,18 @@ body {
             <?php endif; ?>
             <button id="btnFavorito"
                 class="btn d-flex align-items-center"
-                style="background:linear-gradient(90deg,#232027 60%,#444 100%);color:#ffd700;border:none;border-radius:8px;padding:0 22px;font-size:1.1rem;font-weight:600;box-shadow:0 2px 8px #0003;transition:background 0.2s;height:44px;">
-                <i class="fa fa-star" style="font-size:1.4rem;margin-right:8px;"></i>
-                <span id="favText">Agregar a Favoritos</span>
+                style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#232027 60%,#444 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
+                <i class="fa fa-star" style="font-size:1.4rem;color:#fff;"></i>
+                <span id="favText" style="color:#fff;">Agregar a Favoritos</span>
             </button>
+            <div style="position: relative; display: inline-block;">
+                <button id="btnPlaylist"
+                    style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#232027 60%,#444 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
+                    <i class="fa fa-bookmark" style="font-size:1.4rem;color:#fff;"></i>
+                    <span style="color:#fff;">Guardar</span>
+                </button>
+                <div id="playlistTooltip" style="display: none; position: absolute; top: 100%; left: 0; margin-top: 8px; z-index: 10000;"></div>
+            </div>
         </div>
     </div>
   </div>
@@ -246,36 +240,29 @@ body {
         <?php foreach ($eps as $ep):
           $ep_name = $ep['title'] ?? 'Episodio';
           if (strpos($ep_name, '-') !== false) {
-              $parts = explode('-', $ep_name);
-              $ep_name = trim(end($parts));
+              $ep_name = trim(end(explode('-', $ep_name)));
           }
           $ep_id = $ep['id'];
           $ep_num = $ep['episode_num'] ?? '';
-          $ep_img = $poster_tmdb ?: $poster_img;
-          if (isset($tmdb_episodios_imgs[$num_temp][$ep_num])) {
-              $ep_img = $tmdb_episodios_imgs[$num_temp][$ep_num];
-          } elseif (!empty($ep['info']['movie_image'])) {
-              $ep_img = $ep['info']['movie_image'];
-          }
+          $ep_img = isset($tmdb_episodios_imgs[$num_temp][$ep_num]) 
+              ? $tmdb_episodios_imgs[$num_temp][$ep_num] 
+              : (!empty($ep['info']['movie_image']) ? $ep['info']['movie_image'] : $poster_final);
           $ep_plot = $ep['info']['plot'] ?? '';
           $ep_dur = $ep['info']['duration'] ?? '';
+          $ep_num_str = $ep_num ? str_pad($ep_num, 2, '0', STR_PAD_LEFT) : '';
+          $duracion_valida = !empty($ep_dur) && !in_array(trim($ep_dur), ['0', '00:00', '00:00:00']);
         ?>
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
           <div class="episode-card w-100">
             <img src="<?php echo htmlspecialchars($ep_img); ?>" alt="">
             <div class="card-body d-flex flex-column">
               <div class="card-title">
-                  <?php
-                      $ep_num_str = $ep_num ? str_pad($ep_num, 2, '0', STR_PAD_LEFT) : '';
-                      echo htmlspecialchars($ep_num_str ? "Episodio $ep_num_str - " : "") . limitar_texto($ep_name, 40);
-                  ?>
+                  <?php echo htmlspecialchars($ep_num_str ? "Episodio $ep_num_str - " : "") . limitar_texto($ep_name, 40); ?>
               </div>
               <div class="card-text"><?php echo $ep_plot; ?></div>
-              <?php if (!empty($ep_dur)):
-                  $duracion_valida = !empty($ep_dur) && !in_array(trim($ep_dur), ['0', '00:00', '00:00:00']);
-                  if ($duracion_valida): ?>
+              <?php if ($duracion_valida): ?>
                   <div class="mb-2" style="color:#ffd700;"><?php echo $ep_dur; ?></div>
-              <?php endif; endif; ?>
+              <?php endif; ?>
                 <a href="serie_play.php?serie_id=<?php echo $id; ?>&ep_id=<?php echo $ep_id; ?>&ep_img=<?php echo urlencode($ep_img); ?>" class="btn-play mt-auto">
                     <i class="fa-solid fa-circle-play"></i> Ver episodio
                 </a>
@@ -311,6 +298,7 @@ body {
 <script src="./scripts/vendors/bootstrap-5.3.3.bundle.min.js"></script>
 <script src="./scripts/serie/trailer.js"></script>
 <script src="./scripts/serie/favorites.js"></script>
+<script src="./scripts/serie/playlist.js"></script>
 <script src="./scripts/serie/seasons.js"></script>
 <script src="./scripts/serie/mobile.js"></script>
 
