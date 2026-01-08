@@ -6,6 +6,7 @@
         const movieId = window.movieId || '';
         const movieName = window.movieName || '';
         const movieImg = window.movieImg || '';
+        const movieBackdrop = window.movieBackdrop || '';
         const movieYear = window.movieYear || '';
         const movieRating = window.movieRating || '';
         
@@ -17,7 +18,7 @@
             fetch('libs/endpoints/UserData.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: `action=hist_add&id=${movieId}&nombre=${encodeURIComponent(movieName)}&img=${encodeURIComponent(movieImg)}&ano=${encodeURIComponent(movieYear)}&rate=${encodeURIComponent(movieRating)}&tipo=pelicula`
+                body: `action=hist_add&id=${movieId}&nombre=${encodeURIComponent(movieName)}&img=${encodeURIComponent(movieImg)}&backdrop=${encodeURIComponent(movieBackdrop)}&ano=${encodeURIComponent(movieYear)}&rate=${encodeURIComponent(movieRating)}&tipo=pelicula`
             });
         }
         

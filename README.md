@@ -81,7 +81,7 @@ PLAYGO/
 - Xtream UI service credentials (IP, port, username, password)
 - Optional: [Composer](https://getcomposer.org/) for PHP dependencies
 - Write permissions for:
-  - `db/`, `tmdb_cache/`, `collection/`
+  - `db/`, `assets/tmdb_cache/`, `collection/`
 
 
 ---

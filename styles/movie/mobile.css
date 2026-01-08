@@ -162,6 +162,11 @@
         color: #fff !important;
     }
     
+    #btnFavorito.favorito-active i.fa-star,
+    #btnFavorito.favorito-active span {
+        color: #ffd700 !important;
+    }
+    
     #btnPlaylist {
         background: linear-gradient(90deg,#232027 60%,#444 100%) !important;
         color: #fff !important;
@@ -173,6 +178,11 @@
     
     #btnPlaylist span {
         color: #fff !important;
+    }
+    
+    #btnPlaylist.playlist-active i.fa-bookmark,
+    #btnPlaylist.playlist-active span {
+        color: #5dc1b9 !important;
     }
     
     a[href="predator.php"] {

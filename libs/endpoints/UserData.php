@@ -28,9 +28,11 @@ try {
     $id = $_POST['id'] ?? '';
     $nombre = $_POST['nombre'] ?? '';
     $img = $_POST['img'] ?? '';
+    $backdrop = $_POST['backdrop'] ?? '';
     $ano = $_POST['ano'] ?? '';
     $rate = $_POST['rate'] ?? '';
     $tipo = $_POST['tipo'] ?? 'pelicula';
+    $duration = $_POST['duration'] ?? '';
 
     $safeUser = preg_replace('/[^a-zA-Z0-9_-]/', '_', $user);
     $storageDir = __DIR__ . '/../../storage/users/' . $safeUser;
@@ -38,8 +40,8 @@ try {
         mkdir($storageDir, 0755, true);
     }
 
-    $historialFile = $storageDir . '/historial.json';
-    $favoritosFile = $storageDir . '/favoritos.json';
+    $historyFile = $storageDir . '/history.json';
+    $favoritesFile = $storageDir . '/favorites.json';
     $progressFile = $storageDir . '/progress.json';
     $playlistsFile = $storageDir . '/playlists.json';
 
@@ -58,62 +60,64 @@ try {
     }
 
     if ($action == 'hist_add') {
-        $historial = loadJsonFile($historialFile, []);
-        $historial = array_filter($historial, function($item) use ($id, $tipo) {
-            return !($item['id'] == $id && $item['tipo'] == $tipo);
+        $history = loadJsonFile($historyFile, []);
+        $history = array_filter($history, function($item) use ($id, $tipo) {
+            return !($item['id'] == $id && $item['type'] == $tipo);
         });
-        array_unshift($historial, [
+        array_unshift($history, [
             'id' => $id,
-            'tipo' => $tipo,
-            'nombre' => $nombre,
+            'type' => $tipo,
+            'name' => $nombre,
             'img' => $img,
-            'ano' => $ano,
-            'rate' => $rate,
-            'fecha' => date('Y-m-d H:i:s')
+            'backdrop' => $backdrop,
+            'year' => $ano,
+            'rating' => $rate,
+            'date' => date('Y-m-d H:i:s')
         ]);
-        $historial = array_slice($historial, 0, 30);
-        saveJsonFile($historialFile, $historial);
+        $history = array_slice($history, 0, 30);
+        saveJsonFile($historyFile, $history);
         echo json_encode(['success'=>true]);
         exit;
     }
 
     if ($action == 'fav_add') {
-        $favoritos = loadJsonFile($favoritosFile, []);
-        foreach ($favoritos as $fav) {
-            if ($fav['id'] == $id && $fav['tipo'] == $tipo) {
+        $favorites = loadJsonFile($favoritesFile, []);
+        foreach ($favorites as $fav) {
+            if ($fav['id'] == $id && $fav['type'] == $tipo) {
                 echo json_encode(['success'=>true]);
                 exit;
             }
         }
-        $favoritos[] = [
+        $favorites[] = [
             'id' => $id,
-            'tipo' => $tipo,
-            'nombre' => $nombre,
+            'type' => $tipo,
+            'name' => $nombre,
             'img' => $img,
-            'ano' => $ano,
-            'rate' => $rate,
-            'fecha' => date('Y-m-d H:i:s')
+            'backdrop' => $backdrop,
+            'year' => $ano,
+            'rating' => $rate,
+            'date' => date('Y-m-d H:i:s')
         ];
-        saveJsonFile($favoritosFile, $favoritos);
+        saveJsonFile($favoritesFile, $favorites);
         echo json_encode(['success'=>true]);
         exit;
     }
 
     if ($action == 'fav_remove') {
-        $favoritos = loadJsonFile($favoritosFile, []);
-        $favoritos = array_filter($favoritos, function($fav) use ($id, $tipo) {
-            return !($fav['id'] == $id && $fav['tipo'] == $tipo);
+        $favorites = loadJsonFile($favoritesFile, []);
+        $favorites = array_filter($favorites, function($fav) use ($id, $tipo) {
+            return !($fav['id'] == $id && $fav['type'] == $tipo);
         });
-        saveJsonFile($favoritosFile, array_values($favoritos));
+        saveJsonFile($favoritesFile, array_values($favorites));
         echo json_encode(['success'=>true]);
         exit;
     }
 
     if ($action == 'fav_check') {
-        $favoritos = loadJsonFile($favoritosFile, []);
+        $favorites = loadJsonFile($favoritesFile, []);
         $is_fav = false;
-        foreach ($favoritos as $fav) {
-            if ($fav['id'] == $id && $fav['tipo'] == $tipo) {
+        foreach ($favorites as $fav) {
+            if ($fav['id'] == $id && $fav['type'] == $tipo) {
                 $is_fav = true;
                 break;
             }
@@ -123,14 +127,14 @@ try {
     }
 
     if ($action == 'get_historial') {
-        $historial = loadJsonFile($historialFile, []);
-        echo json_encode(['success'=>true, 'historial'=>$historial]);
+        $history = loadJsonFile($historyFile, []);
+        echo json_encode(['success'=>true, 'historial'=>$history]);
         exit;
     }
 
     if ($action == 'get_favoritos') {
-        $favoritos = loadJsonFile($favoritosFile, []);
-        echo json_encode(['success'=>true, 'favoritos'=>$favoritos]);
+        $favorites = loadJsonFile($favoritesFile, []);
+        echo json_encode(['success'=>true, 'favoritos'=>$favorites]);
         exit;
     }
 
@@ -140,8 +144,12 @@ try {
         $key = $tipo . '_' . $id;
         $progress[$key] = [
             'id' => $id,
-            'tipo' => $tipo,
+            'type' => $tipo,
+            'name' => $nombre,
+            'img' => $img,
+            'backdrop' => $backdrop,
             'time' => $time,
+            'duration' => $duration,
             'updated' => date('Y-m-d H:i:s')
         ];
         saveJsonFile($progressFile, $progress);
@@ -220,12 +228,13 @@ try {
         if (!$exists) {
             $playlists[$playlistName][] = [
                 'id' => $id,
-                'tipo' => $tipo,
-                'nombre' => $nombre,
+                'type' => $tipo,
+                'name' => $nombre,
                 'img' => $img,
-                'ano' => $ano,
-                'rate' => $rate,
-                'fecha' => date('Y-m-d H:i:s')
+                'backdrop' => $backdrop,
+                'year' => $ano,
+                'rating' => $rate,
+                'date' => date('Y-m-d H:i:s')
             ];
             saveJsonFile($playlistsFile, $playlists);
         }
@@ -242,7 +251,7 @@ try {
         $playlists = loadJsonFile($playlistsFile, []);
         if (isset($playlists[$playlistName])) {
             $playlists[$playlistName] = array_filter($playlists[$playlistName], function($item) use ($id, $tipo) {
-                return !($item['id'] == $id && $item['tipo'] == $tipo);
+                return !($item['id'] == $id && $item['type'] == $tipo);
             });
             $playlists[$playlistName] = array_values($playlists[$playlistName]);
             saveJsonFile($playlistsFile, $playlists);
@@ -263,7 +272,7 @@ try {
         $isInPlaylist = false;
         if (isset($playlists[$playlistName])) {
             foreach ($playlists[$playlistName] as $item) {
-                if ($item['id'] == $id && $item['tipo'] == $tipo) {
+                if ($item['id'] == $id && $item['type'] == $tipo) {
                     $isInPlaylist = true;
                     break;
                 }

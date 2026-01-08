@@ -16,7 +16,7 @@ $tmdb_id = $output['info']['tmdb_id'] ?? null;
 $tmdb_episodios_imgs = [];
 
 if ($tmdb_id && isset($episodios[$season])) {
-    $cache_dir = __DIR__ . '/tmdb_cache/';
+    $cache_dir = __DIR__ . '/assets/tmdb_cache/';
     if (!is_dir($cache_dir)) mkdir($cache_dir, 0777, true);
 
     // Obtener episodios de la temporada desde TMDb
@@ -28,7 +28,7 @@ if ($tmdb_id && isset($episodios[$season])) {
             if (!empty($ep['still_path'])) {
                 $img_url = "https://image.tmdb.org/t/p/w500" . $ep['still_path'];
                 $img_local = $cache_dir . "{$tmdb_id}_{$season}_{$ep['episode_number']}.jpg";
-                $img_local_url = "tmdb_cache/{$tmdb_id}_{$season}_{$ep['episode_number']}.jpg";
+                $img_local_url = "assets/tmdb_cache/{$tmdb_id}_{$season}_{$ep['episode_number']}.jpg";
                 if (!file_exists($img_local)) {
                     $img_data = @file_get_contents($img_url);
                     if ($img_data) file_put_contents($img_local, $img_data);

@@ -81,10 +81,14 @@
             }
             
             const saveFunction = function() {
+                const movieDuration = window.movieDuration || '';
+                const movieName = window.movieName || '';
+                const movieImg = window.movieImg || '';
+                const movieBackdrop = window.movieBackdrop || '';
                 fetch('libs/endpoints/UserData.php', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: `action=progress_save&id=${movieId}&tipo=${movieTipo}&time=${time}`
+                    body: `action=progress_save&id=${movieId}&tipo=${movieTipo}&nombre=${encodeURIComponent(movieName)}&img=${encodeURIComponent(movieImg)}&backdrop=${encodeURIComponent(movieBackdrop)}&time=${time}&duration=${encodeURIComponent(movieDuration)}`
                 })
                 .then(res => res.json())
                 .then(data => {

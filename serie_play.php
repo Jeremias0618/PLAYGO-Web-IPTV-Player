@@ -56,15 +56,15 @@ $season_num = $ep_data['season'] ?? '';
 $episode_num = $ep_data['episode_num'] ?? '';
 $video_url = IP . "/series/$user/$pwd/$ep_id.$ep_ext";
 
-// Buscar fondo del capítulo (still local de tmdb_cache o TMDB)
+// Buscar fondo del capítulo (still local de assets/tmdb_cache o TMDB)
 $ep_still = '';
 $tmdb_id = $output['info']['tmdb_id'] ?? null;
 $season = isset($ep_data['season']) ? intval($ep_data['season']) : '';
 $ep_number = isset($ep_data['episode_num']) ? intval($ep_data['episode_num']) : '';
 if ($tmdb_id && $season && $ep_number) {
     $still_filename = "{$tmdb_id}_{$season}_{$ep_number}.jpg";
-    $still_local_path = __DIR__ . "/tmdb_cache/$still_filename";
-    $still_local_url = "tmdb_cache/$still_filename";
+    $still_local_path = __DIR__ . "/assets/tmdb_cache/$still_filename";
+    $still_local_url = "assets/tmdb_cache/$still_filename";
     if (file_exists($still_local_path)) {
         $ep_still = $still_local_url;
     } else {
@@ -91,7 +91,7 @@ if (!empty($ep_still)) {
 } elseif (!empty($ep_data['info']['backdrop_path'])) {
     $ep_backdrop = $ep_data['info']['backdrop_path'];
     if (!preg_match('/^https?:\/\//', $ep_backdrop) && !str_starts_with($ep_backdrop, '/')) {
-        $ep_backdrop = 'tmdb_cache/' . $ep_backdrop;
+        $ep_backdrop = 'assets/tmdb_cache/' . $ep_backdrop;
     }
 } elseif (!empty($wallpaper_img)) {
     $ep_backdrop = $wallpaper_img;
@@ -1155,7 +1155,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('libs/endpoints/UserData.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: `action=hist_add&id=<?php echo $serie_id; ?>&nombre=<?php echo urlencode(preg_replace('/\s*\(\d{4}\)$/', '', $serie_nome)); ?>&img=<?php echo urlencode($poster_img); ?>&ano=<?php echo urlencode($ano); ?>&rate=<?php echo urlencode($nota); ?>&tipo=serie`
+        body: `action=hist_add&id=<?php echo $serie_id; ?>&nombre=<?php echo urlencode(preg_replace('/\s*\(\d{4}\)$/', '', $serie_nome)); ?>&img=<?php echo urlencode($poster_img); ?>&backdrop=<?php echo urlencode($ep_backdrop ?: ($backdrop ?: $poster_img)); ?>&ano=<?php echo urlencode($ano); ?>&rate=<?php echo urlencode($nota); ?>&tipo=serie`
     });
 
     // --- REANUDAR REPRODUCCIÓN ---

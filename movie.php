@@ -80,8 +80,10 @@ window.movieTipo = <?php echo json_encode($tipo); ?>;
 window.movieTitle = <?php echo json_encode($filme); ?>;
 window.movieName = <?php echo json_encode($filme); ?>;
 window.movieImg = <?php echo json_encode($poster_tmdb ?: $poster_img); ?>;
+window.movieBackdrop = <?php echo json_encode($wallpaper_tmdb ?: ($backdrop ?: $poster_img)); ?>;
 window.movieYear = <?php echo json_encode($ano); ?>;
 window.movieRating = <?php echo json_encode($nota); ?>;
+window.movieDuration = <?php echo json_encode($duracao); ?>;
 </script>
 </head>
 <body class="body">

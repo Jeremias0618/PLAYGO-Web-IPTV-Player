@@ -142,3 +142,13 @@
     flex-shrink: 0 !important;
 }
 
+#btnFavorito.favorito-active i.fa-star,
+#btnFavorito.favorito-active span {
+    color: #ffd700 !important;
+}
+
+#btnPlaylist.playlist-active i.fa-bookmark,
+#btnPlaylist.playlist-active span {
+    color: #5dc1b9 !important;
+}
+

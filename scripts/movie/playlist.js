@@ -9,6 +9,7 @@
         const movieId = window.movieId || '';
         const movieName = window.movieName || '';
         const movieImg = window.movieImg || '';
+        const movieBackdrop = window.movieBackdrop || '';
         const movieYear = window.movieYear || '';
         const movieRating = window.movieRating || '';
         const movieTipo = window.movieTipo || 'movie';
@@ -34,6 +35,7 @@
                     if (!playlists['VER MÁS TARDE']) {
                         playlists['VER MÁS TARDE'] = [];
                     }
+                    updatePlaylistButtonState();
                 }
                 return playlists;
             });
@@ -42,11 +44,36 @@
         function checkIfInPlaylist(playlistName) {
             if (!playlists[playlistName]) return false;
             for (const item of playlists[playlistName]) {
-                if (item.id == movieId && item.tipo == movieTipo) {
+                if (item.id == movieId && item.type == movieTipo) {
                     return true;
                 }
             }
             return false;
+        }
+        
+        function checkIfInAnyPlaylist() {
+            for (const playlistName in playlists) {
+                if (checkIfInPlaylist(playlistName)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        function updatePlaylistButtonState() {
+            const isInAny = checkIfInAnyPlaylist();
+            const icon = btnPlaylist.querySelector('i.fa-bookmark');
+            const span = btnPlaylist.querySelector('span');
+            
+            if (isInAny) {
+                btnPlaylist.classList.add('playlist-active');
+                if (icon) icon.style.color = '#5dc1b9';
+                if (span) span.style.color = '#5dc1b9';
+            } else {
+                btnPlaylist.classList.remove('playlist-active');
+                if (icon) icon.style.color = '#fff';
+                if (span) span.style.color = '#fff';
+            }
         }
         
         function showPlaylistTooltip() {
@@ -135,12 +162,13 @@
             fetch('libs/endpoints/UserData.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: `action=${action}&playlist_name=${encodeURIComponent(playlistName)}&id=${movieId}&nombre=${encodeURIComponent(movieName)}&img=${encodeURIComponent(movieImg)}&ano=${encodeURIComponent(movieYear)}&rate=${encodeURIComponent(movieRating)}&tipo=${movieTipo}`
+                body: `action=${action}&playlist_name=${encodeURIComponent(playlistName)}&id=${movieId}&nombre=${encodeURIComponent(movieName)}&img=${encodeURIComponent(movieImg)}&backdrop=${encodeURIComponent(movieBackdrop)}&ano=${encodeURIComponent(movieYear)}&rate=${encodeURIComponent(movieRating)}&tipo=${movieTipo}`
             })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
                     loadPlaylists().then(() => {
+                        updatePlaylistButtonState();
                         showPlaylistTooltip();
                     });
                 }
@@ -287,6 +315,10 @@
                 }
             });
         }
+        
+        loadPlaylists().then(() => {
+            updatePlaylistButtonState();
+        });
         
         btnPlaylist.addEventListener('click', function(e) {
             e.stopPropagation();

@@ -57,7 +57,7 @@ if (!$tmdb_id && !empty($serie_nome)) {
 $tmdb_episodios_imgs = [];
 
 if ($tmdb_id && is_array($episodios)) {
-    $cache_dir = __DIR__ . '/tmdb_cache/';
+    $cache_dir = __DIR__ . '/assets/tmdb_cache/';
     if (!is_dir($cache_dir)) mkdir($cache_dir, 0777, true);
 
     foreach ($episodios as $season_num => $eps) {
@@ -70,7 +70,7 @@ if ($tmdb_id && is_array($episodios)) {
                 if (!empty($ep['still_path'])) {
                     $img_url = "https://image.tmdb.org/t/p/w500" . $ep['still_path'];
                     $img_local = $cache_dir . "{$tmdb_id}_{$season_num}_{$ep['episode_number']}.jpg";
-                    $img_local_url = "tmdb_cache/{$tmdb_id}_{$season_num}_{$ep['episode_number']}.jpg";
+                    $img_local_url = "assets/tmdb_cache/{$tmdb_id}_{$season_num}_{$ep['episode_number']}.jpg";
                     // Descargar solo si no existe
                     if (!file_exists($img_local)) {
                         $img_data = @file_get_contents($img_url);

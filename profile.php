@@ -2309,7 +2309,7 @@ $(document).ready(function(){
         let html = '';
         if(data.success && data.historial.length > 0) {
             data.historial.forEach(function(item){
-                let url = (item.tipo === "serie")
+                let url = (item.type === "serie")
                     ? `serie.php?stream=${item.id}&streamtipo=serie`
                     : `movie.php?stream=${item.id}&streamtipo=movie`;
                 html += `<div class="item">
@@ -2322,11 +2322,11 @@ $(document).ready(function(){
                         </div>
                         <div class="movie-info">
                             <div class="movie-title">
-                                <a href="${url}">${item.nombre}</a>
+                                <a href="${url}">${item.name}</a>
                             </div>
                             <div class="movie-meta">
-                                <span class="movie-year">${item.ano ? item.ano.toString().substring(0,4) : ''}</span>
-                                <span class="movie-rating"><i class="fas fa-star"></i> ${item.rate}</span>
+                                <span class="movie-year">${item.year ? item.year.toString().substring(0,4) : ''}</span>
+                                <span class="movie-rating"><i class="fas fa-star"></i> ${item.rating}</span>
                             </div>
                         </div>
                     </div>
@@ -2371,7 +2371,7 @@ $(document).ready(function(){
         let html = '';
         if(data.success && data.favoritos.length > 0) {
             data.favoritos.forEach(function(item){
-                let url = (item.tipo === "serie")
+                let url = (item.type === "serie")
                     ? `serie.php?stream=${item.id}&streamtipo=serie`
                     : `movie.php?stream=${item.id}&streamtipo=movie`;
                 html += `<div class="item">
@@ -2384,11 +2384,11 @@ $(document).ready(function(){
                         </div>
                         <div class="movie-info">
                             <div class="movie-title">
-                                <a href="${url}">${item.nombre}</a>
+                                <a href="${url}">${item.name}</a>
                             </div>
                             <div class="movie-meta">
-                                <span class="movie-year">${item.ano ? item.ano.toString().substring(0,4) : ''}</span>
-                                <span class="movie-rating"><i class="fas fa-star"></i> ${item.rate}</span>
+                                <span class="movie-year">${item.year ? item.year.toString().substring(0,4) : ''}</span>
+                                <span class="movie-rating"><i class="fas fa-star"></i> ${item.rating}</span>
                             </div>
                         </div>
                     </div>
