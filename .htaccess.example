@@ -1,0 +1,149 @@
+# PLAYGO Web IPTV Player - Apache .htaccess Configuration
+# For Ubuntu Server with Apache2
+# 
+# Instructions:
+# 1. Copy this file to .htaccess in the root directory: cp .htaccess.example .htaccess
+# 2. Adjust paths if your installation is in a subdirectory
+# 3. Make sure mod_rewrite, mod_headers, mod_expires, mod_deflate, and mod_mime are enabled:
+#    sudo a2enmod rewrite headers expires deflate mime
+#    sudo systemctl reload apache2
+#
+# Note: This file is used when you don't have access to VirtualHost configuration
+# If you have access to VirtualHost, prefer using 000-default.conf instead
+
+# Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Prevent access to sensitive files
+    RewriteRule ^(libs/config\.php|\.git|\.env|composer\.(json|lock))$ - [F,L]
+    
+    # Allow access to assets, scripts, and styles
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^(assets|scripts|styles|webfonts|collection)/ - [L]
+    
+    # Allow access to API endpoints
+    RewriteRule ^libs/endpoints/ - [L]
+    
+    # Default: serve PHP files normally
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([^\.]+)$ $1.php [NC,L]
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy (adjust as needed for your CDNs)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdn.plyr.io; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; media-src 'self' https:;"
+    
+    # Remove server signature
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# Protect sensitive files
+<FilesMatch "^(config\.php|\.htaccess|\.git|\.gitignore|\.env)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Protect libs/config.php
+<Files "config.php">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</Files>
+
+# Protect storage directory
+<IfModule mod_authz_core.c>
+    <DirectoryMatch "^.*/storage/">
+        Require all denied
+    </DirectoryMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <DirectoryMatch "^.*/storage/">
+        Order deny,allow
+        Deny from all
+    </DirectoryMatch>
+</IfModule>
+
+# Cache static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # CSS and JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    
+    # Fonts
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    
+    # Audio and video
+    ExpiresByType audio/mpeg "access plus 1 month"
+    ExpiresByType video/mp4 "access plus 1 month"
+    
+    # Default
+    ExpiresDefault "access plus 1 week"
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+    AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+    AddOutputFilterByType DEFLATE application/json application/xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# MIME types for video streaming
+<IfModule mod_mime.c>
+    AddType video/mp4 .mp4
+    AddType video/webm .webm
+    AddType video/ogg .ogv
+    AddType application/vnd.apple.mpegurl .m3u8
+    AddType video/mp2t .ts
+    AddType application/x-mpegURL .m3u8
+</IfModule>
+
+# Directory index
+DirectoryIndex index.php index.html
+
+# Disable directory listing
+Options -Indexes
+
+# Prevent access to hidden files
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
