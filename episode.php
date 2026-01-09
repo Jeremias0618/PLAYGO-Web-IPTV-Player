@@ -24,11 +24,6 @@ if (!$pageData) {
 
 extract($pageData, EXTR_SKIP);
 
-$ep_img_from_get = trim($_GET['ep_img'] ?? '');
-if ($ep_img_from_get) {
-    $ep_poster = $ep_img_from_get;
-}
-
 $serie_nome_limpio = preg_replace('/\s*\(\d{4}\)$/', '', $serie_nome);
 $ep_title_limpio = trim(preg_replace('/^.*-\s*/', '', $ep_name));
 $season = $ep_data['season'] ?? '';
@@ -294,9 +289,6 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
                                     $fecha = "$d de $m de $y";
                                 }
                                 $ep_url = "episode.php?serie_id=" . urlencode($serie_id) . "&episode_id=" . urlencode($ep['id']);
-                                if (!empty($ep_img)) {
-                                    $ep_url .= "&ep_img=" . urlencode($ep_img);
-                                }
                                 ?>
                                 <a href="<?php echo $ep_url; ?>" class="episodio-card<?php if($is_active) echo ' active'; ?>">
                                     <div>

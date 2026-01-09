@@ -263,7 +263,7 @@ body {
               <?php if ($duracion_valida): ?>
                   <div class="mb-2" style="color:#ffd700;"><?php echo $ep_dur; ?></div>
               <?php endif; ?>
-                <a href="episode.php?serie_id=<?php echo $id; ?>&episode_id=<?php echo $ep_id; ?>&ep_img=<?php echo urlencode($ep_img); ?>" class="btn-play mt-auto">
+                <a href="episode.php?serie_id=<?php echo $id; ?>&episode_id=<?php echo $ep_id; ?>" class="btn-play mt-auto">
                     <i class="fa-solid fa-circle-play"></i> Ver episodio
                 </a>
             </div>
