@@ -47,8 +47,6 @@ $ano = $movieData['year'];
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="preconnect" href="https://api.themoviedb.org">
-    <link rel="preconnect" href="https://image.tmdb.org">
     <link rel="stylesheet" href="./styles/vendors/bootstrap.min.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
     <link rel="stylesheet" href="./styles/vendors/bootstrap-reboot.min.css">

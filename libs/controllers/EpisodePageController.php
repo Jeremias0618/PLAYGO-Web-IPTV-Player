@@ -121,6 +121,7 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
     return [
         'serie_id' => $serie_id,
         'episode_id' => $episode_id,
+        'tmdb_id' => $tmdb_id,
         'serie_nome' => $seriesData['name'],
         'poster_img' => $seriesData['poster_img'],
         'wallpaper_img' => $wallpaper_img,
