@@ -34,6 +34,7 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
     $ep_number = isset($ep_data['episode_num']) ? intval($ep_data['episode_num']) : '';
     
     $ep_still = '';
+    $tmdb_episode_data = null;
     if ($tmdb_id && $season && $ep_number) {
         $still_filename = "{$tmdb_id}_{$season}_{$ep_number}.jpg";
         $still_local_path = __DIR__ . "/../../assets/tmdb_cache/$still_filename";
@@ -52,9 +53,9 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
             $tmdb_still_json = @curl_exec($ch);
             curl_close($ch);
             
-            $tmdb_still_data = json_decode($tmdb_still_json, true);
-            if (!empty($tmdb_still_data['still_path'])) {
-                $ep_still_url = "https://image.tmdb.org/t/p/w780" . $tmdb_still_data['still_path'];
+            $tmdb_episode_data = json_decode($tmdb_still_json, true);
+            if (!empty($tmdb_episode_data['still_path'])) {
+                $ep_still_url = "https://image.tmdb.org/t/p/w780" . $tmdb_episode_data['still_path'];
                 $img_data = @file_get_contents($ep_still_url);
                 if ($img_data) {
                     @file_put_contents($still_local_path, $img_data);
@@ -118,6 +119,44 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
     $ep_name = $ep_data['title'] ?? 'Episodio';
     $ep_title_limpio = trim(preg_replace('/^.*-\s*/', '', $ep_name));
     
+    $ep_dur = $ep_data['info']['duration'] ?? '';
+    $ep_dur_secs = $ep_data['info']['duration_secs'] ?? '';
+    
+    if (empty($ep_dur) || $ep_dur === '00:00:00' || $ep_dur === '00:00') {
+        if (!empty($ep_dur_secs) && is_numeric($ep_dur_secs) && intval($ep_dur_secs) > 0) {
+            $seconds = intval($ep_dur_secs);
+            $hours = floor($seconds / 3600);
+            $minutes = floor(($seconds % 3600) / 60);
+            $secs = $seconds % 60;
+            if ($hours > 0) {
+                $ep_dur = sprintf("%02d:%02d:%02d", $hours, $minutes, $secs);
+            } else {
+                $ep_dur = sprintf("%02d:%02d", $minutes, $secs);
+            }
+        } elseif ($tmdb_episode_data && !empty($tmdb_episode_data['runtime']) && is_numeric($tmdb_episode_data['runtime'])) {
+            $runtime_minutes = intval($tmdb_episode_data['runtime']);
+            $hours = floor($runtime_minutes / 60);
+            $minutes = $runtime_minutes % 60;
+            if ($hours > 0) {
+                $ep_dur = sprintf("%02d:%02d:%02d", $hours, $minutes, 0);
+            } else {
+                $ep_dur = sprintf("%02d:%02d", $minutes, 0);
+            }
+        }
+    } elseif (!empty($ep_dur)) {
+        if (is_numeric($ep_dur)) {
+            $seconds = intval($ep_dur);
+            $hours = floor($seconds / 3600);
+            $minutes = floor(($seconds % 3600) / 60);
+            $secs = $seconds % 60;
+            if ($hours > 0) {
+                $ep_dur = sprintf("%02d:%02d:%02d", $hours, $minutes, $secs);
+            } else {
+                $ep_dur = sprintf("%02d:%02d", $minutes, $secs);
+            }
+        }
+    }
+    
     return [
         'serie_id' => $serie_id,
         'episode_id' => $episode_id,
@@ -137,7 +176,7 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
         'ep_title_limpio' => $ep_title_limpio,
         'ep_num' => $ep_data['episode_num'] ?? '',
         'ep_plot' => $ep_data['info']['plot'] ?? '',
-        'ep_dur' => $ep_data['info']['duration'] ?? '',
+        'ep_dur' => $ep_dur,
         'ep_poster' => $ep_poster,
         'ep_backdrop' => $ep_backdrop,
         'ep_ext' => $ep_ext,

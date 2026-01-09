@@ -89,6 +89,7 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
             ano: <?php echo json_encode($ano); ?>,
             rate: <?php echo json_encode($nota); ?>
         };
+        
     </script>
 </head>
 <body class="body">
@@ -293,6 +294,52 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
                                 $ep_title = $ep['title'] ?? '';
                                 $ep_title_limpio = trim(preg_replace('/^.*-\s*/', '', $ep_title));
                                 $ep_dur = $ep['info']['duration'] ?? '';
+                                $ep_dur_secs = $ep['info']['duration_secs'] ?? '';
+                                
+                                if (empty($ep_dur) || $ep_dur === '00:00:00' || $ep_dur === '00:00') {
+                                    if (!empty($ep_dur_secs) && is_numeric($ep_dur_secs) && intval($ep_dur_secs) > 0) {
+                                        $seconds = intval($ep_dur_secs);
+                                        $hours = floor($seconds / 3600);
+                                        $minutes = floor(($seconds % 3600) / 60);
+                                        $secs = $seconds % 60;
+                                        if ($hours > 0) {
+                                            $ep_dur = sprintf("%02d:%02d:%02d", $hours, $minutes, $secs);
+                                        } else {
+                                            $ep_dur = sprintf("%02d:%02d", $minutes, $secs);
+                                        }
+                                    } elseif ($tmdb_id && $temporada_actual && $ep_num) {
+                                        $tmdb_ep_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$temporada_actual/episode/$ep_num?api_key=" . TMDB_API_KEY . "&language=" . (defined('LANGUAGE') ? LANGUAGE : 'es-ES');
+                                        $ch = curl_init();
+                                        curl_setopt($ch, CURLOPT_URL, $tmdb_ep_url);
+                                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                                        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+                                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+                                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                                        $tmdb_ep_json = @curl_exec($ch);
+                                        curl_close($ch);
+                                        $tmdb_ep_data = json_decode($tmdb_ep_json, true);
+                                        if (!empty($tmdb_ep_data['runtime']) && is_numeric($tmdb_ep_data['runtime'])) {
+                                            $runtime_minutes = intval($tmdb_ep_data['runtime']);
+                                            $hours = floor($runtime_minutes / 60);
+                                            $minutes = $runtime_minutes % 60;
+                                            if ($hours > 0) {
+                                                $ep_dur = sprintf("%02d:%02d:%02d", $hours, $minutes, 0);
+                                            } else {
+                                                $ep_dur = sprintf("%02d:%02d", $minutes, 0);
+                                            }
+                                        }
+                                    }
+                                } elseif (!empty($ep_dur) && is_numeric($ep_dur)) {
+                                    $seconds = intval($ep_dur);
+                                    $hours = floor($seconds / 3600);
+                                    $minutes = floor(($seconds % 3600) / 60);
+                                    $secs = $seconds % 60;
+                                    if ($hours > 0) {
+                                        $ep_dur = sprintf("%02d:%02d:%02d", $hours, $minutes, $secs);
+                                    } else {
+                                        $ep_dur = sprintf("%02d:%02d", $minutes, $secs);
+                                    }
+                                }
                                 $ep_plot = $ep['info']['plot'] ?? '';
                                 $ep_date = $ep['info']['release_date'] ?? '';
                                 $fecha = '';
