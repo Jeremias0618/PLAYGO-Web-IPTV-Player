@@ -384,10 +384,24 @@ body {
                                 }
                                 $ep_rating = $ep['info']['rating'] ?? '';
                                 $ep_url = "episode.php?serie_id=" . urlencode($serie_id) . "&episode_id=" . urlencode($ep['id']);
+                                
+                                $ep_progress = isset($episodes_progress[$ep['id']]) ? $episodes_progress[$ep['id']] : null;
+                                $ep_percentage = $ep_progress ? $ep_progress['percentage'] : 0;
+                                $ep_watched = $ep_progress && $ep_progress['watched'];
                                 ?>
                                 <a href="<?php echo $ep_url; ?>" class="episodio-card<?php if($is_active) echo ' active'; ?>"<?php if($is_active) echo ' aria-current="page"'; ?>>
-                                    <div>
+                                    <div class="episodio-image-wrapper">
                                         <img src="<?php echo htmlspecialchars($ep_img); ?>" alt="<?php echo htmlspecialchars($ep_title_limpio); ?>" loading="lazy">
+                                        <?php if ($ep_watched): ?>
+                                            <div class="episodio-watched-badge">
+                                                <i class="fa-solid fa-check-circle"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if ($ep_progress && $ep_percentage > 0 && !$ep_watched): ?>
+                                            <div class="episodio-progress-bar">
+                                                <div class="episodio-progress-fill" style="width: <?php echo min(100, max(0, $ep_percentage)); ?>%"></div>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                     <div class="episodio-info">
                                         <div class="episodio-title">

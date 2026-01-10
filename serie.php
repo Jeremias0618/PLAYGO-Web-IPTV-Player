@@ -195,12 +195,11 @@ body {
         ?>
       </select>
     </div>
-    <div class="d-flex gap-2">
-      <button id="viewGridBtn" class="btn" style="background: linear-gradient(90deg,#e50914 60%,#c8008f 100%); color: #fff; border: none; border-radius: 8px; padding: 10px 16px; font-size: 1rem; cursor: pointer; transition: all 0.2s;" title="Vista de cuadrícula">
-        <i class="fa-solid fa-th"></i>
-      </button>
-      <button id="viewListBtn" class="btn" style="background: #232027; color: #fff; border: 1px solid #444; border-radius: 8px; padding: 10px 16px; font-size: 1rem; cursor: pointer; transition: all 0.2s;" title="Vista de lista">
-        <i class="fa-solid fa-list"></i>
+    <div class="d-flex gap-2 align-items-center">
+      <button id="viewToggleBtn" class="btn view-toggle-btn" data-view="grid" title="Cambiar vista">
+        <i class="fa-solid fa-th view-icon-grid"></i>
+        <i class="fa-solid fa-list view-icon-list" style="display: none;"></i>
+        <span class="view-toggle-text">Cuadrícula</span>
       </button>
     </div>
   </div>
@@ -237,9 +236,26 @@ body {
           }
           $ep_rating = $ep['info']['rating'] ?? '';
         ?>
+        <?php
+          $ep_progress = isset($episodes_progress[$ep_id]) ? $episodes_progress[$ep_id] : null;
+          $ep_percentage = $ep_progress ? $ep_progress['percentage'] : 0;
+          $ep_watched = $ep_progress && $ep_progress['watched'];
+        ?>
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
           <div class="episode-card w-100">
-            <img src="<?php echo htmlspecialchars($ep_img); ?>" alt="">
+            <div class="episode-image-wrapper">
+              <img src="<?php echo htmlspecialchars($ep_img); ?>" alt="">
+              <?php if ($ep_watched): ?>
+                <div class="episode-watched-badge">
+                  <i class="fa-solid fa-check-circle"></i>
+                </div>
+              <?php endif; ?>
+              <?php if ($ep_progress && $ep_percentage > 0 && !$ep_watched): ?>
+                <div class="episode-progress-bar">
+                  <div class="episode-progress-fill" style="width: <?php echo min(100, max(0, $ep_percentage)); ?>%"></div>
+                </div>
+              <?php endif; ?>
+            </div>
             <div class="card-body d-flex flex-column">
               <div class="card-title">
                   <?php echo htmlspecialchars($ep_num_str ? "Episodio $ep_num_str - " : "") . limitar_texto($ep_name, 40); ?>

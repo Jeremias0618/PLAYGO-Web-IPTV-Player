@@ -3,11 +3,10 @@
     
     document.addEventListener('DOMContentLoaded', function() {
         const seasonSelect = document.getElementById('seasonSelect');
-        const viewGridBtn = document.getElementById('viewGridBtn');
-        const viewListBtn = document.getElementById('viewListBtn');
+        const viewToggleBtn = document.getElementById('viewToggleBtn');
         const episodesContainers = document.querySelectorAll('.episodes-container');
         
-        if (!seasonSelect || !viewGridBtn || !viewListBtn) {
+        if (!seasonSelect || !viewToggleBtn) {
             return;
         }
         
@@ -27,37 +26,38 @@
             }
         });
         
-        // Manejar cambio a vista de cuadrícula
-        viewGridBtn.addEventListener('click', function() {
-            episodesContainers.forEach(container => {
-                container.setAttribute('data-view', 'grid');
-                container.classList.remove('episodes-list-view');
-                container.classList.add('episodes-grid-view');
-            });
+        // Manejar toggle de vista (cuadrícula <-> lista)
+        viewToggleBtn.addEventListener('click', function() {
+            const currentView = this.getAttribute('data-view');
+            const newView = currentView === 'grid' ? 'list' : 'grid';
+            const viewText = this.querySelector('.view-toggle-text');
             
-            viewGridBtn.style.background = 'linear-gradient(90deg,#e50914 60%,#c8008f 100%)';
-            viewGridBtn.style.border = 'none';
-            viewListBtn.style.background = '#232027';
-            viewListBtn.style.border = '1px solid #444';
-        });
-        
-        // Manejar cambio a vista de lista
-        viewListBtn.addEventListener('click', function() {
-            episodesContainers.forEach(container => {
-                container.setAttribute('data-view', 'list');
-                container.classList.remove('episodes-grid-view');
-                container.classList.add('episodes-list-view');
-            });
+            // Actualizar el atributo data-view del botón
+            this.setAttribute('data-view', newView);
             
-            viewListBtn.style.background = 'linear-gradient(90deg,#e50914 60%,#c8008f 100%)';
-            viewListBtn.style.border = 'none';
-            viewGridBtn.style.background = '#232027';
-            viewGridBtn.style.border = '1px solid #444';
+            // Actualizar el texto según la vista
+            if (viewText) {
+                viewText.textContent = newView === 'grid' ? 'Cuadrícula' : 'Lista';
+            }
+            
+            // Cambiar la vista de todos los contenedores
+            episodesContainers.forEach(container => {
+                container.setAttribute('data-view', newView);
+                
+                if (newView === 'grid') {
+                    container.classList.remove('episodes-list-view');
+                    container.classList.add('episodes-grid-view');
+                } else {
+                    container.classList.remove('episodes-grid-view');
+                    container.classList.add('episodes-list-view');
+                }
+            });
         });
         
         // Inicializar vista de cuadrícula
         episodesContainers.forEach(container => {
             container.classList.add('episodes-grid-view');
+            container.setAttribute('data-view', 'grid');
         });
     });
 })();

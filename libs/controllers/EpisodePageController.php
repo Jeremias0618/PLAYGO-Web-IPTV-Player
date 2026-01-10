@@ -157,6 +157,44 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
         }
     }
     
+    $episodes_progress = [];
+    $safeUser = preg_replace('/[^a-zA-Z0-9_-]/', '_', $user);
+    $progressFile = __DIR__ . '/../../storage/users/' . $safeUser . '/progress.json';
+    
+    if (file_exists($progressFile)) {
+        $progressData = json_decode(file_get_contents($progressFile), true);
+        if (is_array($progressData)) {
+            foreach ($progressData as $key => $progressItem) {
+                if (isset($progressItem['type']) && $progressItem['type'] === 'serie' && isset($progressItem['episode']['id'])) {
+                    $ep_id_progress = $progressItem['episode']['id'];
+                    $time = isset($progressItem['episode']['time']) ? (int)$progressItem['episode']['time'] : 0;
+                    $duration = isset($progressItem['episode']['duration']) ? $progressItem['episode']['duration'] : '';
+                    
+                    $duration_seconds = 0;
+                    if (!empty($duration)) {
+                        $duration_parts = explode(':', $duration);
+                        if (count($duration_parts) == 3) {
+                            $duration_seconds = intval($duration_parts[0]) * 3600 + intval($duration_parts[1]) * 60 + intval($duration_parts[2]);
+                        } elseif (count($duration_parts) == 2) {
+                            $duration_seconds = intval($duration_parts[0]) * 60 + intval($duration_parts[1]);
+                        }
+                    }
+                    
+                    if ($duration_seconds > 0 && $time > 0) {
+                        $percentage = ($time / $duration_seconds) * 100;
+                        $episodes_progress[$ep_id_progress] = [
+                            'time' => $time,
+                            'duration' => $duration,
+                            'duration_seconds' => $duration_seconds,
+                            'percentage' => min(100, max(0, round($percentage, 2))),
+                            'watched' => $percentage >= 80
+                        ];
+                    }
+                }
+            }
+        }
+    }
+    
     return [
         'serie_id' => $serie_id,
         'episode_id' => $episode_id,
@@ -183,7 +221,8 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
         'ep_ext' => $ep_ext,
         'video_url' => $video_url,
         'prev_ep_id' => $prev_ep_id,
-        'next_ep_id' => $next_ep_id
+        'next_ep_id' => $next_ep_id,
+        'episodes_progress' => $episodes_progress
     ];
 }
 
