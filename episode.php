@@ -78,6 +78,7 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
         window.episodeImg = <?php echo json_encode($ep_poster); ?>;
         window.episodeBackdrop = <?php echo json_encode($ep_backdrop ?: $wallpaper_img); ?>;
         window.episodeDuration = <?php echo json_encode($ep_dur); ?>;
+        window.episodeDurationSource = <?php echo json_encode($ep_dur_source ?? 'N/A'); ?>;
         window.serieId = <?php echo json_encode($serie_id); ?>;
         window.serieName = <?php echo json_encode($serie_nome_limpio); ?>;
         window.serieImg = <?php echo json_encode($poster_img); ?>;
@@ -94,6 +95,9 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
             rate: <?php echo json_encode(formatear_rating($nota)); ?>
         };
         
+        console.log('[EPISODE] Duración obtenida desde PHP:', window.episodeDuration);
+        console.log('[EPISODE] Origen de la duración (PHP):', window.episodeDurationSource);
+        console.log('[EPISODE] Duración vacía o inválida?:', !window.episodeDuration || window.episodeDuration === '00:00:00' || window.episodeDuration === '00:00');
     </script>
     <style>
 body {
@@ -174,7 +178,9 @@ body {
                                     <span class="card__rate">
                                         <?php
                                         echo ($ano ? substr($ano, 0, 4) : '');
-                                        if ($nota !== '') {
+                                        if (!empty($ep_rating)) {
+                                            echo ' &nbsp; <i class="fa-solid fa-star"></i> ' . formatear_rating($ep_rating);
+                                        } elseif ($nota !== '') {
                                             echo ' &nbsp; <i class="fa-solid fa-star"></i> ' . formatear_rating($nota);
                                         }
                                         ?>

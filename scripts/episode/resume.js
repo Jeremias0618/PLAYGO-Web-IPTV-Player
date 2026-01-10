@@ -73,15 +73,40 @@
         let saveProgressTimeout = null;
         let lastSavedTime = 0;
         
-        function saveProgressToServer(time, immediate) {
-            if (time === lastSavedTime && !immediate) return;
+        function formatDurationFromSeconds(seconds) {
+            if (!seconds || seconds <= 0 || !isFinite(seconds)) return '';
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
+            if (hours > 0) {
+                return String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+            } else {
+                return String(minutes).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+            }
+        }
+        
+        function getVideoDuration(videoElement) {
+            if (!videoElement) return null;
+            if (videoElement.duration && isFinite(videoElement.duration) && videoElement.duration > 0) {
+                return formatDurationFromSeconds(videoElement.duration);
+            }
+            return null;
+        }
+        
+        function saveProgressToServer(time, immediate, videoDuration) {
+            if (time === lastSavedTime && !immediate && !videoDuration) return;
             
-            if (saveProgressTimeout && !immediate) {
+            if (saveProgressTimeout && !immediate && !videoDuration) {
                 clearTimeout(saveProgressTimeout);
             }
             
             const saveFunction = function() {
-                const episodeDuration = window.episodeDuration || '';
+                let episodeDuration = window.episodeDuration || '';
+                if (videoDuration && (!episodeDuration || episodeDuration === '00:00:00' || episodeDuration === '00:00')) {
+                    episodeDuration = videoDuration;
+                    window.episodeDuration = videoDuration;
+                }
+                
                 const episodeName = window.episodeName || '';
                 const episodeImg = window.episodeImg || '';
                 const episodeBackdrop = window.episodeBackdrop || '';
@@ -103,7 +128,7 @@
                 .catch(function() {});
             };
             
-            if (immediate) {
+            if (immediate || videoDuration) {
                 saveFunction();
             } else {
                 saveProgressTimeout = setTimeout(saveFunction, 1000);
@@ -143,15 +168,46 @@
                 if (window.player && typeof window.player.on === "function") {
                     clearInterval(plyrInterval);
                     const plyrPlayer = window.player;
+                    const videoElement = plyrPlayer.media;
+                    
+                    if (!videoElement) {
+                        return;
+                    }
+                    
+                    const handleVideoDuration = function() {
+                        const currentDuration = window.episodeDuration || '';
+                        if (!currentDuration || currentDuration === '00:00:00' || currentDuration === '00:00') {
+                            const videoDuration = getVideoDuration(videoElement);
+                            if (videoDuration) {
+                                console.log('[EPISODE] Duración obtenida del VIDEO PLAYER (Plyr):', videoDuration);
+                                console.log('[EPISODE] Duración anterior (desde PHP):', currentDuration);
+                                console.log('[EPISODE] Duración del elemento video (segundos):', videoElement.duration);
+                                window.episodeDuration = videoDuration;
+                                saveProgressToServer(0, true, videoDuration);
+                            } else {
+                                console.log('[EPISODE] No se pudo obtener duración del video (Plyr). Video duration:', videoElement.duration);
+                            }
+                        } else {
+                            console.log('[EPISODE] Duración ya disponible desde PHP, no se obtiene del player. Duración:', currentDuration);
+                            console.log('[EPISODE] Origen de la duración:', window.episodeDurationSource || 'N/A');
+                        }
+                    };
+                    
+                    if (videoElement.readyState >= 2 && videoElement.duration > 0) {
+                        handleVideoDuration();
+                    } else {
+                        const onMetadataLoaded = function() {
+                            videoElement.removeEventListener('loadedmetadata', onMetadataLoaded);
+                            handleVideoDuration();
+                        };
+                        videoElement.addEventListener('loadedmetadata', onMetadataLoaded);
+                        videoElement.addEventListener('loadeddata', handleVideoDuration);
+                        videoElement.addEventListener('durationchange', handleVideoDuration);
+                    }
                     
                     getProgressFromServer(function(serverTime) {
                         const lastTime = serverTime;
                         if (lastTime > 10) {
-                            const videoElement = plyrPlayer.media;
-                            if (!videoElement) {
-                                return;
-                            }
-                            
                             const resumePlayback = function() {
                                 const setTimeAndPlay = function() {
                                     if (videoElement.readyState >= 2 && videoElement.duration > 0) {
@@ -219,6 +275,33 @@
             }, 200);
         } else if (document.querySelector('video#plyr-video') === null && document.querySelector('video')) {
             const video = document.querySelector('video');
+            
+            const handleVideoDuration = function() {
+                const currentDuration = window.episodeDuration || '';
+                if (!currentDuration || currentDuration === '00:00:00' || currentDuration === '00:00') {
+                    const videoDuration = getVideoDuration(video);
+                    if (videoDuration) {
+                        console.log('[EPISODE] Duración obtenida del VIDEO PLAYER (HTML5 nativo):', videoDuration);
+                        console.log('[EPISODE] Duración anterior (desde PHP):', currentDuration);
+                        console.log('[EPISODE] Duración del elemento video (segundos):', video.duration);
+                        window.episodeDuration = videoDuration;
+                        saveProgressToServer(0, true, videoDuration);
+                    } else {
+                        console.log('[EPISODE] No se pudo obtener duración del video (HTML5 nativo). Video duration:', video.duration);
+                    }
+                } else {
+                    console.log('[EPISODE] Duración ya disponible desde PHP, no se obtiene del player. Duración:', currentDuration);
+                    console.log('[EPISODE] Origen de la duración:', window.episodeDurationSource || 'N/A');
+                }
+            };
+            
+            if (video.readyState >= 2 && video.duration > 0) {
+                handleVideoDuration();
+            } else {
+                video.addEventListener('loadedmetadata', handleVideoDuration);
+                video.addEventListener('loadeddata', handleVideoDuration);
+                video.addEventListener('durationchange', handleVideoDuration);
+            }
             
             getProgressFromServer(function(serverTime) {
                 const lastTime = serverTime;
