@@ -74,5 +74,110 @@
         border: none;
         z-index: 10100;
     }
+    
+    .serie-hero .info > div[style*="display:flex"],
+    .serie-hero .info > div[style*="display: flex"],
+    .serie-hero .sinopsis + div[style*="display"],
+    .serie-hero .sinopsis + div {
+        flex-direction: column !important;
+        gap: 10px !important;
+        margin-top: 18px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+    }
+    
+    .serie-hero .info > div[style*="display"] > div[style*="position"],
+    .serie-hero .sinopsis + div > div[style*="position"],
+    .serie-hero .sinopsis + div > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        position: relative !important;
+        margin: 0 !important;
+    }
+    
+    #btnTrailer,
+    #btnFavorito,
+    #btnPlaylist {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        font-size: 1.08rem !important;
+        height: auto !important;
+        padding: 13px 0 !important;
+        border-radius: 12px !important;
+        margin-bottom: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-shadow: 0 2px 12px #0002 !important;
+        transition: background 0.18s, color 0.18s !important;
+        gap: 10px !important;
+    }
+    
+    #btnTrailer i,
+    #btnFavorito i,
+    #btnPlaylist i {
+        font-size: 1.35rem !important;
+        margin-right: 8px !important;
+    }
+    
+    #btnTrailer span,
+    #btnFavorito span,
+    #btnPlaylist span {
+        font-size: 1.08rem !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.5px !important;
+    }
+    
+    #btnTrailer {
+        background: linear-gradient(90deg,#ff0000 60%,#c80000 100%) !important;
+        color: #fff !important;
+    }
+    
+    #btnFavorito {
+        background: linear-gradient(90deg,#232027 60%,#444 100%) !important;
+        color: #fff !important;
+    }
+    
+    #btnFavorito i.fa-star {
+        color: #fff !important;
+    }
+    
+    #btnFavorito span {
+        color: #fff !important;
+    }
+    
+    #btnFavorito.favorito-active i.fa-star,
+    #btnFavorito.favorito-active span {
+        color: #ffd700 !important;
+    }
+    
+    #btnPlaylist {
+        background: linear-gradient(90deg,#232027 60%,#444 100%) !important;
+        color: #fff !important;
+    }
+    
+    #btnPlaylist i.fa-bookmark {
+        color: #fff !important;
+    }
+    
+    #btnPlaylist span {
+        color: #fff !important;
+    }
+    
+    #btnPlaylist.playlist-active i.fa-bookmark,
+    #btnPlaylist.playlist-active span {
+        color: #5dc1b9 !important;
+    }
+    
+    #btnTrailer:active,
+    #btnFavorito:active,
+    #btnPlaylist:active {
+        opacity: 0.85 !important;
+    }
 }
 

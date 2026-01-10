@@ -67,32 +67,55 @@ function limpiar_titulo_episodio($titulo) {
     $titulo = trim($titulo);
     
     if (preg_match('/S\d+E\d+/i', $titulo, $matches, PREG_OFFSET_CAPTURE)) {
-        $posicion = $matches[0][1] + strlen($matches[0][0]);
-        $resto = trim(substr($titulo, $posicion));
+        $season_pos = $matches[0][1];
+        $season_len = strlen($matches[0][0]);
+        $after_season = trim(substr($titulo, $season_pos + $season_len));
         
-        if (!empty($resto)) {
-            if (strpos($resto, '-') === 0) {
-                $resto = trim(substr($resto, 1));
+        if (!empty($after_season)) {
+            if (preg_match('/^-\s+(.+)$/s', $after_season, $m)) {
+                return trim($m[1]);
             }
-            if (strpos($resto, '-') !== false) {
-                $partes = explode('-', $resto);
-                array_shift($partes);
-                $resultado = trim(implode('-', $partes));
-                return !empty($resultado) ? $resultado : $resto;
+            if (preg_match('/^\s+(.+)$/s', $after_season, $m)) {
+                return trim($m[1]);
             }
-            return $resto;
+            return $after_season;
         }
+        
+        if ($season_pos > 0) {
+            $before_season = trim(substr($titulo, 0, $season_pos));
+            if (preg_match('/-\s+(.+)$/s', $before_season, $m)) {
+                return trim($m[1]);
+            }
+            $parts = array_filter(array_map('trim', explode('-', $before_season)));
+            if (!empty($parts)) {
+                $last = trim(end($parts));
+                if (!preg_match('/^S\d+E\d+$/i', $last)) {
+                    return $last;
+                }
+            }
+        }
+        
+        return $titulo;
     }
     
     if (strpos($titulo, '-') !== false) {
-        $partes = array_map('trim', explode('-', $titulo));
+        $parts = array_map('trim', explode('-', $titulo));
+        $parts = array_filter($parts, function($p) {
+            return !empty($p);
+        });
         
-        if (preg_match('/^S\d+E\d+/i', end($partes))) {
-            array_pop($partes);
+        if (count($parts) > 1) {
+            $last_part = trim(end($parts));
+            if (!preg_match('/^S\d+E\d+$/i', $last_part)) {
+                return $last_part;
+            }
+            array_pop($parts);
+            if (!empty($parts)) {
+                return trim(end($parts));
+            }
         }
         
-        $ultima_parte = trim(end($partes));
-        return !empty($ultima_parte) ? $ultima_parte : $titulo;
+        return $titulo;
     }
     
     return $titulo;
