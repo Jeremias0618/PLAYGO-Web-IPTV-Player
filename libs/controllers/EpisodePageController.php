@@ -42,27 +42,27 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
         
         if (file_exists($still_local_path)) {
             $ep_still = $still_local_url;
-        }
-        
-        $tmdb_ep_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$season/episode/$ep_number?api_key=" . TMDB_API_KEY . "&language=" . (defined('LANGUAGE') ? LANGUAGE : 'es-ES');
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $tmdb_ep_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $tmdb_ep_json = @curl_exec($ch);
-        curl_close($ch);
-        
-        $tmdb_episode_data = json_decode($tmdb_ep_json, true);
-        if ($tmdb_episode_data && !empty($tmdb_episode_data['still_path']) && !file_exists($still_local_path)) {
-            $ep_still_url = "https://image.tmdb.org/t/p/w780" . $tmdb_episode_data['still_path'];
-            $img_data = @file_get_contents($ep_still_url);
-            if ($img_data) {
-                @file_put_contents($still_local_path, $img_data);
-                $ep_still = $still_local_url;
-            } else {
-                $ep_still = $ep_still_url;
+        } else {
+            $tmdb_ep_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$season/episode/$ep_number?api_key=" . TMDB_API_KEY . "&language=" . (defined('LANGUAGE') ? LANGUAGE : 'es-ES');
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $tmdb_ep_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $tmdb_ep_json = @curl_exec($ch);
+            curl_close($ch);
+            
+            $tmdb_episode_data = json_decode($tmdb_ep_json, true);
+            if ($tmdb_episode_data && !empty($tmdb_episode_data['still_path'])) {
+                $ep_still_url = "https://image.tmdb.org/t/p/w780" . $tmdb_episode_data['still_path'];
+                $img_data = @file_get_contents($ep_still_url);
+                if ($img_data) {
+                    @file_put_contents($still_local_path, $img_data);
+                    $ep_still = $still_local_url;
+                } else {
+                    $ep_still = $ep_still_url;
+                }
             }
         }
     }
@@ -128,32 +128,21 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
     $ep_dur_secs = $ep_data['info']['duration_secs'] ?? '';
     $duration_source = '';
     
-    if (empty($ep_dur) || $ep_dur === '00:00:00' || $ep_dur === '00:00') {
-        if (!empty($ep_dur_secs) && is_numeric($ep_dur_secs) && intval($ep_dur_secs) > 0) {
-            $duration_source = 'Xtream API (duration_secs)';
-            $seconds = intval($ep_dur_secs);
-            $hours = floor($seconds / 3600);
-            $minutes = floor(($seconds % 3600) / 60);
-            $secs = $seconds % 60;
-            if ($hours > 0) {
-                $ep_dur = sprintf("%02d:%02d:%02d", $hours, $minutes, $secs);
-            } else {
-                $ep_dur = sprintf("%02d:%02d", $minutes, $secs);
-            }
-        } elseif ($tmdb_episode_data && !empty($tmdb_episode_data['runtime']) && is_numeric($tmdb_episode_data['runtime'])) {
-            $duration_source = 'TMDB API (runtime)';
-            $runtime_minutes = intval($tmdb_episode_data['runtime']);
-            $hours = floor($runtime_minutes / 60);
-            $minutes = $runtime_minutes % 60;
-            if ($hours > 0) {
-                $ep_dur = sprintf("%02d:%02d:%02d", $hours, $minutes, 0);
-            } else {
-                $ep_dur = sprintf("%02d:%02d", $minutes, 0);
-            }
+    $has_xtream_duration = false;
+    if (!empty($ep_dur_secs) && is_numeric($ep_dur_secs) && intval($ep_dur_secs) > 0) {
+        $has_xtream_duration = true;
+        $duration_source = 'Xtream API (duration_secs)';
+        $seconds = intval($ep_dur_secs);
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+        $secs = $seconds % 60;
+        if ($hours > 0) {
+            $ep_dur = sprintf("%02d:%02d:%02d", $hours, $minutes, $secs);
         } else {
-            $duration_source = 'Ninguna (requiere obtener del player)';
+            $ep_dur = sprintf("%02d:%02d", $minutes, $secs);
         }
-    } elseif (!empty($ep_dur)) {
+    } elseif (!empty($ep_dur) && $ep_dur !== '00:00:00' && $ep_dur !== '00:00') {
+        $has_xtream_duration = true;
         $duration_source = 'Xtream API (duration)';
         if (is_numeric($ep_dur)) {
             $seconds = intval($ep_dur);
@@ -166,7 +155,37 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
                 $ep_dur = sprintf("%02d:%02d", $minutes, $secs);
             }
         }
-    } else {
+    }
+    
+    if (!$has_xtream_duration && $tmdb_id && $season && $ep_number) {
+        $runtime_minutes = null;
+        if ($tmdb_episode_data && !empty($tmdb_episode_data['runtime']) && is_numeric($tmdb_episode_data['runtime'])) {
+            $runtime_minutes = intval($tmdb_episode_data['runtime']);
+            $runtime_dir = __DIR__ . '/../../assets/tmdb_runtime/';
+            if (!is_dir($runtime_dir)) {
+                @mkdir($runtime_dir, 0777, true);
+            }
+            $runtime_filename = "{$tmdb_id}_{$season}_{$ep_number}.json";
+            $runtime_path = $runtime_dir . $runtime_filename;
+            $cache_data = ['runtime' => $runtime_minutes, 'cached_at' => date('Y-m-d H:i:s')];
+            @file_put_contents($runtime_path, json_encode($cache_data, JSON_PRETTY_PRINT));
+        } else {
+            $runtime_minutes = getTmdbEpisodeRuntime($tmdb_id, $season, $ep_number);
+        }
+        
+        if ($runtime_minutes && $runtime_minutes > 0) {
+            $duration_source = 'TMDB API (runtime)';
+            $hours = floor($runtime_minutes / 60);
+            $minutes = $runtime_minutes % 60;
+            if ($hours > 0) {
+                $ep_dur = sprintf("%02d:%02d:%02d", $hours, $minutes, 0);
+            } else {
+                $ep_dur = sprintf("%02d:%02d", $minutes, 0);
+            }
+        } else {
+            $duration_source = 'Ninguna (requiere obtener del player)';
+        }
+    } elseif (!$has_xtream_duration) {
         $duration_source = 'Ninguna (requiere obtener del player)';
     }
     

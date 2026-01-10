@@ -346,18 +346,8 @@ body {
                                             $ep_dur = sprintf("%02d:%02d", $minutes, $secs);
                                         }
                                     } elseif ($tmdb_id && $temporada_actual && $ep_num) {
-                                        $tmdb_ep_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$temporada_actual/episode/$ep_num?api_key=" . TMDB_API_KEY . "&language=" . (defined('LANGUAGE') ? LANGUAGE : 'es-ES');
-                                        $ch = curl_init();
-                                        curl_setopt($ch, CURLOPT_URL, $tmdb_ep_url);
-                                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                                        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-                                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-                                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                                        $tmdb_ep_json = @curl_exec($ch);
-                                        curl_close($ch);
-                                        $tmdb_ep_data = json_decode($tmdb_ep_json, true);
-                                        if (!empty($tmdb_ep_data['runtime']) && is_numeric($tmdb_ep_data['runtime'])) {
-                                            $runtime_minutes = intval($tmdb_ep_data['runtime']);
+                                        $runtime_minutes = getTmdbEpisodeRuntime($tmdb_id, $temporada_actual, $ep_num);
+                                        if ($runtime_minutes && $runtime_minutes > 0) {
                                             $hours = floor($runtime_minutes / 60);
                                             $minutes = $runtime_minutes % 60;
                                             if ($hours > 0) {

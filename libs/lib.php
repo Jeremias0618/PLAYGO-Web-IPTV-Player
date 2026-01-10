@@ -144,6 +144,53 @@ function ds($ds) {
 	
 }
 
+function getTmdbEpisodeRuntime($tmdb_id, $season, $episode_num) {
+    if (!$tmdb_id || !$season || !$episode_num) {
+        return null;
+    }
+    
+    $runtime_dir = __DIR__ . '/../assets/tmdb_runtime/';
+    if (!is_dir($runtime_dir)) {
+        @mkdir($runtime_dir, 0777, true);
+    }
+    
+    $cache_filename = "{$tmdb_id}_{$season}_{$episode_num}.json";
+    $cache_path = $runtime_dir . $cache_filename;
+    
+    if (file_exists($cache_path)) {
+        $cached_data = @json_decode(file_get_contents($cache_path), true);
+        if (isset($cached_data['runtime']) && is_numeric($cached_data['runtime']) && $cached_data['runtime'] > 0) {
+            return intval($cached_data['runtime']);
+        }
+    }
+    
+    if (!defined('TMDB_API_KEY') || empty(TMDB_API_KEY)) {
+        return null;
+    }
+    
+    $language = defined('LANGUAGE') ? LANGUAGE : 'es-ES';
+    $tmdb_ep_url = "https://api.themoviedb.org/3/tv/$tmdb_id/season/$season/episode/$episode_num?api_key=" . TMDB_API_KEY . "&language=" . $language;
+    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $tmdb_ep_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $tmdb_ep_json = @curl_exec($ch);
+    curl_close($ch);
+    
+    $tmdb_ep_data = @json_decode($tmdb_ep_json, true);
+    if (!empty($tmdb_ep_data['runtime']) && is_numeric($tmdb_ep_data['runtime']) && $tmdb_ep_data['runtime'] > 0) {
+        $runtime_minutes = intval($tmdb_ep_data['runtime']);
+        $cache_data = ['runtime' => $runtime_minutes, 'cached_at' => date('Y-m-d H:i:s')];
+        @file_put_contents($cache_path, json_encode($cache_data, JSON_PRETTY_PRINT));
+        return $runtime_minutes;
+    }
+    
+    return null;
+}
+
 
 if($_GET['acao'] == 'sair') {
   session_unset();

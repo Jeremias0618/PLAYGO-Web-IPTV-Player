@@ -2,6 +2,7 @@ libs/config.php
 storage/
 assets/channels/
 assets/tmdb_cache/
+assets/tmdb_runtime/
 .DS_Store
 Thumbs.db
 desktop.ini
