@@ -81,6 +81,9 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
         window.serieName = <?php echo json_encode($serie_nome_limpio); ?>;
         window.serieImg = <?php echo json_encode($poster_img); ?>;
         window.serieBackdrop = <?php echo json_encode($wallpaper_img); ?>;
+        window.serieYoutubeId = <?php echo json_encode($youtube_id); ?>;
+        window.serieYear = <?php echo json_encode($ano); ?>;
+        window.serieRating = <?php echo json_encode($nota); ?>;
         window.episodeHistoryData = {
             serieId: <?php echo json_encode($serie_id); ?>,
             serieName: <?php echo json_encode($serie_nome_limpio); ?>,
@@ -91,6 +94,13 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
         };
         
     </script>
+    <style>
+body {
+    background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo htmlspecialchars($ep_backdrop ?: $wallpaper_img ?: $poster_img); ?>') center center/cover no-repeat;
+    color: #fff;
+    background-attachment: fixed;
+}
+    </style>
 </head>
 <body class="body">
  
@@ -144,7 +154,6 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
 </header>
 <?php include_once __DIR__ . '/libs/views/search.php'; ?>
 <section class="section details">
-<div class="details__bg" data-bg="<?php echo $wallpaper_img ?: $poster_img; ?>"></div>
     <div class="container top-margin">
         <div class="row">
             <div class="col-12 col-xl-12">
@@ -177,6 +186,28 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
                                 </ul>
                                 <div class="card__description card__description--details">
                                     <?php echo htmlspecialchars($ep_plot ?: $sinopsis); ?>
+                                </div>
+                                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                                    <?php if (!empty($youtube_id)): ?>
+                                        <button class="btn d-flex align-items-center" id="btnTrailer"
+                                            style="font-weight:600;font-size:1.1rem;height:44px;background:linear-gradient(90deg,#ff0000 60%,#c80000 100%);color:#fff;border:none;border-radius:8px;padding:4px 22px;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
+                                            <i class="fab fa-youtube" style="font-size:1.4rem;margin-right:8px;"></i> Ver Tráiler
+                                        </button>
+                                    <?php endif; ?>
+                                    <button id="btnFavorito"
+                                        class="btn d-flex align-items-center"
+                                        style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#232027 60%,#444 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
+                                        <i class="fa fa-star" style="font-size:1.4rem;color:#fff;"></i>
+                                        <span id="favText" style="color:#fff;">Agregar a Favoritos</span>
+                                    </button>
+                                    <div style="position: relative; display: inline-block;">
+                                        <button id="btnPlaylist"
+                                            style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#232027 60%,#444 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
+                                            <i class="fa fa-bookmark" style="font-size:1.4rem;color:#fff;"></i>
+                                            <span style="color:#fff;">Guardar</span>
+                                        </button>
+                                        <div id="playlistTooltip" style="display: none; position: absolute; top: 100%; left: 0; margin-top: 8px; z-index: 10000;"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -386,9 +417,24 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
         </div>
     </div>
 </section>
-
+<?php if (!empty($youtube_id)): ?>
+<div class="modal fade" id="trailerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe id="trailerIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 <script src="./scripts/vendors/jquery-3.5.1.min.js"></script>
-<script src="./scripts/vendors/bootstrap.bundle.min.js" defer></script>
+<script src="./scripts/vendors/bootstrap-5.3.3.bundle.min.js"></script>
 <script src="./scripts/vendors/owl.carousel.min.js" defer></script>
 <script src="./scripts/vendors/jquery.mousewheel.min.js" defer></script>
 <script src="./scripts/vendors/jquery.mcustomscrollbar.min.js" defer></script>
@@ -405,6 +451,11 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
 <script src="./scripts/episode/history.js"></script>
 <script src="./scripts/episode/resume.js"></script>
 <script src="./scripts/episode/mobile.js"></script>
+<?php if (!empty($youtube_id)): ?>
+<script src="./scripts/serie/trailer.js"></script>
+<?php endif; ?>
+<script src="./scripts/serie/favorites.js"></script>
+<script src="./scripts/serie/playlist.js"></script>
 
 </body>
 </html>

@@ -28,25 +28,14 @@ $poster_final = $poster_tmdb ?: $poster_img;
 $backdrop_final = $wallpaper_tmdb ?: ($backdrop ?: $poster_final);
 
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PLAYGO - <?php echo htmlspecialchars($serie_nome); ?></title>
-    <script>
-window.serieId = <?php echo json_encode($id); ?>;
-window.serieYoutubeId = <?php echo json_encode($youtube_id); ?>;
-window.serieName = <?php echo json_encode($serie_nome); ?>;
-window.serieImg = <?php echo json_encode($poster_final); ?>;
-window.serieBackdrop = <?php echo json_encode($backdrop_final); ?>;
-window.serieYear = <?php echo json_encode($ano); ?>;
-window.serieRating = <?php echo json_encode($nota); ?>;
-    </script>
-    <link rel="stylesheet" href="./styles/vendors/bootstrap-5.3.3.min.css">
-    <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
-    <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="./styles/vendors/bootstrap.min.css">
+    <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
     <link rel="stylesheet" href="./styles/vendors/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="./styles/vendors/bootstrap-grid.min.css">
     <link rel="stylesheet" href="./styles/vendors/owl.carousel.min.css">
@@ -59,11 +48,23 @@ window.serieRating = <?php echo json_encode($nota); ?>;
     <link rel="stylesheet" href="./styles/vendors/jBox.all.min.css">
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
     <link rel="stylesheet" href="./styles/core/main.css">
+    <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
     <link rel="stylesheet" href="./styles/serie/layout.css">
     <link rel="stylesheet" href="./styles/serie/hero.css">
     <link rel="stylesheet" href="./styles/serie/episodes.css">
     <link rel="stylesheet" href="./styles/serie/modal.css">
     <link rel="stylesheet" href="./styles/serie/mobile.css">
+    <link rel="shortcut icon" href="assets/icon/favicon.ico">
+    <title>PLAYGO - <?php echo htmlspecialchars($serie_nome); ?></title>
+    <script>
+window.serieId = <?php echo json_encode($id); ?>;
+window.serieYoutubeId = <?php echo json_encode($youtube_id); ?>;
+window.serieName = <?php echo json_encode($serie_nome); ?>;
+window.serieImg = <?php echo json_encode($poster_final); ?>;
+window.serieBackdrop = <?php echo json_encode($backdrop_final); ?>;
+window.serieYear = <?php echo json_encode($ano); ?>;
+window.serieRating = <?php echo json_encode($nota); ?>;
+    </script>
     <style>
 body {
     background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo $backdrop_final; ?>') center center/cover no-repeat;
@@ -72,7 +73,8 @@ body {
 }
     </style>
 </head>
-<body>
+<body class="body">
+ 
 <header class="header">
     <div class="navbar-overlay bg-animate"></div>
     <div class="header__wrap">
@@ -120,22 +122,7 @@ body {
             </div>
         </div>
     </div>
-
 </header>
-
-<nav class="mobile-menu" id="mobileMenu">
-  <button class="close-menu" id="closeMobileMenu" aria-label="Cerrar menú">&times;</button>
-  <ul>
-    <li><a href="./home.php">INICIO</a></li>
-    <li><a href="./channels.php">TV EN VIVO</a></li>
-    <li><a href="movies.php">PELÍCULAS</a></li>
-    <li><a href="series.php">SERIES</a></li>
-    <li><a href="profile.php">PERFIL</a></li>
-  </ul>
-</nav>
-<div id="mobileMenuOverlay"></div>
-
-
 <?php include_once __DIR__ . '/libs/views/search.php'; ?>
 <section class="serie-hero d-flex align-items-center">
   <div class="container">
@@ -295,7 +282,21 @@ body {
   </div>
 </div>
 
+<script src="./scripts/vendors/jquery-3.5.1.min.js"></script>
 <script src="./scripts/vendors/bootstrap-5.3.3.bundle.min.js"></script>
+<script src="./scripts/vendors/owl.carousel.min.js" defer></script>
+<script src="./scripts/vendors/jquery.mousewheel.min.js" defer></script>
+<script src="./scripts/vendors/jquery.mcustomscrollbar.min.js" defer></script>
+<script src="./scripts/vendors/wnumb.js" defer></script>
+<script src="./scripts/vendors/nouislider.min.js" defer></script>
+<script src="./scripts/vendors/jquery.morelines.min.js" defer></script>
+<script src="./scripts/vendors/photoswipe.min.js" defer></script>
+<script src="./scripts/vendors/photoswipe-ui-default.min.js" defer></script>
+<script src="./scripts/vendors/glightbox.min.js" defer></script>
+<script src="./scripts/vendors/jBox.all.min.js" defer></script>
+<script src="./scripts/vendors/select2.min.js" defer></script>
+<script src="./scripts/core/main.js" defer></script>
+<script src="./scripts/search/modal.js"></script>
 <script src="./scripts/serie/trailer.js"></script>
 <script src="./scripts/serie/favorites.js"></script>
 <script src="./scripts/serie/playlist.js"></script>

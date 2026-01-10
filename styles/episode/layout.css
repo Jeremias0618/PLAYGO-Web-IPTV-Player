@@ -184,3 +184,7 @@ body {
     flex-shrink: 0 !important;
 }
 
+.details__bg {
+    display: none !important;
+}
+

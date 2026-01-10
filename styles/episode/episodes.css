@@ -257,13 +257,91 @@
 
 @media (max-width: 600px) {
     .serie-episodios-list {
-        padding: 0 8px;
-        gap: 10px;
+        padding: 0 12px;
+        gap: 14px;
+        margin: 24px auto 40px auto;
     }
     
     .serie-episodios-list .episodio-card {
-        min-height: 100px;
-        border-radius: 8px;
+        min-height: 110px;
+        border-radius: 10px;
+        box-shadow: 0 3px 16px rgba(0, 0, 0, 0.5);
+    }
+    
+    .serie-episodios-list .episodio-card.active {
+        border-left: 4px solid #e50914;
+        transform: translateX(0);
+        box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
+    }
+    
+    .serie-episodios-list .episodio-card:hover:not(.active) {
+        transform: translateX(0);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+    }
+    
+    .serie-episodios-list .episodio-card > div:first-child {
+        width: 130px;
+        min-width: 130px;
+    }
+    
+    .serie-episodios-list .episodio-card > div:first-child img {
+        min-height: 110px;
+    }
+    
+    .serie-episodios-list .episodio-info {
+        padding: 14px 16px;
+    }
+    
+    .serie-episodios-list .episodio-title {
+        font-size: 1.05rem;
+        margin-bottom: 8px;
+        gap: 10px;
+        line-height: 1.4;
+    }
+    
+    .serie-episodios-list .episodio-num {
+        font-size: 0.85rem;
+        padding: 3px 10px;
+        border-radius: 5px;
+    }
+    
+    .serie-episodios-list .episodio-meta {
+        font-size: 0.85rem;
+        gap: 14px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .serie-episodios-list .episodio-meta span {
+        gap: 5px;
+        color: #c0c0c0;
+    }
+    
+    .serie-episodios-list .episodio-meta i {
+        font-size: 0.85rem;
+    }
+    
+    .serie-episodios-list .episodio-plot {
+        font-size: 0.9rem;
+        -webkit-line-clamp: 2;
+        margin-top: 4px;
+        line-height: 1.5;
+        color: #b8b8b8;
+    }
+    
+    .serie-episodios-list .episodio-card.active .episodio-plot {
+        color: #d0d0d0;
+    }
+}
+
+@media (max-width: 480px) {
+    .serie-episodios-list {
+        padding: 0 10px;
+        gap: 12px;
+    }
+    
+    .serie-episodios-list .episodio-card {
+        min-height: 105px;
     }
     
     .serie-episodios-list .episodio-card > div:first-child {
@@ -272,7 +350,7 @@
     }
     
     .serie-episodios-list .episodio-card > div:first-child img {
-        min-height: 100px;
+        min-height: 105px;
     }
     
     .serie-episodios-list .episodio-info {
@@ -295,13 +373,8 @@
         margin-bottom: 6px;
     }
     
-    .serie-episodios-list .episodio-meta span {
-        gap: 4px;
-    }
-    
     .serie-episodios-list .episodio-plot {
         font-size: 0.88rem;
         -webkit-line-clamp: 2;
-        margin-top: 2px;
     }
 }

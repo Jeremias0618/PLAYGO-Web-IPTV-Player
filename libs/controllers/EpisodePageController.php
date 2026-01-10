@@ -170,6 +170,7 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
         'nota' => $seriesData['rating'],
         'cast' => $seriesData['cast'],
         'diretor' => $seriesData['director'],
+        'youtube_id' => $seriesData['youtube_id'],
         'episodios' => $seriesData['episodes'],
         'ep_data' => $ep_data,
         'ep_name' => $ep_name,
