@@ -10,18 +10,15 @@
             return;
         }
         
-        // Manejar cambio de temporada
         seasonSelect.addEventListener('change', function() {
             const selectedSeason = this.value;
             const targetPane = document.getElementById('season-' + selectedSeason);
             
             if (targetPane) {
-                // Ocultar todos los panes
                 document.querySelectorAll('.tab-pane').forEach(pane => {
                     pane.classList.remove('show', 'active');
                 });
                 
-                // Mostrar el pane seleccionado
                 targetPane.classList.add('show', 'active');
             }
         });

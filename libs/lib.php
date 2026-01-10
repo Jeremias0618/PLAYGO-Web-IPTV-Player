@@ -119,6 +119,17 @@ function limpiar_titulo_episodio($titulo) {
     }
     
     return $titulo;
+}
+
+function formatear_rating($rating) {
+    if (empty($rating) || !is_numeric($rating)) {
+        return $rating;
+    }
+    
+    $rating_float = floatval($rating);
+    $rating_truncado = floor($rating_float * 10) / 10;
+    
+    return number_format($rating_truncado, 1, '.', '');
 } 
 
 function ds($ds) {

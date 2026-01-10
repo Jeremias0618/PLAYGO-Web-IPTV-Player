@@ -63,7 +63,7 @@ window.serieName = <?php echo json_encode($serie_nome); ?>;
 window.serieImg = <?php echo json_encode($poster_final); ?>;
 window.serieBackdrop = <?php echo json_encode($backdrop_final); ?>;
 window.serieYear = <?php echo json_encode($ano); ?>;
-window.serieRating = <?php echo json_encode($nota); ?>;
+window.serieRating = <?php echo json_encode(formatear_rating($nota)); ?>;
     </script>
     <style>
 body {
@@ -135,7 +135,7 @@ body {
         <div class="meta">
           <?php echo $ano_short; ?>
           <?php if($nota !== ''): ?>
-            <span class="rate"><i class="fa-solid fa-star"></i> <?php echo $nota; ?></span>
+            <span class="rate"><i class="fa-solid fa-star"></i> <?php echo formatear_rating($nota); ?></span>
           <?php endif; ?>
           <span class="genres">
             <?php foreach ($generos_array as $g): ?>
@@ -264,7 +264,7 @@ body {
                   <span class="meta-duration"><i class="fa-regular fa-clock"></i> <?php echo $ep_dur; ?></span>
                 <?php endif; ?>
                 <?php if ($ep_rating): ?>
-                  <span class="meta-rating"><i class="fa-solid fa-star"></i> <?php echo htmlspecialchars($ep_rating); ?></span>
+                  <span class="meta-rating"><i class="fa-solid fa-star"></i> <?php echo htmlspecialchars(formatear_rating($ep_rating)); ?></span>
                 <?php endif; ?>
               </div>
               <a href="episode.php?serie_id=<?php echo $id; ?>&episode_id=<?php echo $ep_id; ?>" class="btn-play mt-auto">

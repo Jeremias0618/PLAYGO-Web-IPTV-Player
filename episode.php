@@ -84,14 +84,14 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
         window.serieBackdrop = <?php echo json_encode($wallpaper_img); ?>;
         window.serieYoutubeId = <?php echo json_encode($youtube_id); ?>;
         window.serieYear = <?php echo json_encode($ano); ?>;
-        window.serieRating = <?php echo json_encode($nota); ?>;
+        window.serieRating = <?php echo json_encode(formatear_rating($nota)); ?>;
         window.episodeHistoryData = {
             serieId: <?php echo json_encode($serie_id); ?>,
             serieName: <?php echo json_encode($serie_nome_limpio); ?>,
             posterImg: <?php echo json_encode($poster_img); ?>,
             backdrop: <?php echo json_encode($ep_backdrop ?: $wallpaper_img); ?>,
             ano: <?php echo json_encode($ano); ?>,
-            rate: <?php echo json_encode($nota); ?>
+            rate: <?php echo json_encode(formatear_rating($nota)); ?>
         };
         
     </script>
@@ -175,7 +175,7 @@ body {
                                         <?php
                                         echo ($ano ? substr($ano, 0, 4) : '');
                                         if ($nota !== '') {
-                                            echo ' &nbsp; <i class="fa-solid fa-star"></i> ' . $nota;
+                                            echo ' &nbsp; <i class="fa-solid fa-star"></i> ' . formatear_rating($nota);
                                         }
                                         ?>
                                     </span>
@@ -410,7 +410,7 @@ body {
                                         <div class="episodio-meta">
                                             <?php if($fecha): ?><span><i class="fa-regular fa-calendar"></i> <?php echo htmlspecialchars($fecha); ?></span><?php endif; ?>
                                             <?php if($ep_dur): ?><span><i class="fa-regular fa-clock"></i> <?php echo htmlspecialchars($ep_dur); ?></span><?php endif; ?>
-                                            <?php if($ep_rating): ?><span><i class="fa-solid fa-star"></i> <?php echo htmlspecialchars($ep_rating); ?></span><?php endif; ?>
+                                            <?php if($ep_rating): ?><span><i class="fa-solid fa-star"></i> <?php echo htmlspecialchars(formatear_rating($ep_rating)); ?></span><?php endif; ?>
                                         </div>
                                         <?php if($ep_plot): ?>
                                         <div class="episodio-plot">
