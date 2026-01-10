@@ -1,12 +1,20 @@
+.season-select-wrapper {
+    display: inline-block;
+    min-width: 140px;
+    max-width: 200px;
+}
+
 #seasonSelect {
     background: #232027 !important;
     color: #fff !important;
     border: 1px solid #444 !important;
     border-radius: 8px !important;
-    padding: 10px 16px !important;
-    font-size: 1rem !important;
+    padding: 8px 14px !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
     cursor: pointer !important;
     transition: all 0.2s !important;
+    width: 100% !important;
 }
 
 .view-toggle-btn {
@@ -550,7 +558,49 @@
     }
 }
 
+@media (max-width: 900px) {
+    .season-select-wrapper {
+        min-width: 130px;
+        max-width: 180px;
+    }
+    
+    #seasonSelect {
+        font-size: 0.88rem !important;
+        padding: 8px 12px !important;
+    }
+}
+
 @media (max-width: 600px) {
+    .d-flex.justify-content-between[style*="gap: 16px"] {
+        gap: 12px !important;
+        flex-wrap: wrap !important;
+    }
+    
+    .season-select-wrapper {
+        min-width: 120px;
+        max-width: 160px;
+        flex: 0 0 auto !important;
+    }
+    
+    #seasonSelect {
+        font-size: 0.85rem !important;
+        padding: 7px 10px !important;
+    }
+    
+    .view-toggle-btn {
+        font-size: 0.9rem !important;
+        padding: 8px 14px !important;
+        gap: 6px !important;
+    }
+    
+    .view-toggle-btn i {
+        font-size: 1rem !important;
+    }
+    
+    .view-toggle-text {
+        font-size: 0.9rem !important;
+    }
+    
     .season-tabs {
         gap: 7px 7px;
     }

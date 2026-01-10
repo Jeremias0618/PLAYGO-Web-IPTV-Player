@@ -180,8 +180,8 @@ body {
 <div class="container mt-5">
   <?php if ($episodios && is_array($episodios)): ?>
   <div class="d-flex justify-content-between align-items-center mb-3" style="gap: 16px; flex-wrap: wrap;">
-    <div style="flex: 1; min-width: 200px; max-width: 300px;">
-      <select class="form-select" id="seasonSelect" style="background: #232027; color: #fff; border: 1px solid #444; border-radius: 8px; padding: 10px 16px; font-size: 1rem; cursor: pointer;">
+    <div class="season-select-wrapper">
+      <select class="form-select" id="seasonSelect">
         <?php
           $i = 0;
           foreach ($episodios as $num_temp => $eps):
