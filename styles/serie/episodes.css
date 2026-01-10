@@ -317,6 +317,26 @@
     width: auto !important;
 }
 
+.episodes-list-view .episode-card {
+    cursor: pointer !important;
+}
+
+.episodes-list-view .episode-card > * {
+    pointer-events: none;
+}
+
+.episodes-list-view .episode-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
 .episode-card .btn-play {
     background: linear-gradient(90deg,#e50914 60%,#c8008f 100%);
     color: #fff;
@@ -395,6 +415,7 @@
     margin-bottom: 0 !important;
     align-items: stretch !important;
     height: auto !important;
+    cursor: pointer !important;
 }
 
 .episodes-list-view .episode-image-wrapper::after {
@@ -447,7 +468,9 @@
     padding: 20px 24px !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
+    min-width: 0 !important;
+    gap: 0 !important;
 }
 
 .episodes-list-view .episode-card .card-title {
@@ -458,26 +481,34 @@
     -webkit-line-clamp: 1 !important;
     line-clamp: 1 !important;
     line-height: 1.4 !important;
+    flex: 0 0 auto !important;
 }
 
 .episodes-list-view .episode-card .card-text {
     font-size: 0.95rem !important;
     color: #b8b8b8 !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 10px !important;
     line-height: 1.5 !important;
-    min-height: auto !important;
-    max-height: none !important;
+    height: 3em !important;
+    min-height: 3em !important;
+    max-height: 3em !important;
     -webkit-line-clamp: 2 !important;
     line-clamp: 2 !important;
-    flex: 0 0 auto !important;
+    flex: 0 0 3em !important;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    word-wrap: break-word !important;
 }
 
 .episodes-list-view .episode-card .episode-meta {
     gap: 14px !important;
     font-size: 0.9rem !important;
-    margin-bottom: 14px !important;
+    margin-bottom: 0 !important;
     align-items: center !important;
     flex-wrap: nowrap !important;
+    margin-top: auto !important;
 }
 
 .episodes-list-view .episode-card .episode-meta span {
@@ -491,12 +522,7 @@
 }
 
 .episodes-list-view .episode-card .btn-play {
-    margin-top: auto !important;
-    align-self: flex-start !important;
-    width: auto !important;
-    max-width: none !important;
-    padding: 10px 22px !important;
-    font-size: 1rem !important;
+    display: none !important;
 }
 
 
@@ -611,6 +637,16 @@
     
     .episodes-list-view .episode-card .card-text {
         font-size: 0.9rem !important;
+        height: 2.8em !important;
+        min-height: 2.8em !important;
+        max-height: 2.8em !important;
+        flex: 0 0 2.8em !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .episodes-list-view .episode-card .episode-meta {
+        margin-top: auto !important;
+        margin-bottom: 0 !important;
     }
 }
 
@@ -664,6 +700,10 @@
     
     .episodes-list-view .episode-card .card-text {
         font-size: 0.88rem !important;
+        height: 2.7em !important;
+        min-height: 2.7em !important;
+        max-height: 2.7em !important;
+        flex: 0 0 2.7em !important;
         -webkit-line-clamp: 2 !important;
         line-clamp: 2 !important;
     }
@@ -673,6 +713,12 @@
         font-size: 0.85rem !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
+        margin-top: auto !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .episodes-list-view .episode-card .card-text {
+        margin-bottom: 10px !important;
     }
     
     .episodes-list-view .episode-card .btn-play {

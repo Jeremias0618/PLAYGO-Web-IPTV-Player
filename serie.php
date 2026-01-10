@@ -272,9 +272,9 @@ body {
                   <span class="meta-rating"><i class="fa-solid fa-star"></i> <?php echo htmlspecialchars($ep_rating); ?></span>
                 <?php endif; ?>
               </div>
-                <a href="episode.php?serie_id=<?php echo $id; ?>&episode_id=<?php echo $ep_id; ?>" class="btn-play mt-auto">
-                    <i class="fa-solid fa-circle-play"></i> Ver episodio
-                </a>
+              <a href="episode.php?serie_id=<?php echo $id; ?>&episode_id=<?php echo $ep_id; ?>" class="btn-play mt-auto">
+                  <i class="fa-solid fa-circle-play"></i> Ver episodio
+              </a>
             </div>
           </div>
         </div>

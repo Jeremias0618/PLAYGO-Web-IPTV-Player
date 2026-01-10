@@ -26,21 +26,48 @@
             }
         });
         
-        // Manejar toggle de vista (cuadrícula <-> lista)
+        function setupEpisodeCards() {
+            const episodeCards = document.querySelectorAll('.episode-card');
+            episodeCards.forEach(card => {
+                const container = card.closest('.episodes-container');
+                if (!container) return;
+                
+                const isListView = container.classList.contains('episodes-list-view');
+                const btnPlay = card.querySelector('.btn-play');
+                
+                card.removeEventListener('click', card._listViewClickHandler);
+                
+                if (isListView && btnPlay) {
+                    card.style.cursor = 'pointer';
+                    const episodeUrl = btnPlay.getAttribute('href');
+                    if (episodeUrl) {
+                        card._listViewClickHandler = function(e) {
+                            if (e.target.closest('.btn-play')) {
+                                e.stopPropagation();
+                                return;
+                            }
+                            e.preventDefault();
+                            window.location.href = episodeUrl;
+                        };
+                        card.addEventListener('click', card._listViewClickHandler);
+                    }
+                } else {
+                    card.style.cursor = '';
+                }
+            });
+        }
+        
         viewToggleBtn.addEventListener('click', function() {
             const currentView = this.getAttribute('data-view');
             const newView = currentView === 'grid' ? 'list' : 'grid';
             const viewText = this.querySelector('.view-toggle-text');
             
-            // Actualizar el atributo data-view del botón
             this.setAttribute('data-view', newView);
             
-            // Actualizar el texto según la vista
             if (viewText) {
                 viewText.textContent = newView === 'grid' ? 'Cuadrícula' : 'Lista';
             }
             
-            // Cambiar la vista de todos los contenedores
             episodesContainers.forEach(container => {
                 container.setAttribute('data-view', newView);
                 
@@ -52,12 +79,15 @@
                     container.classList.add('episodes-list-view');
                 }
             });
+            
+            setTimeout(setupEpisodeCards, 50);
         });
         
-        // Inicializar vista de cuadrícula
         episodesContainers.forEach(container => {
             container.classList.add('episodes-grid-view');
             container.setAttribute('data-view', 'grid');
         });
+        
+        setupEpisodeCards();
     });
 })();
