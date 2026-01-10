@@ -376,15 +376,13 @@ body {
                                 $fecha = '';
                                 if ($ep_date) {
                                     $timestamp = strtotime($ep_date);
-                                    $meses = [
-                                        '01'=>'enero','02'=>'febrero','03'=>'marzo','04'=>'abril','05'=>'mayo','06'=>'junio',
-                                        '07'=>'julio','08'=>'agosto','09'=>'septiembre','10'=>'octubre','11'=>'noviembre','12'=>'diciembre'
-                                    ];
-                                    $y = date('Y', $timestamp);
-                                    $m = $meses[date('m', $timestamp)];
-                                    $d = date('j', $timestamp);
-                                    $fecha = "$d de $m de $y";
+                                    if ($timestamp) {
+                                        $fecha = date('Y-m-d', $timestamp);
+                                    } else {
+                                        $fecha = $ep_date;
+                                    }
                                 }
+                                $ep_rating = $ep['info']['rating'] ?? '';
                                 $ep_url = "episode.php?serie_id=" . urlencode($serie_id) . "&episode_id=" . urlencode($ep['id']);
                                 ?>
                                 <a href="<?php echo $ep_url; ?>" class="episodio-card<?php if($is_active) echo ' active'; ?>"<?php if($is_active) echo ' aria-current="page"'; ?>>
@@ -399,6 +397,7 @@ body {
                                         <div class="episodio-meta">
                                             <?php if($fecha): ?><span><i class="fa-regular fa-calendar"></i> <?php echo htmlspecialchars($fecha); ?></span><?php endif; ?>
                                             <?php if($ep_dur): ?><span><i class="fa-regular fa-clock"></i> <?php echo htmlspecialchars($ep_dur); ?></span><?php endif; ?>
+                                            <?php if($ep_rating): ?><span><i class="fa-solid fa-star"></i> <?php echo htmlspecialchars($ep_rating); ?></span><?php endif; ?>
                                         </div>
                                         <?php if($ep_plot): ?>
                                         <div class="episodio-plot">

@@ -160,9 +160,11 @@
 .serie-episodios-list .episodio-meta span {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 6px;
     color: #d0d0d0;
     transition: color 0.2s;
+    line-height: 1.5;
 }
 
 .serie-episodios-list .episodio-card:hover .episodio-meta span {
@@ -171,12 +173,22 @@
 
 .serie-episodios-list .episodio-meta i {
     font-size: 0.9rem;
-    color: #e50914;
-    opacity: 0.8;
+    background: -webkit-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 1;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+    flex-shrink: 0;
 }
 
 .serie-episodios-list .episodio-card.active .episodio-meta i {
-    color: #ff1a2e;
+    background: -webkit-linear-gradient(90deg, #ff1a2e 0%, #ff00a0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     opacity: 1;
 }
 
@@ -319,6 +331,14 @@
     
     .serie-episodios-list .episodio-meta i {
         font-size: 0.85rem;
+        background: -webkit-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 1;
+        flex-shrink: 0;
     }
     
     .serie-episodios-list .episodio-plot {

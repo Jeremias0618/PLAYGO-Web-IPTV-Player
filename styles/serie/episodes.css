@@ -1,3 +1,31 @@
+/* Estilos para el select de temporadas */
+#seasonSelect {
+    background: #232027 !important;
+    color: #fff !important;
+    border: 1px solid #444 !important;
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+    font-size: 1rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+}
+
+#seasonSelect:hover {
+    border-color: #666 !important;
+    background: #2a2a32 !important;
+}
+
+#seasonSelect:focus {
+    border-color: #e50914 !important;
+    box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.2) !important;
+    outline: none !important;
+}
+
+#seasonSelect option {
+    background: #232027 !important;
+    color: #fff !important;
+}
+
 .season-tabs {
     display: flex;
     flex-wrap: wrap;
@@ -28,6 +56,10 @@
     background: linear-gradient(90deg,#e50914 60%,#c8008f 100%);
     color: #fff;
 }
+
+/* ============================================
+   ESTILOS BASE PARA VISTA DE CUADRÍCULA (GRID)
+   ============================================ */
 .episode-card {
     background: #232027;
     border-radius: 12px;
@@ -38,55 +70,169 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
+
+.episode-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.2) 100%);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 12px 12px 0 0;
+}
+
+.episode-card:hover::after {
+    opacity: 1;
+}
+
 .episode-card:hover {
     transform: translateY(-6px) scale(1.025);
     box-shadow: 0 8px 32px #000a;
 }
+
 .episode-card img {
     width: 100%;
-    height: 160px;
+    height: auto;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
+    object-position: center center;
     border-radius: 12px 12px 0 0;
     background: #181818;
+    display: block;
+    flex-shrink: 0;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 0;
 }
+
+.episode-card:hover img {
+    transform: scale(1.08);
+}
+
 .episode-card .card-body {
-    padding: 14px 14px 10px 14px;
+    padding: 16px 18px 14px 18px;
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+    position: relative;
+    z-index: 2;
 }
+
 .episode-card .card-title {
-    font-size: 1.08rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: #fff;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
+    line-height: 1.35;
+    min-height: 2.7em;
+    max-height: 2.7em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 .episode-card .card-text {
-    font-size: 0.98rem;
-    color: #ccc;
-    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #b8b8b8;
+    margin-bottom: 12px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
+    line-height: 1.55;
+    flex: 1;
+    min-height: 4.65em;
+    max-height: 4.65em;
+    word-wrap: break-word;
+    hyphens: auto;
 }
+
+.episode-card .episode-meta {
+    display: flex !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    font-size: 0.83rem !important;
+    color: #d0d0d0 !important;
+    margin-bottom: 12px !important;
+    padding: 0 !important;
+    line-height: 1.4 !important;
+    width: 100% !important;
+    overflow: visible !important;
+}
+
+.episode-card .episode-meta span {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 4px !important;
+    white-space: nowrap !important;
+    color: #d0d0d0 !important;
+    line-height: 1.3 !important;
+    vertical-align: middle !important;
+    flex-shrink: 0 !important;
+    font-size: inherit !important;
+}
+
+.episode-card .episode-meta .meta-date,
+.episode-card .episode-meta .meta-duration,
+.episode-card .episode-meta .meta-rating {
+    min-width: fit-content !important;
+    color: #d0d0d0 !important;
+}
+
+.episode-card .episode-meta i {
+    font-size: 0.85rem !important;
+    background: -webkit-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    line-height: 1 !important;
+    flex-shrink: 0 !important;
+    width: auto !important;
+}
+
 .episode-card .btn-play {
     background: linear-gradient(90deg,#e50914 60%,#c8008f 100%);
     color: #fff;
     border: none;
     border-radius: 6px;
-    padding: 7px 18px;
-    font-size: 1rem;
+    padding: 8px 18px;
+    font-size: 0.98rem;
     font-weight: 600;
     margin-top: auto;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(229, 9, 20, 0.3);
     position: relative;
     overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+    text-decoration: none;
+    width: 100%;
+    max-width: 100%;
 }
+
 .episode-card .btn-play::before {
     content: '';
     position: absolute;
@@ -97,26 +243,172 @@
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
     transition: left 0.5s ease;
 }
+
 .episode-card .btn-play:hover {
     background: linear-gradient(90deg,#ff1a2e 60%,#ff00a0 100%);
     color: #fff;
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(229, 9, 20, 0.5);
 }
+
 .episode-card .btn-play:hover::before {
     left: 100%;
 }
+
 .episode-card .btn-play:active {
     transform: translateY(0);
     box-shadow: 0 2px 8px rgba(229, 9, 20, 0.3);
 }
+
+/* Vista de cuadrícula (por defecto) */
+.episodes-grid-view {
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+/* ============================================
+   ESTILOS ESPECÍFICOS PARA VISTA DE LISTA
+   ============================================ */
+.episodes-list-view {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+
+.episodes-list-view .col-12,
+.episodes-list-view .col-sm-6,
+.episodes-list-view .col-md-4,
+.episodes-list-view .col-lg-3 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+.episodes-list-view .episode-card {
+    flex-direction: row !important;
+    min-height: auto !important;
+    margin-bottom: 0 !important;
+    align-items: stretch !important;
+    height: auto !important;
+}
+
+.episodes-list-view .episode-card::after {
+    height: calc(320px * 9 / 16) !important;
+    width: 320px !important;
+    border-radius: 12px 0 0 12px !important;
+    background: linear-gradient(90deg, rgba(0,0,0,0.1) 0%, transparent 100%) !important;
+    aspect-ratio: unset !important;
+    right: auto !important;
+}
+
+.episodes-list-view .episode-card:hover {
+    transform: translateY(-4px) scale(1.01) !important;
+}
+
+.episodes-list-view .episode-card img {
+    width: 320px !important;
+    min-width: 320px !important;
+    max-width: 320px !important;
+    height: calc(320px * 9 / 16) !important;
+    min-height: calc(320px * 9 / 16) !important;
+    max-height: calc(320px * 9 / 16) !important;
+    aspect-ratio: 16 / 9 !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    border-radius: 12px 0 0 12px !important;
+    flex-shrink: 0 !important;
+    display: block !important;
+}
+
+.episodes-list-view .episode-card:hover img {
+    transform: none !important;
+}
+
+.episodes-list-view .episode-card .card-body {
+    flex: 1 !important;
+    padding: 20px 24px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+.episodes-list-view .episode-card .card-title {
+    font-size: 1.2rem !important;
+    margin-bottom: 10px !important;
+    min-height: auto !important;
+    max-height: none !important;
+    -webkit-line-clamp: 1 !important;
+    line-clamp: 1 !important;
+    line-height: 1.4 !important;
+}
+
+.episodes-list-view .episode-card .card-text {
+    font-size: 0.95rem !important;
+    color: #b8b8b8 !important;
+    margin-bottom: 12px !important;
+    line-height: 1.5 !important;
+    min-height: auto !important;
+    max-height: none !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+    flex: 0 0 auto !important;
+}
+
+.episodes-list-view .episode-card .episode-meta {
+    gap: 14px !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 14px !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+}
+
+.episodes-list-view .episode-card .episode-meta span {
+    align-items: center !important;
+    flex-shrink: 0 !important;
+    font-size: 0.9rem !important;
+}
+
+.episodes-list-view .episode-card .episode-meta i {
+    font-size: 0.88rem !important;
+}
+
+.episodes-list-view .episode-card .btn-play {
+    margin-top: auto !important;
+    align-self: flex-start !important;
+    width: auto !important;
+    max-width: none !important;
+    padding: 10px 22px !important;
+    font-size: 1rem !important;
+}
+
+/* ============================================
+   MEDIA QUERIES - VISTA CUADRÍCULA (GRID)
+   ============================================ */
 @media (max-width: 900px) {
     .season-tabs .nav-link {
         min-width: 90px;
         font-size: 0.98rem;
         padding: 8px 0;
     }
+    
+    .episode-card .card-title {
+        font-size: 1rem !important;
+        margin-bottom: 8px !important;
+        min-height: 2.5em !important;
+        max-height: 2.5em !important;
+    }
+    
+    .episode-card .card-text {
+        font-size: 0.88rem !important;
+        margin-bottom: 10px !important;
+        line-height: 1.5 !important;
+        min-height: 4.2em !important;
+        max-height: 4.2em !important;
+        -webkit-line-clamp: 3 !important;
+        line-clamp: 3 !important;
+    }
 }
+
 @media (max-width: 600px) {
     .season-tabs {
         gap: 7px 7px;
@@ -126,8 +418,132 @@
         font-size: 0.93rem;
         padding: 7px 0;
     }
-    .episode-card img {
-        height: 120px;
+    
+    .episode-card .card-body {
+        padding: 14px 16px 12px 16px !important;
+    }
+    
+    .episode-card .card-title {
+        font-size: 1rem !important;
+        margin-bottom: 8px !important;
+        min-height: 2.5em !important;
+        max-height: 2.5em !important;
+        line-height: 1.3 !important;
+    }
+    
+    .episode-card .card-text {
+        font-size: 0.87rem !important;
+        margin-bottom: 10px !important;
+        line-height: 1.5 !important;
+        min-height: 4em !important;
+        max-height: 4em !important;
+        -webkit-line-clamp: 3 !important;
+        line-clamp: 3 !important;
+        color: #b8b8b8 !important;
+    }
+    
+    .episode-card .episode-meta {
+        gap: 10px !important;
+        font-size: 0.82rem !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+    }
+    
+    .episode-card .episode-meta span {
+        font-size: 0.82rem !important;
+    }
+    
+    .episode-card .episode-meta i {
+        font-size: 0.8rem !important;
     }
 }
 
+/* ============================================
+   MEDIA QUERIES - VISTA LISTA
+   ============================================ */
+@media (max-width: 900px) {
+    .episodes-list-view .episode-card {
+        min-height: auto !important;
+    }
+    
+    .episodes-list-view .episode-card img {
+        width: 240px !important;
+        min-width: 240px !important;
+        max-width: 240px !important;
+        height: calc(240px * 9 / 16) !important;
+        min-height: calc(240px * 9 / 16) !important;
+        max-height: calc(240px * 9 / 16) !important;
+        aspect-ratio: 16 / 9 !important;
+    }
+    
+    .episodes-list-view .episode-card::after {
+        width: 240px !important;
+        height: calc(240px * 9 / 16) !important;
+    }
+    
+    .episodes-list-view .episode-card .card-body {
+        padding: 16px 20px !important;
+    }
+    
+    .episodes-list-view .episode-card .card-title {
+        font-size: 1.1rem !important;
+    }
+    
+    .episodes-list-view .episode-card .card-text {
+        font-size: 0.9rem !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .episodes-list-view .episode-card {
+        flex-direction: column !important;
+        min-height: auto !important;
+    }
+    
+    .episodes-list-view .episode-card img {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9 !important;
+        border-radius: 12px 12px 0 0 !important;
+    }
+    
+    .episodes-list-view .episode-card::after {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9 !important;
+        border-radius: 12px 12px 0 0 !important;
+    }
+    
+    .episodes-list-view .episode-card .card-body {
+        padding: 16px 18px 14px 18px !important;
+    }
+    
+    .episodes-list-view .episode-card .card-title {
+        font-size: 1rem !important;
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
+        min-height: 2.4em !important;
+        max-height: 2.4em !important;
+    }
+    
+    .episodes-list-view .episode-card .card-text {
+        font-size: 0.88rem !important;
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
+    }
+    
+    .episodes-list-view .episode-card .episode-meta {
+        gap: 10px !important;
+        font-size: 0.85rem !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+    }
+    
+    .episodes-list-view .episode-card .btn-play {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}

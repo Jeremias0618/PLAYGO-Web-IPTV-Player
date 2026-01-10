@@ -178,52 +178,39 @@ body {
 </section>
 
 <div class="container mt-5">
-  <h2 class="mb-4" style="font-weight:700;letter-spacing:1px;">Capítulos</h2>
   <?php if ($episodios && is_array($episodios)): ?>
-<ul class="nav season-tabs mb-3" id="seasonTab" role="tablist">
-  <?php
-    $i = 0;
-    $total = count($episodios);
-    foreach ($episodios as $num_temp => $eps):
-      if ($i < 7):
-  ?>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link<?php if($i==0) echo ' active'; ?>" id="season-<?php echo $num_temp; ?>-tab" data-bs-toggle="tab" data-bs-target="#season-<?php echo $num_temp; ?>" type="button" role="tab">
-        Temporada <?php echo htmlspecialchars($num_temp); ?>
+  <div class="d-flex justify-content-between align-items-center mb-3" style="gap: 16px; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 200px; max-width: 300px;">
+      <select class="form-select" id="seasonSelect" style="background: #232027; color: #fff; border: 1px solid #444; border-radius: 8px; padding: 10px 16px; font-size: 1rem; cursor: pointer;">
+        <?php
+          $i = 0;
+          foreach ($episodios as $num_temp => $eps):
+        ?>
+          <option value="<?php echo $num_temp; ?>"<?php if($i==0) echo ' selected'; ?>>
+            Temporada <?php echo htmlspecialchars($num_temp); ?>
+          </option>
+        <?php
+            $i++;
+          endforeach;
+        ?>
+      </select>
+    </div>
+    <div class="d-flex gap-2">
+      <button id="viewGridBtn" class="btn" style="background: linear-gradient(90deg,#e50914 60%,#c8008f 100%); color: #fff; border: none; border-radius: 8px; padding: 10px 16px; font-size: 1rem; cursor: pointer; transition: all 0.2s;" title="Vista de cuadrícula">
+        <i class="fa-solid fa-th"></i>
       </button>
-    </li>
-  <?php
-      elseif ($i == 7):
-        $restantes = array_slice(array_keys($episodios), 7);
-  ?>
-    <li class="nav-item dropdown" role="presentation">
-      <button class="nav-link dropdown-toggle" id="season-dropdown-tab" data-bs-toggle="dropdown" type="button" role="tab" aria-expanded="false">
-        Temporadas
+      <button id="viewListBtn" class="btn" style="background: #232027; color: #fff; border: 1px solid #444; border-radius: 8px; padding: 10px 16px; font-size: 1rem; cursor: pointer; transition: all 0.2s;" title="Vista de lista">
+        <i class="fa-solid fa-list"></i>
       </button>
-      <ul class="dropdown-menu" id="seasonDropdownMenu">
-        <?php foreach ($restantes as $rest_num): ?>
-          <li>
-            <a class="dropdown-item season-dropdown-item" href="#" data-season="<?php echo $rest_num; ?>">
-              Temporada <?php echo htmlspecialchars($rest_num); ?>
-            </a>
-          </li>
-        <?php endforeach; ?>
-      </ul>
-    </li>
-  <?php
-        break;
-      endif;
-      $i++;
-    endforeach;
-  ?>
-</ul>
+    </div>
+  </div>
 <div class="tab-content" id="seasonTabContent">
   <?php
     $i = 0;
     foreach ($episodios as $num_temp => $eps):
   ?>
     <div class="tab-pane fade<?php if($i==0) echo ' show active'; ?>" id="season-<?php echo $num_temp; ?>" role="tabpanel">
-      <div class="row">
+      <div class="row episodes-container" data-view="grid">
         <?php foreach ($eps as $ep):
           $ep_name = $ep['title'] ?? 'Episodio';
           if (strpos($ep_name, '-') !== false) {
@@ -238,6 +225,17 @@ body {
           $ep_dur = $ep['info']['duration'] ?? '';
           $ep_num_str = $ep_num ? str_pad($ep_num, 2, '0', STR_PAD_LEFT) : '';
           $duracion_valida = !empty($ep_dur) && !in_array(trim($ep_dur), ['0', '00:00', '00:00:00']);
+          $ep_date = $ep['info']['release_date'] ?? '';
+          $ep_release_date = '';
+          if ($ep_date) {
+              $timestamp = strtotime($ep_date);
+              if ($timestamp) {
+                  $ep_release_date = date('Y-m-d', $timestamp);
+              } else {
+                  $ep_release_date = $ep_date;
+              }
+          }
+          $ep_rating = $ep['info']['rating'] ?? '';
         ?>
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
           <div class="episode-card w-100">
@@ -247,9 +245,17 @@ body {
                   <?php echo htmlspecialchars($ep_num_str ? "Episodio $ep_num_str - " : "") . limitar_texto($ep_name, 40); ?>
               </div>
               <div class="card-text"><?php echo $ep_plot; ?></div>
-              <?php if ($duracion_valida): ?>
-                  <div class="mb-2" style="color:#ffd700;"><?php echo $ep_dur; ?></div>
-              <?php endif; ?>
+              <div class="episode-meta">
+                <?php if ($ep_release_date): ?>
+                  <span class="meta-date"><i class="fa-regular fa-calendar"></i> <?php echo htmlspecialchars($ep_release_date); ?></span>
+                <?php endif; ?>
+                <?php if ($duracion_valida): ?>
+                  <span class="meta-duration"><i class="fa-regular fa-clock"></i> <?php echo $ep_dur; ?></span>
+                <?php endif; ?>
+                <?php if ($ep_rating): ?>
+                  <span class="meta-rating"><i class="fa-solid fa-star"></i> <?php echo htmlspecialchars($ep_rating); ?></span>
+                <?php endif; ?>
+              </div>
                 <a href="episode.php?serie_id=<?php echo $id; ?>&episode_id=<?php echo $ep_id; ?>" class="btn-play mt-auto">
                     <i class="fa-solid fa-circle-play"></i> Ver episodio
                 </a>
