@@ -183,24 +183,23 @@
     right: 8px;
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: #fff;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 3;
     box-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
     transition: all 0.3s ease;
-}
-
-.episode-watched-badge i {
-    font-size: 1.1rem;
-    color: #fff;
+    white-space: nowrap;
+    line-height: 1.2;
 }
 
 .episode-card:hover .episode-watched-badge {
-    transform: scale(1.1);
+    transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.7);
 }
 

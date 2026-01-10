@@ -57,6 +57,45 @@ function limitar_texto($texto, $limite){
   else{
     return $texto;
   }
+}
+
+function limpiar_titulo_episodio($titulo) {
+    if (empty($titulo)) {
+        return 'Episodio';
+    }
+    
+    $titulo = trim($titulo);
+    
+    if (preg_match('/S\d+E\d+/i', $titulo, $matches, PREG_OFFSET_CAPTURE)) {
+        $posicion = $matches[0][1] + strlen($matches[0][0]);
+        $resto = trim(substr($titulo, $posicion));
+        
+        if (!empty($resto)) {
+            if (strpos($resto, '-') === 0) {
+                $resto = trim(substr($resto, 1));
+            }
+            if (strpos($resto, '-') !== false) {
+                $partes = explode('-', $resto);
+                array_shift($partes);
+                $resultado = trim(implode('-', $partes));
+                return !empty($resultado) ? $resultado : $resto;
+            }
+            return $resto;
+        }
+    }
+    
+    if (strpos($titulo, '-') !== false) {
+        $partes = array_map('trim', explode('-', $titulo));
+        
+        if (preg_match('/^S\d+E\d+/i', end($partes))) {
+            array_pop($partes);
+        }
+        
+        $ultima_parte = trim(end($partes));
+        return !empty($ultima_parte) ? $ultima_parte : $titulo;
+    }
+    
+    return $titulo;
 } 
 
 function ds($ds) {

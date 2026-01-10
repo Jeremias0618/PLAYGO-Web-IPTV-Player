@@ -25,7 +25,7 @@ if (!$pageData) {
 extract($pageData, EXTR_SKIP);
 
 $serie_nome_limpio = preg_replace('/\s*\(\d{4}\)$/', '', $serie_nome);
-$ep_title_limpio = trim(preg_replace('/^.*-\s*/', '', $ep_name));
+$ep_title_limpio = limpiar_titulo_episodio($ep_name);
 $season = $ep_data['season'] ?? '';
 $ep_num = $ep_data['episode_num'] ?? '';
 $ep_num_str = $ep_num ? str_pad(intval($ep_num), 2, '0', STR_PAD_LEFT) : '';
@@ -323,7 +323,7 @@ body {
                                 }
                                 
                                 $ep_title = $ep['title'] ?? '';
-                                $ep_title_limpio = trim(preg_replace('/^.*-\s*/', '', $ep_title));
+                                $ep_title_limpio = limpiar_titulo_episodio($ep_title);
                                 $ep_dur = $ep['info']['duration'] ?? '';
                                 $ep_dur_secs = $ep['info']['duration_secs'] ?? '';
                                 
@@ -393,9 +393,7 @@ body {
                                     <div class="episodio-image-wrapper">
                                         <img src="<?php echo htmlspecialchars($ep_img); ?>" alt="<?php echo htmlspecialchars($ep_title_limpio); ?>" loading="lazy">
                                         <?php if ($ep_watched): ?>
-                                            <div class="episodio-watched-badge">
-                                                <i class="fa-solid fa-check-circle"></i>
-                                            </div>
+                                            <div class="episodio-watched-badge">Visto</div>
                                         <?php endif; ?>
                                         <?php if ($ep_progress && $ep_percentage > 0 && !$ep_watched): ?>
                                             <div class="episodio-progress-bar">

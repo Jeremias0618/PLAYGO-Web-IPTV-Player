@@ -211,10 +211,7 @@ body {
     <div class="tab-pane fade<?php if($i==0) echo ' show active'; ?>" id="season-<?php echo $num_temp; ?>" role="tabpanel">
       <div class="row episodes-container" data-view="grid">
         <?php foreach ($eps as $ep):
-          $ep_name = $ep['title'] ?? 'Episodio';
-          if (strpos($ep_name, '-') !== false) {
-              $ep_name = trim(end(explode('-', $ep_name)));
-          }
+          $ep_name = limpiar_titulo_episodio($ep['title'] ?? 'Episodio');
           $ep_id = $ep['id'];
           $ep_num = $ep['episode_num'] ?? '';
           $ep_img = isset($tmdb_episodios_imgs[$num_temp][$ep_num]) 
@@ -246,9 +243,7 @@ body {
             <div class="episode-image-wrapper">
               <img src="<?php echo htmlspecialchars($ep_img); ?>" alt="">
               <?php if ($ep_watched): ?>
-                <div class="episode-watched-badge">
-                  <i class="fa-solid fa-check-circle"></i>
-                </div>
+                <div class="episode-watched-badge">Visto</div>
               <?php endif; ?>
               <?php if ($ep_progress && $ep_percentage > 0 && !$ep_watched): ?>
                 <div class="episode-progress-bar">

@@ -117,7 +117,7 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
     }
     
     $ep_name = $ep_data['title'] ?? 'Episodio';
-    $ep_title_limpio = trim(preg_replace('/^.*-\s*/', '', $ep_name));
+    $ep_title_limpio = limpiar_titulo_episodio($ep_name);
     
     $ep_dur = $ep_data['info']['duration'] ?? '';
     $ep_dur_secs = $ep_data['info']['duration_secs'] ?? '';
