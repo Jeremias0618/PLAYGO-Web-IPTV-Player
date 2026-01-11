@@ -1,0 +1,234 @@
+.sagas-admin-actions {
+    margin-bottom: 30px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.sagas-admin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(229, 9, 20, 0.3);
+}
+
+.sagas-admin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+}
+
+.sagas-admin-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.sagas-admin-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #bfc1c8;
+    font-size: 1.1rem;
+}
+
+.sagas-admin-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sagas-admin-group {
+    background: #1a1a1f;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sagas-admin-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: #232027;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.sagas-admin-group-header:hover {
+    background: #2a2a32;
+}
+
+.sagas-admin-group-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    flex: 1;
+}
+
+.sagas-admin-group-count {
+    font-size: 0.95rem;
+    color: #bfc1c8;
+    margin-right: 15px;
+}
+
+.sagas-admin-group-icon {
+    color: #bfc1c8;
+    transition: transform 0.3s;
+}
+
+.sagas-admin-group-content {
+    padding: 20px 24px;
+}
+
+.sagas-admin-movies-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.sagas-admin-movie-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #232027;
+    border-radius: 8px;
+}
+
+.sagas-admin-movie-name {
+    color: #fff;
+    font-size: 1rem;
+    flex: 1;
+}
+
+.sagas-admin-movie-id {
+    color: #bfc1c8;
+    font-size: 0.9rem;
+    font-family: monospace;
+}
+
+.sagas-admin-btn-confirm {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(90deg, #5dc1b9 0%, #4a9a94 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sagas-admin-btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(93, 193, 185, 0.4);
+}
+
+.sagas-admin-saved-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.sagas-admin-saved-item {
+    background: #1a1a1f;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.sagas-admin-saved-image {
+    width: 100%;
+    height: 200px;
+    background: #232027;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.sagas-admin-saved-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sagas-admin-no-image {
+    color: #bfc1c8;
+    font-size: 0.9rem;
+}
+
+.sagas-admin-saved-info {
+    padding: 20px;
+    flex: 1;
+}
+
+.sagas-admin-saved-info h3 {
+    color: #fff;
+    font-size: 1.2rem;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+}
+
+.sagas-admin-saved-info p {
+    color: #bfc1c8;
+    font-size: 0.95rem;
+    margin: 5px 0;
+}
+
+.sagas-admin-saved-date {
+    font-size: 0.85rem !important;
+    opacity: 0.7;
+}
+
+.sagas-admin-btn-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    margin: 0 20px 20px 20px;
+    background: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sagas-admin-btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+}
+
+@media (max-width: 600px) {
+    .sagas-admin-actions {
+        flex-direction: column;
+    }
+    
+    .sagas-admin-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .sagas-admin-saved-list {
+        grid-template-columns: 1fr;
+    }
+}
+

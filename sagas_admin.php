@@ -42,6 +42,8 @@ $backdrop_fondo = $data['backdrop'];
     <link rel="stylesheet" href="./styles/movie/mobile.css">
     <link rel="stylesheet" href="./styles/sagas-admin/layout.css">
     <link rel="stylesheet" href="./styles/sagas-admin/content.css">
+    <link rel="stylesheet" href="./styles/sagas-admin/table.css">
+    <link rel="stylesheet" href="./styles/sagas-admin/modal.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - Administración de Sagas</title>
 </head>
@@ -105,11 +107,58 @@ $backdrop_fondo = $data['backdrop'];
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <div class="sagas-admin-container">
-                        <i class="fas fa-cog sagas-admin-icon"></i>
-                        <p class="sagas-admin-title">Panel de administración de sagas</p>
-                        <p class="sagas-admin-subtitle">La funcionalidad estará disponible próximamente</p>
+                    <div class="sagas-admin-actions">
+                        <button id="collectMoviesBtn" class="sagas-admin-btn">
+                            <i class="fas fa-download"></i> Recolectar Películas
+                        </button>
                     </div>
+                    
+                    <div id="groupedMoviesContainer" class="sagas-admin-container">
+                        <div class="sagas-admin-message">
+                            Haz clic en "Recolectar Películas" para comenzar
+                        </div>
+                    </div>
+                    
+                    <div id="savedSagasContainer" style="margin-top: 50px;">
+                        <h3 style="color: #fff; margin-bottom: 20px; font-size: 1.5rem;">Sagas Guardadas</h3>
+                        <div class="sagas-admin-message">Cargando sagas...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="sagaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content saga-modal-content">
+                <div class="modal-header saga-modal-header">
+                    <h2 class="modal-title">Crear Nueva Saga</h2>
+                    <button type="button" class="btn-close btn-close-white saga-modal-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body saga-modal-body">
+                    <div class="saga-modal-section">
+                        <label for="sagaTitle">Título de la Saga</label>
+                        <input type="text" id="sagaTitle" placeholder="Ej: SAGA IRON MAN" required>
+                    </div>
+                    
+                    <div class="saga-modal-section">
+                        <label for="sagaImageFile">Imagen de la Saga (JPG, PNG, WEBP)</label>
+                        <input type="file" id="sagaImageFile" accept="image/jpeg,image/jpg,image/png,image/webp">
+                        <img id="sagaImagePreview" class="saga-image-preview" alt="Preview">
+                    </div>
+                    
+                    <div class="saga-modal-section">
+                        <label>Películas en esta Saga</label>
+                        <div id="sagaMoviesList" class="saga-modal-movies"></div>
+                    </div>
+                </div>
+                <div class="modal-footer saga-modal-footer">
+                    <button type="button" class="saga-modal-btn saga-modal-btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button" id="saveSagaBtn" class="saga-modal-btn saga-modal-btn-primary" onclick="saveSaga()">
+                        <i class="fas fa-save"></i> Guardar Saga
+                    </button>
                 </div>
             </div>
         </div>
@@ -135,6 +184,8 @@ $backdrop_fondo = $data['backdrop'];
 <script src="./scripts/core/main.js"></script>
 <script src="./scripts/search/modal.js"></script>
 <script src="./scripts/sagas-admin/init.js"></script>
+<script src="./scripts/sagas-admin/collect.js"></script>
+<script src="./scripts/sagas-admin/save.js"></script>
 
 </body>
 </html>

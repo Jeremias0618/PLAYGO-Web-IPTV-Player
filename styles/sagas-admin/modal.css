@@ -1,0 +1,204 @@
+.saga-modal-content {
+    background: #1a1a1f;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.saga-modal-content .modal-header {
+    border-bottom: 1px solid #2a2a32;
+    padding: 24px 30px;
+}
+
+.saga-modal-content .modal-body {
+    padding: 30px;
+}
+
+.saga-modal-content .modal-footer {
+    border-top: 1px solid #2a2a32;
+    padding: 20px 30px;
+}
+
+.saga-modal-header {
+    background: #232027;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.saga-modal-header h2 {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.saga-modal-close {
+    background: transparent;
+    border: none;
+    color: #bfc1c8;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.saga-modal-close:hover {
+    background: #2a2a32;
+    color: #fff;
+}
+
+.saga-modal-body {
+    padding: 30px;
+}
+
+.saga-modal-section {
+    margin-bottom: 25px;
+}
+
+.saga-modal-section label {
+    display: block;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.saga-modal-section input[type="text"],
+.saga-modal-section input[type="file"] {
+    width: 100%;
+    padding: 12px 16px;
+    background: #232027;
+    border: 1px solid #2a2a32;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.saga-modal-section input[type="text"]:focus {
+    outline: none;
+    border-color: #e50914;
+}
+
+.saga-modal-section input[type="file"] {
+    cursor: pointer;
+}
+
+.saga-modal-movies {
+    max-height: 300px;
+    overflow-y: auto;
+    background: #232027;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.saga-modal-movie-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #1a1a1f;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.saga-modal-movie-item:last-child {
+    margin-bottom: 0;
+}
+
+.saga-modal-movie-item span:first-child {
+    color: #fff;
+    font-size: 0.95rem;
+    flex: 1;
+}
+
+.saga-modal-movie-id {
+    color: #bfc1c8;
+    font-size: 0.85rem;
+    font-family: monospace;
+}
+
+.saga-image-preview {
+    margin-top: 15px;
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 8px;
+    display: none;
+}
+
+.saga-modal-footer {
+    background: #232027;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.saga-modal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.saga-modal-btn-primary {
+    background: linear-gradient(90deg, #5dc1b9 0%, #4a9a94 100%);
+    color: #fff;
+}
+
+.saga-modal-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(93, 193, 185, 0.4);
+}
+
+.saga-modal-btn-secondary {
+    background: #2a2a32;
+    color: #fff;
+}
+
+.saga-modal-btn-secondary:hover {
+    background: #333;
+}
+
+.saga-modal-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 600px) {
+    .saga-modal-content {
+        width: 95%;
+        margin: 20px auto;
+    }
+    
+    .saga-modal-header,
+    .saga-modal-body,
+    .saga-modal-footer {
+        padding: 20px;
+    }
+    
+    .saga-modal-footer {
+        flex-direction: column;
+    }
+    
+    .saga-modal-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+

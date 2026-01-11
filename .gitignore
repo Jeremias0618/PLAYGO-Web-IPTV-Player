@@ -3,6 +3,8 @@ storage/
 assets/channels/
 assets/tmdb_cache/
 assets/tmdb_runtime/
+assets/image/sagas/
+storage/sagas.json
 .DS_Store
 Thumbs.db
 desktop.ini
