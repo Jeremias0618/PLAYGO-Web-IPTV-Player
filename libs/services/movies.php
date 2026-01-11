@@ -282,3 +282,86 @@ function paginateMovies($movies, $page, $perPage = 48) {
     ];
 }
 
+function getRandomMoviesByGenres($movies, $ratingMin = 4.0, $ratingMax = 10.0, $user = null, $pwd = null) {
+    if (!is_array($movies) || empty($movies)) {
+        return [];
+    }
+    
+    $moviesWithRating = [];
+    foreach ($movies as $movie) {
+        $r = isset($movie['rating_5based']) ? floatval($movie['rating_5based'])*2 : (isset($movie['rating']) ? floatval($movie['rating']) : 0);
+        if ($r >= $ratingMin && $r <= $ratingMax) {
+            if (empty($movie['genre']) && $user && $pwd) {
+                $vod_id = isset($movie['stream_id']) ? $movie['stream_id'] : null;
+                if ($vod_id) {
+                    $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$vod_id";
+                    $res_info = @apixtream($url_info);
+                    $data_info = @json_decode($res_info, true);
+                    if (isset($data_info['info']['genre']) && !empty($data_info['info']['genre'])) {
+                        $movie['genre'] = $data_info['info']['genre'];
+                    }
+                }
+            }
+            $moviesWithRating[] = $movie;
+        }
+    }
+    
+    if (empty($moviesWithRating)) {
+        return [];
+    }
+    
+    $moviesByGenre = [];
+    foreach ($moviesWithRating as $movie) {
+        if (!isset($movie['genre']) || empty($movie['genre'])) {
+            if (!isset($moviesByGenre['Sin género'])) {
+                $moviesByGenre['Sin género'] = [];
+            }
+            $moviesByGenre['Sin género'][] = $movie;
+            continue;
+        }
+        
+        $genres = is_array($movie['genre']) ? $movie['genre'] : explode(',', $movie['genre']);
+        foreach ($genres as $genre) {
+            $genre = trim($genre);
+            if (empty($genre)) {
+                continue;
+            }
+            
+            if (!isset($moviesByGenre[$genre])) {
+                $moviesByGenre[$genre] = [];
+            }
+            
+            $movieId = isset($movie['stream_id']) ? $movie['stream_id'] : null;
+            $exists = false;
+            foreach ($moviesByGenre[$genre] as $existingMovie) {
+                if (isset($existingMovie['stream_id']) && $existingMovie['stream_id'] == $movieId) {
+                    $exists = true;
+                    break;
+                }
+            }
+            
+            if (!$exists) {
+                $moviesByGenre[$genre][] = $movie;
+            }
+        }
+    }
+    
+    if (empty($moviesByGenre)) {
+        return [];
+    }
+    
+    $allGenres = array_keys($moviesByGenre);
+    shuffle($allGenres);
+    
+    $result = [];
+    foreach ($allGenres as $genre) {
+        $genreMovies = $moviesByGenre[$genre];
+        shuffle($genreMovies);
+        $result = array_merge($result, $genreMovies);
+    }
+    
+    shuffle($result);
+    
+    return array_values($result);
+}
+
