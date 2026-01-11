@@ -67,6 +67,7 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
     <link rel="stylesheet" href="./styles/episode/player.css">
     <link rel="stylesheet" href="./styles/episode/episodes.css">
     <link rel="stylesheet" href="./styles/episode/layout.css">
+    <link rel="stylesheet" href="./styles/movie/resume-notification.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - <?php echo htmlspecialchars($serie_nome); ?> - <?php echo htmlspecialchars($ep_name); ?></title>
     <script>

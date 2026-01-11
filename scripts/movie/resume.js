@@ -10,62 +10,158 @@
         }
         
         function showResumeNotification(time, onAccept, onCancel) {
-            if (document.getElementById('resumeNotifBg')) return;
-            const bg = document.createElement('div');
-            bg.id = 'resumeNotifBg';
-            bg.style.position = 'fixed';
-            bg.style.left = '0';
-            bg.style.top = '0';
-            bg.style.width = '100vw';
-            bg.style.height = '100vh';
-            bg.style.background = 'rgba(0,0,0,0.85)';
-            bg.style.zIndex = '999999';
-            bg.style.display = 'flex';
-            bg.style.alignItems = 'center';
-            bg.style.justifyContent = 'center';
+            const videoElement = document.getElementById('plyr-video');
+            const isPlyr = videoElement && window.Plyr && document.querySelector('.plyr');
             
-            const notif = document.createElement('div');
-            notif.id = 'resumeNotif';
-            notif.style.background = '#232027';
-            notif.style.color = '#fff';
-            notif.style.padding = '32px 38px';
-            notif.style.borderRadius = '16px';
-            notif.style.boxShadow = '0 8px 32px #000a';
-            notif.style.fontSize = '1.18rem';
-            notif.style.display = 'flex';
-            notif.style.flexDirection = 'column';
-            notif.style.alignItems = 'center';
-            notif.style.gap = '28px';
-            notif.style.maxWidth = '90vw';
-            notif.style.textAlign = 'center';
-            
-            const min = Math.floor(time/60);
-            const sec = Math.floor(time%60).toString().padStart(2,'0');
-            notif.innerHTML = `
-                <span style="font-size:1.15rem;">¿Deseas continuar viendo <b>${movieTitle}</b> desde el minuto <b>${min}:${sec}</b>?</span>
-                <div style="display:flex;gap:18px;">
-                    <button id="resumeAccept" style="background:#e50914;color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:1.1rem;cursor:pointer;margin-right:10px;">Aceptar</button>
-                    <button id="resumeCancel" style="background:#444;color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:1.1rem;cursor:pointer;">Cancelar</button>
-                </div>
-            `;
-            bg.appendChild(notif);
-            document.body.appendChild(bg);
-            
-            document.getElementById('resumeAccept').onclick = function() {
-                bg.remove();
-                onAccept();
-            };
-            document.getElementById('resumeCancel').onclick = function() {
-                bg.remove();
-                if (onCancel) onCancel();
-            };
-            document.addEventListener('keydown', function escListener(e) {
-                if (e.key === "Escape") {
-                    bg.remove();
-                    document.removeEventListener('keydown', escListener);
-                    if (onCancel) onCancel();
+            if (isPlyr) {
+                if (document.getElementById('plyrResumeNotification')) return;
+                
+                let container = videoElement.closest('.plyr');
+                if (!container) {
+                    container = videoElement.parentElement;
+                    while (container && !container.classList.contains('plyr') && container !== document.body) {
+                        container = container.parentElement;
+                    }
                 }
-            });
+                if (!container) {
+                    container = videoElement.parentElement;
+                }
+                
+                const computedStyle = window.getComputedStyle(container);
+                if (computedStyle.position === 'static') {
+                    container.style.position = 'relative';
+                }
+                
+                const notif = document.createElement('div');
+                notif.id = 'plyrResumeNotification';
+                notif.className = 'plyr-resume-notification';
+                
+                const hours = Math.floor(time/3600);
+                const minutes = Math.floor((time%3600)/60);
+                const seconds = Math.floor(time%60);
+                let timeStr = '';
+                if (hours > 0) {
+                    timeStr = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+                } else {
+                    timeStr = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+                }
+                
+                notif.innerHTML = `
+                    <span class="plyr-resume-notification__text">Reanudar película desde ${timeStr}?</span>
+                    <button class="plyr-resume-notification__close" aria-label="Cerrar"></button>
+                `;
+                
+                container.appendChild(notif);
+                
+                const closeBtn = notif.querySelector('.plyr-resume-notification__close');
+                let notificationClosed = false;
+                
+                const closeNotification = function() {
+                    if (notificationClosed) return;
+                    notificationClosed = true;
+                    if (notif && notif.parentNode) {
+                        notif.style.animation = 'slideOutToRight 0.3s ease-out';
+                        setTimeout(function() {
+                            if (notif && notif.parentNode) {
+                                notif.remove();
+                            }
+                        }, 300);
+                    }
+                };
+                
+                const acceptResume = function() {
+                    closeNotification();
+                    onAccept();
+                };
+                
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeNotification();
+                    if (onCancel) onCancel();
+                });
+                
+                const textElement = notif.querySelector('.plyr-resume-notification__text');
+                textElement.style.cursor = 'pointer';
+                textElement.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    acceptResume();
+                });
+                
+                if (window.player && typeof window.player.on === "function") {
+                    const playHandler = function() {
+                        closeNotification();
+                        window.player.off('play', playHandler);
+                        if (onCancel) onCancel();
+                    };
+                    window.player.on('play', playHandler);
+                }
+            } else {
+                if (document.getElementById('resumeNotifBg')) return;
+                const bg = document.createElement('div');
+                bg.id = 'resumeNotifBg';
+                bg.style.position = 'fixed';
+                bg.style.left = '0';
+                bg.style.top = '0';
+                bg.style.width = '100vw';
+                bg.style.height = '100vh';
+                bg.style.background = 'rgba(0,0,0,0.85)';
+                bg.style.zIndex = '999999';
+                bg.style.display = 'flex';
+                bg.style.alignItems = 'center';
+                bg.style.justifyContent = 'center';
+                
+                const notif = document.createElement('div');
+                notif.id = 'resumeNotif';
+                notif.style.background = '#232027';
+                notif.style.color = '#fff';
+                notif.style.padding = '32px 38px';
+                notif.style.borderRadius = '16px';
+                notif.style.boxShadow = '0 8px 32px #000a';
+                notif.style.fontSize = '1.18rem';
+                notif.style.display = 'flex';
+                notif.style.flexDirection = 'column';
+                notif.style.alignItems = 'center';
+                notif.style.gap = '28px';
+                notif.style.maxWidth = '90vw';
+                notif.style.textAlign = 'center';
+                
+                const hours = Math.floor(time/3600);
+                const minutes = Math.floor((time%3600)/60);
+                const seconds = Math.floor(time%60);
+                let timeStr = '';
+                if (hours > 0) {
+                    timeStr = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+                } else {
+                    timeStr = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+                }
+                
+                notif.innerHTML = `
+                    <span style="font-size:1.15rem;">¿Deseas continuar viendo <b>${movieTitle}</b> desde ${timeStr}?</span>
+                    <div style="display:flex;gap:18px;">
+                        <button id="resumeAccept" style="background:#e50914;color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:1.1rem;cursor:pointer;margin-right:10px;">Aceptar</button>
+                        <button id="resumeCancel" style="background:#444;color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:1.1rem;cursor:pointer;">Cancelar</button>
+                    </div>
+                `;
+                bg.appendChild(notif);
+                document.body.appendChild(bg);
+                
+                document.getElementById('resumeAccept').onclick = function() {
+                    bg.remove();
+                    onAccept();
+                };
+                document.getElementById('resumeCancel').onclick = function() {
+                    bg.remove();
+                    if (onCancel) onCancel();
+                };
+                document.addEventListener('keydown', function escListener(e) {
+                    if (e.key === "Escape") {
+                        bg.remove();
+                        document.removeEventListener('keydown', escListener);
+                        if (onCancel) onCancel();
+                    }
+                });
+            }
         }
         
         const movieId = window.movieId || '';

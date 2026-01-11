@@ -68,6 +68,7 @@ $ano = $movieData['year'];
     <link rel="stylesheet" href="./styles/movie/trailer.css">
     <link rel="stylesheet" href="./styles/movie/mobile.css">
     <link rel="stylesheet" href="./styles/movie/fullscreen.css">
+    <link rel="stylesheet" href="./styles/movie/resume-notification.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - <?php echo htmlspecialchars($filme); ?></title>
     <script>
