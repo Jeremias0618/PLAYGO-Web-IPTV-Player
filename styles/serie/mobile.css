@@ -179,5 +179,203 @@
     #btnPlaylist:active {
         opacity: 0.85 !important;
     }
+    
+    #viewToggleBtn {
+        display: none !important;
+    }
+    
+    .container.mt-5 {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+    
+    .tab-content {
+        padding: 0 !important;
+    }
+    
+    .episodes-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    .episodes-container[data-view="grid"],
+    .episodes-container.episodes-grid-view {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .episodes-container[data-view="list"],
+    .episodes-container.episodes-list-view {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .episodes-container .col-12,
+    .episodes-container .col-sm-6,
+    .episodes-container .col-md-4,
+    .episodes-container .col-lg-3 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    .episodes-list-view .episode-card {
+        flex-direction: column !important;
+        min-height: auto !important;
+        background: rgba(20, 20, 24, 0.95) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+        overflow: hidden !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border: 2px solid transparent !important;
+        cursor: pointer !important;
+        margin: 0 !important;
+    }
+    
+    .episodes-list-view .episode-card:hover {
+        background: rgba(30, 30, 36, 0.98) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    .episodes-list-view .episode-image-wrapper {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 12px 12px 0 0 !important;
+        aspect-ratio: 16 / 9 !important;
+        position: relative !important;
+        overflow: hidden !important;
+        background: #0a0a0a !important;
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: auto !important;
+    }
+    
+    .episodes-list-view .episode-card img {
+        width: 100% !important;
+        height: 100% !important;
+        min-width: 100% !important;
+        min-height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: cover !important;
+        object-position: center center !important;
+        display: block !important;
+        border-radius: 12px 12px 0 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .episodes-list-view .episode-card .card-body {
+        padding: 18px 20px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        min-width: 0 !important;
+    }
+    
+    .episodes-list-view .episode-card .card-title {
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        margin-bottom: 10px !important;
+        line-height: 1.4 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        min-height: 2.8em !important;
+        max-height: 2.8em !important;
+    }
+    
+    .episodes-list-view .episode-card .card-text {
+        font-size: 0.9rem !important;
+        color: #b8b8b8 !important;
+        margin-bottom: 12px !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        line-height: 1.5 !important;
+        min-height: 3em !important;
+        max-height: 3em !important;
+    }
+    
+    .episodes-list-view .episode-card .episode-meta {
+        display: flex !important;
+        gap: 18px !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        font-size: 0.88rem !important;
+        color: #d0d0d0 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .episodes-list-view .episode-card .episode-meta span {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        white-space: nowrap !important;
+        color: #d0d0d0 !important;
+    }
+    
+    .episodes-list-view .episode-card .episode-meta i {
+        font-size: 0.88rem !important;
+        background: -webkit-linear-gradient(90deg, #e50914 0%, #c8008f 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        flex-shrink: 0 !important;
+    }
+    
+    .episodes-list-view .episode-card .btn-play {
+        display: none !important;
+    }
+    
+    .episodes-list-view .episode-watched-badge {
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        color: #fff !important;
+        padding: 5px 12px !important;
+        border-radius: 6px !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        z-index: 3 !important;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.5) !important;
+    }
+    
+    .episodes-list-view .episode-progress-bar {
+        position: absolute !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 4px !important;
+        background: rgba(0, 0, 0, 0.4) !important;
+        z-index: 2 !important;
+        border-radius: 0 !important;
+    }
+    
+    .episodes-list-view .episode-progress-fill {
+        height: 100% !important;
+        background: linear-gradient(90deg, #e50914 0%, #c8008f 100%) !important;
+        transition: width 0.3s ease !important;
+        border-radius: 0 !important;
+    }
+    
+    .episodes-list-view .episode-image-wrapper::after {
+        display: none !important;
+    }
 }
 

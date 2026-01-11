@@ -80,11 +80,39 @@
             setTimeout(setupEpisodeCards, 50);
         });
         
-        episodesContainers.forEach(container => {
-            container.classList.add('episodes-grid-view');
-            container.setAttribute('data-view', 'grid');
-        });
+        function isMobile() {
+            return window.innerWidth <= 600;
+        }
         
-        setupEpisodeCards();
+        function applyView() {
+            if (isMobile()) {
+                episodesContainers.forEach(container => {
+                    container.classList.remove('episodes-grid-view');
+                    container.classList.add('episodes-list-view');
+                    container.setAttribute('data-view', 'list');
+                });
+                if (viewToggleBtn) {
+                    viewToggleBtn.setAttribute('data-view', 'list');
+                    const viewText = viewToggleBtn.querySelector('.view-toggle-text');
+                    if (viewText) {
+                        viewText.textContent = 'Lista';
+                    }
+                }
+            } else {
+                episodesContainers.forEach(container => {
+                    container.classList.add('episodes-grid-view');
+                    container.setAttribute('data-view', 'grid');
+                });
+            }
+            setupEpisodeCards();
+        }
+        
+        applyView();
+        
+        window.addEventListener('resize', function() {
+            if (isMobile()) {
+                applyView();
+            }
+        });
     });
 })();
