@@ -205,3 +205,97 @@ function paginateSeries($series, $page, $perPage = 48) {
     ];
 }
 
+function getRandomSeriesByGenres($series, $ratingMin = 4.0, $ratingMax = 10.0, $user = null, $pwd = null) {
+    if (!is_array($series) || empty($series)) {
+        return [];
+    }
+    
+    $seriesWithRating = [];
+    foreach ($series as $serie) {
+        $r = isset($serie['rating_5based']) ? floatval($serie['rating_5based'])*2 : (isset($serie['rating']) ? floatval($serie['rating']) : 0);
+        if ($r >= $ratingMin && $r <= $ratingMax) {
+            if (empty($serie['genre']) && $user && $pwd) {
+                $series_id = isset($serie['series_id']) ? $serie['series_id'] : null;
+                if ($series_id) {
+                    $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_series_info&series_id=$series_id";
+                    $res_info = @apixtream($url_info);
+                    $data_info = @json_decode($res_info, true);
+                    if (isset($data_info['info']['genre']) && !empty($data_info['info']['genre'])) {
+                        $serie['genre'] = $data_info['info']['genre'];
+                    }
+                }
+            }
+            $seriesWithRating[] = $serie;
+        }
+    }
+    
+    if (empty($seriesWithRating)) {
+        return [];
+    }
+    
+    $seriesByGenre = [];
+    foreach ($seriesWithRating as $serie) {
+        if (!isset($serie['genre']) || empty($serie['genre'])) {
+            if (!isset($seriesByGenre['Sin género'])) {
+                $seriesByGenre['Sin género'] = [];
+            }
+            $seriesByGenre['Sin género'][] = $serie;
+            continue;
+        }
+        
+        $genres = is_array($serie['genre']) ? $serie['genre'] : explode(',', $serie['genre']);
+        foreach ($genres as $genre) {
+            $genre = trim($genre);
+            if (empty($genre)) {
+                continue;
+            }
+            
+            if (!isset($seriesByGenre[$genre])) {
+                $seriesByGenre[$genre] = [];
+            }
+            
+            $serieId = isset($serie['series_id']) ? $serie['series_id'] : null;
+            $exists = false;
+            foreach ($seriesByGenre[$genre] as $existingSerie) {
+                if (isset($existingSerie['series_id']) && $existingSerie['series_id'] == $serieId) {
+                    $exists = true;
+                    break;
+                }
+            }
+            
+            if (!$exists) {
+                $seriesByGenre[$genre][] = $serie;
+            }
+        }
+    }
+    
+    if (empty($seriesByGenre)) {
+        return [];
+    }
+    
+    $allGenres = array_keys($seriesByGenre);
+    shuffle($allGenres);
+    
+    $result = [];
+    $addedSeriesIds = [];
+    
+    foreach ($allGenres as $genre) {
+        $genreSeries = $seriesByGenre[$genre];
+        shuffle($genreSeries);
+        
+        foreach ($genreSeries as $serie) {
+            $serieId = isset($serie['series_id']) ? $serie['series_id'] : null;
+            if ($serieId && !in_array($serieId, $addedSeriesIds)) {
+                $result[] = $serie;
+                $addedSeriesIds[] = $serieId;
+            } elseif (!$serieId) {
+                $result[] = $serie;
+            }
+        }
+    }
+    
+    shuffle($result);
+    
+    return array_values($result);
+}
+

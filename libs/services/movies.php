@@ -354,10 +354,21 @@ function getRandomMoviesByGenres($movies, $ratingMin = 4.0, $ratingMax = 10.0, $
     shuffle($allGenres);
     
     $result = [];
+    $addedMovieIds = [];
+    
     foreach ($allGenres as $genre) {
         $genreMovies = $moviesByGenre[$genre];
         shuffle($genreMovies);
-        $result = array_merge($result, $genreMovies);
+        
+        foreach ($genreMovies as $movie) {
+            $movieId = isset($movie['stream_id']) ? $movie['stream_id'] : null;
+            if ($movieId && !in_array($movieId, $addedMovieIds)) {
+                $result[] = $movie;
+                $addedMovieIds[] = $movieId;
+            } elseif (!$movieId) {
+                $result[] = $movie;
+            }
+        }
     }
     
     shuffle($result);

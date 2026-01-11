@@ -15,12 +15,18 @@ $series_por_pagina = 48;
 $pagina_actual = isset($_GET['pagina']) ? max(1, intval($_GET['pagina'])) : 1;
 $inicio = ($pagina_actual - 1) * $series_por_pagina;
 
+require_once(__DIR__ . '/libs/services/series.php');
+
 $url = IP."/player_api.php?username=$user&password=$pwd&action=get_series";
 $resposta = apixtream($url);
 $output = json_decode($resposta,true);
 
+if (!is_array($output)) {
+    $output = [];
+}
+
 $backdrop_fondo = '';
-if ($output && is_array($output) && count($output) > 0) {
+if ($output && count($output) > 0) {
     $serie_aleatoria = $output[array_rand($output)];
     $serie_id = $serie_aleatoria['series_id'];
     $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_series_info&series_id=$serie_id";
@@ -35,13 +41,7 @@ if ($output && is_array($output) && count($output) > 0) {
     }
 }
 
-if ($output && is_array($output)) {
-    usort($output, function($a, $b) {
-        $ra = isset($a['rating_5based']) ? floatval($a['rating_5based'])*2 : (isset($a['rating']) ? floatval($a['rating']) : 0);
-        $rb = isset($b['rating_5based']) ? floatval($b['rating_5based'])*2 : (isset($b['rating']) ? floatval($b['rating']) : 0);
-        return $rb <=> $ra;
-    });
-}
+$output = getRandomSeriesByGenres($output, 4.0, 10.0, $user, $pwd);
 
 $total_series = is_array($output) ? count($output) : 0;
 $total_paginas = ceil($total_series / $series_por_pagina);
@@ -64,6 +64,7 @@ $series_pagina = ($output && is_array($output)) ? array_slice(array_values($outp
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
+    <link rel="stylesheet" href="./styles/movies/title.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - Populares</title>
     <style>
@@ -727,9 +728,8 @@ html > body > * {
 
 <?php include_once __DIR__ . '/libs/views/search.php'; ?>
 
-<!-- Título centrado -->
-<div style="width:100%;text-align:center;margin:130px 0 30px 0;">
-    <h2 style="font-size:2.5rem;font-weight:800;letter-spacing:2px;color:#fff;display:inline-block;padding:10px 40px;border-radius:12px;">SERIES POPULARES</h2>
+<div class="movies-page-title">
+    <h2>SERIES POPULARES</h2>
 </div>
 <div class="catalog details">
     <div class="container">
