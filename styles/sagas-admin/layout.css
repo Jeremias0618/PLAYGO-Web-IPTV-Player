@@ -1,0 +1,42 @@
+body {
+    background: transparent !important;
+}
+
+.main-bg-fondo {
+    background: url('../../assets/image/wallpaper_channels.webp') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.main-bg-fondo:before {
+    content: "";
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.78);
+    pointer-events: none;
+}
+
+.main-bg-fondo > * {
+    position: relative;
+    z-index: 1;
+}
+
+.footer {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+

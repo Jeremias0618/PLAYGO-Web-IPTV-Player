@@ -11,10 +11,13 @@ if (!defined('SAGAS_ADMIN_ENABLED') || SAGAS_ADMIN_ENABLED !== true) {
     exit;
 }
 
+require_once(__DIR__ . '/libs/controllers/SagasAdminController.php');
+
 $user = $_COOKIE['xuserm'];
 $pwd = $_COOKIE['xpwdm'];
 
-$backdrop_fondo = 'assets/image/wallpaper_channels.webp';
+$data = getSagasAdminData();
+$backdrop_fondo = $data['backdrop'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -34,42 +37,13 @@ $backdrop_fondo = 'assets/image/wallpaper_channels.webp';
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
-    <link rel="stylesheet" href="./styles/movies/layout.css">
-    <link rel="stylesheet" href="./styles/movies/pagination.css">
     <link rel="stylesheet" href="./styles/movies/title.css">
-    <link rel="stylesheet" href="./styles/movies/filters.css">
-    <link rel="stylesheet" href="./styles/movies/modals.css">
-    <link rel="stylesheet" href="./styles/movies/cards.css">
-    <link rel="stylesheet" href="./styles/movies/popular.css">
-    <link rel="stylesheet" href="./styles/movies/mobile.css">
+    <link rel="stylesheet" href="./styles/movie/layout.css">
+    <link rel="stylesheet" href="./styles/movie/mobile.css">
+    <link rel="stylesheet" href="./styles/sagas-admin/layout.css">
+    <link rel="stylesheet" href="./styles/sagas-admin/content.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - Administración de Sagas</title>
-<?php if($backdrop_fondo): ?>
-<style>
-.main-bg-fondo {
-    background: url('<?php echo $backdrop_fondo; ?>') no-repeat center center fixed;
-    background-size: cover;
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
-.main-bg-fondo:before {
-    content: "";
-    position: fixed;
-    z-index: 0;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.78);
-    pointer-events: none;
-}
-.main-bg-fondo > * {
-    position: relative;
-    z-index: 1;
-}
-</style>
-<?php endif; ?>
 </head>
 <body class="body">
 <header class="header">
@@ -131,10 +105,10 @@ $backdrop_fondo = 'assets/image/wallpaper_channels.webp';
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <div style="color: #fff; text-align: center; padding: 60px 20px; font-size: 1.2rem;">
-                        <i class="fas fa-cog fa-spin" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-                        <p>Panel de administración de sagas</p>
-                        <p style="opacity: 0.7; font-size: 1rem; margin-top: 10px;">La funcionalidad estará disponible próximamente</p>
+                    <div class="sagas-admin-container">
+                        <i class="fas fa-cog sagas-admin-icon"></i>
+                        <p class="sagas-admin-title">Panel de administración de sagas</p>
+                        <p class="sagas-admin-subtitle">La funcionalidad estará disponible próximamente</p>
                     </div>
                 </div>
             </div>
@@ -160,6 +134,7 @@ $backdrop_fondo = 'assets/image/wallpaper_channels.webp';
 <script src="./scripts/vendors/provider.hlsjs.js"></script>
 <script src="./scripts/core/main.js"></script>
 <script src="./scripts/search/modal.js"></script>
+<script src="./scripts/sagas-admin/init.js"></script>
 
 </body>
 </html>
