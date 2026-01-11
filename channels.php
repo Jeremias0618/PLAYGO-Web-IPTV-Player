@@ -96,7 +96,7 @@ $streams = $pageData['streams'];
     <?php include_once __DIR__ . '/libs/views/search.php'; ?>
 
     <section class="content channels-section details" style="margin-top:30px; position: relative;">
-        <div class="details__bg" data-bg="./assets/image/wallpaper_02.webp"></div>
+        <div class="details__bg" data-bg="./assets/image/wallpaper_channels.webp"></div>
         <div class="container" style="position: relative; z-index: 1;">
             <div class="row">
                 <div class="col-12">

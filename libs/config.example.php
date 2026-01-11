@@ -22,6 +22,8 @@ define("EMAIL_ASSUNTO", 'Bienvenido a PLAYGO - WebPlayer');
 define("EMAIL_REVENDA", 'contato@playgo.pe');
 define("NOME_REVENDA", 'PLAYGO');
 
+define("SAGAS_ADMIN_ENABLED", false);
+
 define("CORPO_EMAIL", "Hola %NOME%, tu prueba fue creada con éxito.<br><br>
     Puedes iniciar sesión en nuestro webplayer con los siguientes datos:<br>
     <br>

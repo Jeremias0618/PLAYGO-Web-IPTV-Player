@@ -26,7 +26,7 @@ $sagas = [
     ]
 ];
 
-$backdrop_fondo = '';
+$backdrop_fondo = 'assets/image/wallpaper_03.webp';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -45,6 +45,7 @@ $backdrop_fondo = '';
     <link rel="stylesheet" href="./styles/vendors/select2.min.css">
     <link rel="stylesheet" href="./styles/core/main.css">
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
+    <link rel="stylesheet" href="./styles/movies/title.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - Sagas</title>
     <style>
@@ -734,8 +735,8 @@ html > body > * {
 
 <?php include_once __DIR__ . '/libs/views/search.php'; ?>
 
-<div style="width:100%;text-align:center;margin:130px 0 30px 0;">
-    <h2 style="font-size:2.5rem;font-weight:800;letter-spacing:2px;color:#fff;display:inline-block;padding:10px 40px;border-radius:12px;">SAGAS</h2>
+<div class="movies-page-title">
+    <h2>SAGAS</h2>
 </div>
 <div class="catalog details">
     <div class="container">
