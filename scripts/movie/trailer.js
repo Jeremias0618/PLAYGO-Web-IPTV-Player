@@ -20,13 +20,31 @@
         });
         
         if (trailerCloseBtn) {
-            trailerCloseBtn.addEventListener('click', function() {
+            trailerCloseBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                stopTrailer();
                 trailerModal.hide();
             });
         }
         
+        function stopTrailer() {
+            if (trailerIframe) {
+                trailerIframe.src = "about:blank";
+            }
+        }
+        
+        trailerModalElement.addEventListener('hide.bs.modal', function () {
+            stopTrailer();
+        });
+        
         trailerModalElement.addEventListener('hidden.bs.modal', function () {
-            trailerIframe.src = "";
+            stopTrailer();
+        });
+        
+        trailerModalElement.addEventListener('click', function(e) {
+            if (e.target === trailerModalElement) {
+                stopTrailer();
+            }
         });
     });
 })();
