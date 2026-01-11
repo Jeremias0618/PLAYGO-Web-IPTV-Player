@@ -179,17 +179,9 @@
                         if (!currentDuration || currentDuration === '00:00:00' || currentDuration === '00:00') {
                             const videoDuration = getVideoDuration(videoElement);
                             if (videoDuration) {
-                                console.log('[EPISODE] Duración obtenida del VIDEO PLAYER (Plyr):', videoDuration);
-                                console.log('[EPISODE] Duración anterior (desde PHP):', currentDuration);
-                                console.log('[EPISODE] Duración del elemento video (segundos):', videoElement.duration);
                                 window.episodeDuration = videoDuration;
                                 saveProgressToServer(0, true, videoDuration);
-                            } else {
-                                console.log('[EPISODE] No se pudo obtener duración del video (Plyr). Video duration:', videoElement.duration);
                             }
-                        } else {
-                            console.log('[EPISODE] Duración ya disponible desde PHP, no se obtiene del player. Duración:', currentDuration);
-                            console.log('[EPISODE] Origen de la duración:', window.episodeDurationSource || 'N/A');
                         }
                     };
                     
@@ -281,17 +273,9 @@
                 if (!currentDuration || currentDuration === '00:00:00' || currentDuration === '00:00') {
                     const videoDuration = getVideoDuration(video);
                     if (videoDuration) {
-                        console.log('[EPISODE] Duración obtenida del VIDEO PLAYER (HTML5 nativo):', videoDuration);
-                        console.log('[EPISODE] Duración anterior (desde PHP):', currentDuration);
-                        console.log('[EPISODE] Duración del elemento video (segundos):', video.duration);
                         window.episodeDuration = videoDuration;
                         saveProgressToServer(0, true, videoDuration);
-                    } else {
-                        console.log('[EPISODE] No se pudo obtener duración del video (HTML5 nativo). Video duration:', video.duration);
                     }
-                } else {
-                    console.log('[EPISODE] Duración ya disponible desde PHP, no se obtiene del player. Duración:', currentDuration);
-                    console.log('[EPISODE] Origen de la duración:', window.episodeDurationSource || 'N/A');
                 }
             };
             

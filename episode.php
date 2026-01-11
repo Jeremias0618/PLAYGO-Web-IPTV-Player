@@ -94,10 +94,6 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
             ano: <?php echo json_encode($ano); ?>,
             rate: <?php echo json_encode(formatear_rating($nota)); ?>
         };
-        
-        console.log('[EPISODE] Duración obtenida desde PHP:', window.episodeDuration);
-        console.log('[EPISODE] Origen de la duración (PHP):', window.episodeDurationSource);
-        console.log('[EPISODE] Duración vacía o inválida?:', !window.episodeDuration || window.episodeDuration === '00:00:00' || window.episodeDuration === '00:00');
     </script>
     <style>
 body {
