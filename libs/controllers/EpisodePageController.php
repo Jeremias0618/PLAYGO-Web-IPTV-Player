@@ -91,6 +91,8 @@ function getEpisodePageData($user, $pwd, $serie_id, $episode_id) {
         $ep_poster = $ep_still;
     } elseif (!empty($ep_data['info']['movie_image'])) {
         $ep_poster = $ep_data['info']['movie_image'];
+    } elseif (!empty($wallpaper_img)) {
+        $ep_poster = $wallpaper_img;
     } else {
         $ep_poster = $seriesData['poster_img'];
     }

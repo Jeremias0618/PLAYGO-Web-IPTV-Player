@@ -1,5 +1,5 @@
 .modal-buscador-bg {
-    display: none;
+    display: flex;
     position: fixed;
     z-index: 9999;
     left: 0;
@@ -12,11 +12,14 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    visibility: hidden;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
 }
 .modal-buscador-bg.active {
-    display: flex;
     opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 .modal-buscador {
     background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
@@ -28,12 +31,14 @@
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0,0,0,0.8);
     position: relative;
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
+    transform: scale(0.9) translateY(-20px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(229,9,20,0.3);
+    opacity: 0;
 }
 .modal-buscador-bg.active .modal-buscador {
-    transform: scale(1);
+    transform: scale(1) translateY(0);
+    opacity: 1;
 }
 .modal-buscador-header {
     background: linear-gradient(90deg, #e50914 0%, #c8008f 100%);

@@ -364,188 +364,230 @@
 
 @media (max-width: 600px) {
     .serie-episodios-list {
-        padding: 0 12px;
-        gap: 14px;
-        margin: 24px auto 40px auto;
+        padding: 0 16px !important;
+        gap: 16px !important;
+        margin: 24px auto 40px auto !important;
+        max-width: 100% !important;
     }
     
     .serie-episodios-list .episodio-card {
-        min-height: auto;
-        border-radius: 10px;
-        box-shadow: 0 3px 16px rgba(0, 0, 0, 0.5);
-        flex-direction: column;
+        min-height: auto !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+        flex-direction: column !important;
+        background: rgba(20, 20, 24, 0.95) !important;
+        overflow: hidden !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     
     .serie-episodios-list .episodio-card.active {
-        border-left: 4px solid #e50914;
-        transform: translateX(0);
-        box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
+        border-left: none !important;
+        border-top: 4px solid #e50914 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 24px rgba(229, 9, 20, 0.4) !important;
+        background: rgba(35, 32, 39, 0.98) !important;
     }
     
     .serie-episodios-list .episodio-card:hover:not(.active) {
-        transform: translateX(0);
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5) !important;
+        background: rgba(30, 30, 36, 0.98) !important;
     }
     
     .serie-episodios-list .episodio-image-wrapper {
-        width: 100%;
-        min-width: 100%;
-        aspect-ratio: 16 / 9;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+        position: relative !important;
+        overflow: hidden !important;
+        background: #0a0a0a !important;
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
     
     .serie-episodios-list .episodio-card > div:first-child {
-        width: 100%;
-        min-width: 100%;
-        aspect-ratio: 16 / 9;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
     }
     
     .serie-episodios-list .episodio-image-wrapper img,
     .serie-episodios-list .episodio-card > div:first-child img {
-        aspect-ratio: 16 / 9;
-        height: auto;
-        width: 100%;
-        border-radius: 12px 12px 0 0;
+        width: 100% !important;
+        height: 100% !important;
+        min-width: 100% !important;
+        min-height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: cover !important;
+        object-position: center center !important;
+        aspect-ratio: 16 / 9 !important;
+        display: block !important;
+        border-radius: 12px 12px 0 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     
     .episodio-watched-badge {
-        padding: 3px 8px;
-        font-size: 0.7rem;
-        top: 6px;
-        right: 6px;
+        padding: 5px 12px !important;
+        font-size: 0.8rem !important;
+        top: 10px !important;
+        right: 10px !important;
+        font-weight: 600 !important;
     }
     
     .episodio-progress-bar {
-        height: 3px;
+        height: 4px !important;
+        border-radius: 0 !important;
+    }
+    
+    .episodio-progress-fill {
+        border-radius: 0 !important;
     }
     
     .serie-episodios-list .episodio-info {
-        padding: 14px 16px;
+        padding: 18px 20px !important;
+        display: flex !important;
+        flex-direction: column !important;
     }
     
     .serie-episodios-list .episodio-title {
-        font-size: 1.05rem;
-        margin-bottom: 8px;
-        gap: 10px;
-        line-height: 1.4;
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 10px !important;
+        gap: 10px !important;
+        line-height: 1.4 !important;
+        color: #fff !important;
     }
     
     .serie-episodios-list .episodio-num {
-        font-size: 0.85rem;
-        padding: 3px 10px;
-        border-radius: 5px;
+        font-size: 0.9rem !important;
+        padding: 4px 12px !important;
+        border-radius: 6px !important;
+        font-weight: 800 !important;
     }
     
     .serie-episodios-list .episodio-meta {
-        font-size: 0.85rem;
-        gap: 14px;
-        margin-bottom: 8px;
-        flex-wrap: wrap;
+        font-size: 0.88rem !important;
+        gap: 18px !important;
+        margin-bottom: 12px !important;
+        flex-wrap: wrap !important;
+        color: #d0d0d0 !important;
     }
     
     .serie-episodios-list .episodio-meta span {
-        gap: 5px;
-        color: #c0c0c0;
+        gap: 6px !important;
+        color: #d0d0d0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
     }
     
     .serie-episodios-list .episodio-meta i {
-        font-size: 0.85rem;
-        background: -webkit-linear-gradient(90deg, #e50914 0%, #c8008f 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        display: inline-block;
-        vertical-align: middle;
-        line-height: 1;
-        flex-shrink: 0;
+        font-size: 0.88rem !important;
+        background: -webkit-linear-gradient(90deg, #e50914 0%, #c8008f 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        flex-shrink: 0 !important;
     }
     
     .serie-episodios-list .episodio-plot {
-        font-size: 0.9rem;
-        -webkit-line-clamp: 2;
-        margin-top: 4px;
-        line-height: 1.5;
-        color: #b8b8b8;
+        font-size: 0.9rem !important;
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
+        margin-top: 0 !important;
+        line-height: 1.5 !important;
+        color: #b8b8b8 !important;
+        min-height: 3em !important;
+        max-height: 3em !important;
     }
     
     .serie-episodios-list .episodio-card.active .episodio-plot {
-        color: #d0d0d0;
+        color: #c8c8c8 !important;
+    }
+    
+    .serie-episodios-list .episodio-card::before {
+        display: none !important;
     }
 }
 
 @media (max-width: 480px) {
     .serie-episodios-list {
-        padding: 0 10px;
-        gap: 12px;
+        padding: 0 16px !important;
+        gap: 14px !important;
     }
     
     .serie-episodios-list .episodio-card {
-        min-height: auto;
+        min-height: auto !important;
+        border-radius: 12px !important;
     }
     
     .serie-episodios-list .episodio-image-wrapper {
-        width: 100%;
-        min-width: 100%;
-        aspect-ratio: 16 / 9;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
     }
     
     .serie-episodios-list .episodio-card > div:first-child {
-        width: 100%;
-        min-width: 100%;
-        aspect-ratio: 16 / 9;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
     }
     
     .serie-episodios-list .episodio-image-wrapper img,
     .serie-episodios-list .episodio-card > div:first-child img {
-        aspect-ratio: 16 / 9;
-        height: auto;
-        width: 100%;
-        border-radius: 12px 12px 0 0;
+        width: 100% !important;
+        height: 100% !important;
+        min-width: 100% !important;
+        min-height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: cover !important;
+        aspect-ratio: 16 / 9 !important;
+        border-radius: 12px 12px 0 0 !important;
     }
     
     .episodio-watched-badge {
-        padding: 3px 8px;
-        font-size: 0.68rem;
-        top: 5px;
-        right: 5px;
+        padding: 4px 10px !important;
+        font-size: 0.75rem !important;
+        top: 8px !important;
+        right: 8px !important;
     }
     
     .episodio-progress-bar {
-        height: 3px;
+        height: 4px !important;
     }
     
     .serie-episodios-list .episodio-info {
-        padding: 12px 14px;
+        padding: 16px 18px !important;
     }
     
     .serie-episodios-list .episodio-title {
-        font-size: 1rem;
-        margin-bottom: 6px;
+        font-size: 1.05rem !important;
+        margin-bottom: 8px !important;
     }
     
     .serie-episodios-list .episodio-num {
-        font-size: 0.8rem;
-        padding: 2px 8px;
+        font-size: 0.85rem !important;
+        padding: 3px 10px !important;
     }
     
     .serie-episodios-list .episodio-meta {
-        font-size: 0.82rem;
-        gap: 12px;
-        margin-bottom: 6px;
+        font-size: 0.85rem !important;
+        gap: 16px !important;
+        margin-bottom: 10px !important;
     }
     
     .serie-episodios-list .episodio-plot {
-        font-size: 0.88rem;
-        -webkit-line-clamp: 2;
-    }
-    
-    .episodio-watched-badge {
-        padding: 3px 8px;
-        font-size: 0.68rem;
-        top: 5px;
-        right: 5px;
-    }
-    
-    .episodio-progress-bar {
-        height: 3px;
+        font-size: 0.88rem !important;
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
+        min-height: 3em !important;
+        max-height: 3em !important;
     }
 }
