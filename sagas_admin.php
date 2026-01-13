@@ -156,14 +156,21 @@ $backdrop_fondo = $data['backdrop'];
                 </div>
                 <div class="modal-body saga-modal-body">
                     <div class="saga-modal-section">
-                        <label for="sagaTitle">Título de la Saga</label>
+                        <label for="sagaTitle" class="saga-field-label">Título de la Saga</label>
                         <input type="text" id="sagaTitle" placeholder="Ej: SAGA IRON MAN" required>
                     </div>
                     
                     <div class="saga-modal-section">
-                        <label for="sagaImageFile">Imagen de la Saga (JPG, PNG, WEBP)</label>
-                        <input type="file" id="sagaImageFile" accept="image/jpeg,image/jpg,image/png,image/webp">
-                        <img id="sagaImagePreview" class="saga-image-preview" alt="Preview">
+                        <label for="sagaImageFile" class="saga-field-label">Imagen de la Saga (JPG, PNG, WEBP)</label>
+                        <div class="saga-dropzone" id="sagaDropzone">
+                            <input type="file" id="sagaImageFile" accept="image/jpeg,image/jpg,image/png,image/webp" style="display: none;">
+                            <div class="saga-dropzone-content">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p class="saga-dropzone-text">Arrastra una imagen aquí o haz clic para seleccionar</p>
+                                <p class="saga-dropzone-hint">JPG, PNG o WEBP (máx. 5MB)</p>
+                            </div>
+                            <img id="sagaImagePreview" class="saga-image-preview" alt="Preview" style="display: none;">
+                        </div>
                     </div>
                     
                     <div class="saga-modal-section">
@@ -172,20 +179,25 @@ $backdrop_fondo = $data['backdrop'];
                     </div>
                     
                     <div class="saga-modal-section">
-                        <div class="saga-search-tabs">
-                            <button class="saga-search-tab active" data-tab="movies" onclick="switchSearchTab('movies')">
-                                <i class="fas fa-film"></i> Películas
-                            </button>
-                            <button class="saga-search-tab" data-tab="series" onclick="switchSearchTab('series')">
-                                <i class="fas fa-tv"></i> Series
-                            </button>
+                        <div class="saga-search-wrapper">
+                            <div class="saga-search-input-wrapper">
+                                <i class="fas fa-search saga-search-icon"></i>
+                                <input type="text" id="sagaSearchMovies" placeholder="Buscar películas por nombre..." class="saga-search-input">
+                                <input type="text" id="sagaSearchSeries" placeholder="Buscar series por nombre..." class="saga-search-input" style="display: none;">
+                            </div>
+                            <div class="saga-segmented-control">
+                                <button class="saga-segmented-btn active" data-tab="movies" onclick="switchSearchTab('movies')">
+                                    <i class="fas fa-film"></i> Películas
+                                </button>
+                                <button class="saga-segmented-btn" data-tab="series" onclick="switchSearchTab('series')">
+                                    <i class="fas fa-tv"></i> Series
+                                </button>
+                            </div>
                         </div>
                         <div id="searchMoviesTab" class="saga-search-tab-content active">
-                            <input type="text" id="sagaSearchMovies" placeholder="Buscar películas por nombre..." class="saga-search-input">
                             <div id="sagaSearchResults" class="saga-search-results"></div>
                         </div>
                         <div id="searchSeriesTab" class="saga-search-tab-content">
-                            <input type="text" id="sagaSearchSeries" placeholder="Buscar series por nombre..." class="saga-search-input">
                             <div id="sagaSearchSeriesResults" class="saga-search-results"></div>
                         </div>
                     </div>

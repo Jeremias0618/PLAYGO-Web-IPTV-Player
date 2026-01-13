@@ -8,7 +8,7 @@ if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['x
     exit;
 }
 
-if (!defined('SAGAS_ADMIN_ENABLED') || SAGAS_ADMIN_ENABLED !== false) {
+if (!defined('SAGAS_ADMIN_ENABLED') || SAGAS_ADMIN_ENABLED !== true) {
     http_response_code(403);
     echo json_encode(['error' => 'Forbidden']);
     exit;

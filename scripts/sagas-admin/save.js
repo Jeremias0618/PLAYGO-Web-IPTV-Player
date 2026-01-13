@@ -48,6 +48,13 @@
             updateSearchResults('', 'series');
         }
         
+        initDropzone();
+        
+        const dropzoneContent = document.querySelector('.saga-dropzone-content');
+        if (dropzoneContent) {
+            dropzoneContent.style.display = 'flex';
+        }
+        
         if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
             const bsModal = new bootstrap.Modal(modal, {
                 backdrop: true,
@@ -311,9 +318,6 @@
                 <div class="saga-modal-movie-card" data-item-id="${item.id}" data-item-type="${item.type}" draggable="true">
                     <div class="saga-modal-movie-order">
                         <span class="order-number">${index + 1}</span>
-                        <div class="order-handle">
-                            <i class="fas fa-grip-vertical"></i>
-                        </div>
                     </div>
                     ${item.poster ? `
                         <img src="${escapeHtml(item.poster)}" alt="${escapeHtml(item.name)}" class="saga-modal-movie-poster" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -327,7 +331,7 @@
                         <div class="saga-modal-movie-id">ID: ${item.id}</div>
                     </div>
                     <button class="saga-modal-remove-btn" onclick="removeItemFromSaga(${index})" title="Quitar">
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-trash"></i>
                     </button>
                 </div>
             `;
@@ -352,10 +356,12 @@
     function switchSearchTab(tab) {
         window.currentSearchTab = tab;
         
-        const moviesTab = document.querySelector('.saga-search-tab[data-tab="movies"]');
-        const seriesTab = document.querySelector('.saga-search-tab[data-tab="series"]');
+        const moviesTab = document.querySelector('.saga-segmented-btn[data-tab="movies"]');
+        const seriesTab = document.querySelector('.saga-segmented-btn[data-tab="series"]');
         const moviesContent = document.getElementById('searchMoviesTab');
         const seriesContent = document.getElementById('searchSeriesTab');
+        const moviesInput = document.getElementById('sagaSearchMovies');
+        const seriesInput = document.getElementById('sagaSearchSeries');
         
         if (moviesTab && seriesTab && moviesContent && seriesContent) {
             if (tab === 'movies') {
@@ -363,23 +369,62 @@
                 seriesTab.classList.remove('active');
                 moviesContent.classList.add('active');
                 seriesContent.classList.remove('active');
+                if (moviesInput) moviesInput.style.display = 'block';
+                if (seriesInput) seriesInput.style.display = 'none';
                 
-                const input = document.getElementById('sagaSearchMovies');
-                if (input) {
-                    setTimeout(() => input.focus(), 100);
+                if (moviesInput) {
+                    setTimeout(() => moviesInput.focus(), 100);
                 }
             } else {
                 seriesTab.classList.add('active');
                 moviesTab.classList.remove('active');
                 seriesContent.classList.add('active');
                 moviesContent.classList.remove('active');
+                if (moviesInput) moviesInput.style.display = 'none';
+                if (seriesInput) seriesInput.style.display = 'block';
                 
-                const input = document.getElementById('sagaSearchSeries');
-                if (input) {
-                    setTimeout(() => input.focus(), 100);
+                if (seriesInput) {
+                    setTimeout(() => seriesInput.focus(), 100);
                 }
             }
         }
+    }
+    
+    function initDropzone() {
+        const dropzone = document.getElementById('sagaDropzone');
+        const fileInput = document.getElementById('sagaImageFile');
+        const preview = document.getElementById('sagaImagePreview');
+        
+        if (!dropzone || !fileInput) return;
+        
+        dropzone.addEventListener('click', function() {
+            fileInput.click();
+        });
+        
+        dropzone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+        
+        dropzone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+        });
+        
+        dropzone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                previewImage(fileInput);
+            }
+        });
+        
+        fileInput.addEventListener('change', function() {
+            previewImage(this);
+        });
     }
     
     function handleMoviesSearch(e) {
@@ -451,8 +496,6 @@
         const queryLower = query.toLowerCase().trim();
         const filtered = cache.filter(item => {
             if (!item.name || !item.id) return false;
-            const alreadyAdded = window.currentSagaItems && window.currentSagaItems.some(i => String(i.id) === String(item.id) && i.type === item.type);
-            if (alreadyAdded) return false;
             return item.name.toLowerCase().includes(queryLower);
         }).slice(0, 20);
         
@@ -461,10 +504,18 @@
             return;
         }
         
+        const isAlreadyAdded = (item) => {
+            return window.currentSagaItems && window.currentSagaItems.some(i => String(i.id) === String(item.id) && i.type === item.type);
+        };
+        
         resultsContainer.innerHTML = filtered.map(item => {
             const typeIcon = item.type === 'series' ? '<i class="fas fa-tv"></i>' : '<i class="fas fa-film"></i>';
+            const added = isAlreadyAdded(item);
+            const btnClass = added ? 'saga-search-add-btn added' : 'saga-search-add-btn';
+            const btnText = added ? '<i class="fas fa-check"></i> Añadido' : '<i class="fas fa-plus"></i> Añadir';
+            
             return `
-                <div class="saga-search-result-item" onclick="addItemToSaga(${JSON.stringify(item).replace(/"/g, '&quot;')})">
+                <div class="saga-search-result-item" onclick="${!added ? `addItemToSaga(${JSON.stringify(item).replace(/"/g, '&quot;')})` : ''}">
                     ${item.poster ? `
                         <img src="${escapeHtml(item.poster)}" alt="${escapeHtml(item.name)}" class="saga-search-result-poster" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="saga-search-result-poster-placeholder" style="display: none;">Sin imagen</div>
@@ -476,8 +527,8 @@
                         <div class="saga-search-result-name">${escapeHtml(item.name)}</div>
                         <div class="saga-search-result-id">ID: ${item.id}</div>
                     </div>
-                    <button class="saga-search-add-btn" onclick="event.stopPropagation(); addItemToSaga(${JSON.stringify(item).replace(/"/g, '&quot;')})">
-                        <i class="fas fa-plus"></i>
+                    <button class="${btnClass}" onclick="event.stopPropagation(); ${!added ? `addItemToSaga(${JSON.stringify(item).replace(/"/g, '&quot;')})` : ''}">
+                        ${btnText}
                     </button>
                 </div>
             `;
@@ -503,6 +554,24 @@
             if (searchInput) {
                 updateSearchResults(searchInput.value, activeTab);
             }
+        }
+    }
+    
+    function previewImage(input) {
+        if (input && input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('sagaImagePreview');
+                const dropzoneContent = document.querySelector('.saga-dropzone-content');
+                if (preview) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                if (dropzoneContent) {
+                    dropzoneContent.style.display = 'none';
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
         }
     }
     
@@ -544,20 +613,6 @@
                 backdrop.remove();
             }
             document.body.style.overflow = '';
-        }
-    }
-
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('sagaImagePreview');
-                if (preview) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                }
-            };
-            reader.readAsDataURL(input.files[0]);
         }
     }
 
