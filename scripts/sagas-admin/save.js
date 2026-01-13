@@ -200,17 +200,41 @@
     
     let draggedElement = null;
     let placeholder = null;
+    let sortableInitialized = false;
+    let listDropHandler = null;
+    let listDragoverHandler = null;
     
     function initSortable() {
         const list = document.getElementById('sagaMoviesList');
-        if (!list) return;
+        if (!list) {
+            return;
+        }
+        
+        if (sortableInitialized) {
+            const oldItems = Array.from(list.children).filter(item => 
+                !item.classList.contains('saga-empty-message') && 
+                !item.classList.contains('sortable-placeholder')
+            );
+            
+            oldItems.forEach(item => {
+                const newItem = item.cloneNode(true);
+                item.parentNode.replaceChild(newItem, item);
+            });
+            
+            if (listDropHandler) {
+                list.removeEventListener('drop', listDropHandler);
+            }
+            if (listDragoverHandler) {
+                list.removeEventListener('dragover', listDragoverHandler);
+            }
+        }
         
         const items = Array.from(list.children).filter(item => 
             !item.classList.contains('saga-empty-message') && 
             !item.classList.contains('sortable-placeholder')
         );
         
-        items.forEach(item => {
+        items.forEach((item, index) => {
             item.setAttribute('draggable', 'true');
             
             item.addEventListener('dragstart', function(e) {
@@ -239,9 +263,6 @@
                         list.insertBefore(draggedElement, placeholder);
                         list.removeChild(placeholder);
                         updateItemsOrder();
-                        setTimeout(() => {
-                            initSortable();
-                        }, 50);
                     }
                 } else if (placeholder && placeholder.parentNode) {
                     placeholder.parentNode.removeChild(placeholder);
@@ -277,9 +298,6 @@
                         list.insertBefore(draggedElement, placeholder);
                         list.removeChild(placeholder);
                         updateItemsOrder();
-                        setTimeout(() => {
-                            initSortable();
-                        }, 50);
                     }
                 }
                 
@@ -287,14 +305,14 @@
             });
         });
         
-        list.addEventListener('dragover', function(e) {
+        listDragoverHandler = function(e) {
             if (placeholder && draggedElement) {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = 'move';
             }
-        });
+        };
         
-        list.addEventListener('drop', function(e) {
+        listDropHandler = function(e) {
             e.preventDefault();
             e.stopPropagation();
             
@@ -304,9 +322,6 @@
                     list.insertBefore(draggedElement, placeholder);
                     list.removeChild(placeholder);
                     updateItemsOrder();
-                    setTimeout(() => {
-                        initSortable();
-                    }, 50);
                 }
             }
             
@@ -319,12 +334,19 @@
             placeholder = null;
             
             return false;
-        });
+        };
+        
+        list.addEventListener('dragover', listDragoverHandler);
+        list.addEventListener('drop', listDropHandler);
+        
+        sortableInitialized = true;
     }
     
     function updateItemsOrder() {
         const list = document.getElementById('sagaMoviesList');
-        if (!list || !window.currentSagaItems) return;
+        if (!list || !window.currentSagaItems) {
+            return;
+        }
         
         const newOrder = [];
         const items = Array.from(list.children).filter(item => 
@@ -350,10 +372,13 @@
     
     function updateItemsList() {
         const itemsList = document.getElementById('sagaMoviesList');
-        if (!itemsList) return;
+        if (!itemsList) {
+            return;
+        }
         
         if (!window.currentSagaItems || window.currentSagaItems.length === 0) {
             itemsList.innerHTML = '<div class="saga-empty-message">No hay contenido en esta saga</div>';
+            sortableInitialized = false;
             return;
         }
         
@@ -383,13 +408,17 @@
                 </div>
             `;
         }).join('');
+        
+        sortableInitialized = false;
+        setTimeout(() => {
+            initSortable();
+        }, 100);
     }
     
     function removeItemFromSaga(index) {
         if (window.currentSagaItems && window.currentSagaItems.length > index) {
             window.currentSagaItems.splice(index, 1);
             updateItemsList();
-            initSortable();
             const activeTab = window.currentSearchTab || 'movies';
             const searchInput = activeTab === 'movies' ? 
                 document.getElementById('sagaSearchMovies') : 
@@ -590,9 +619,9 @@
         
         const exists = window.currentSagaItems.some(i => String(i.id) === String(item.id) && i.type === item.type);
         if (!exists) {
+            console.log('[SAGAS-ADMIN] addItemToSaga: adding item', { itemId: item.id, itemType: item.type });
             window.currentSagaItems.push(item);
             updateItemsList();
-            initSortable();
             
             const activeTab = window.currentSearchTab || 'movies';
             const searchInput = activeTab === 'movies' ? 
