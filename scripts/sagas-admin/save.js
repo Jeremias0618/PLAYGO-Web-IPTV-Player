@@ -25,12 +25,19 @@
                 existingFeedback.remove();
             }
             
-            titleInput.removeEventListener('input', validateTitle);
-            titleInput.addEventListener('input', validateTitle);
+            titleInput.removeEventListener('input', function() {
+                validateTitle();
+            });
+            titleInput.addEventListener('input', function() {
+                validateTitle();
+                updateSaveButtonState();
+            });
             
             if (titleInput.value.trim()) {
                 validateTitle();
             }
+            
+            updateSaveButtonState();
         }
         
         const imagePreview = document.getElementById('sagaImagePreview');
@@ -431,6 +438,7 @@
         if (window.currentSagaItems && window.currentSagaItems.length > index) {
             window.currentSagaItems.splice(index, 1);
             updateItemsList();
+            updateSaveButtonState();
             const activeTab = window.currentSearchTab || 'movies';
             const searchInput = activeTab === 'movies' ? 
                 document.getElementById('sagaSearchMovies') : 
@@ -633,6 +641,7 @@
         if (!exists) {
             window.currentSagaItems.push(item);
             updateItemsList();
+            updateSaveButtonState();
             
             const activeTab = window.currentSearchTab || 'movies';
             const searchInput = activeTab === 'movies' ? 
@@ -677,11 +686,20 @@
         clearTimeout(validationTimeout);
         validationTimeout = setTimeout(() => {
             const title = titleInput.value.trim();
+            const saveBtn = document.getElementById('saveSagaBtn');
+            
             if (!title) {
                 titleInput.classList.remove('is-invalid');
                 const existingFeedback = titleInput.parentElement.querySelector('.invalid-feedback');
                 if (existingFeedback) {
                     existingFeedback.remove();
+                }
+                
+                if (saveBtn) {
+                    const hasItems = window.currentSagaItems && window.currentSagaItems.length > 0;
+                    saveBtn.disabled = !hasItems;
+                    saveBtn.style.opacity = !hasItems ? '0.5' : '1';
+                    saveBtn.style.cursor = !hasItems ? 'not-allowed' : 'pointer';
                 }
                 return;
             }
@@ -700,6 +718,8 @@
                 return response.json();
             })
             .then(data => {
+                const saveBtn = document.getElementById('saveSagaBtn');
+                
                 if (data.exists) {
                     titleInput.classList.add('is-invalid');
                     let feedback = titleInput.parentElement.querySelector('.invalid-feedback');
@@ -709,11 +729,24 @@
                         titleInput.parentElement.appendChild(feedback);
                     }
                     feedback.textContent = 'Ya existe una saga con ese nombre';
+                    
+                    if (saveBtn) {
+                        saveBtn.disabled = true;
+                        saveBtn.style.opacity = '0.5';
+                        saveBtn.style.cursor = 'not-allowed';
+                    }
                 } else {
                     titleInput.classList.remove('is-invalid');
                     const existingFeedback = titleInput.parentElement.querySelector('.invalid-feedback');
                     if (existingFeedback) {
                         existingFeedback.remove();
+                    }
+                    
+                    if (saveBtn) {
+                        const hasItems = window.currentSagaItems && window.currentSagaItems.length > 0;
+                        saveBtn.disabled = !hasItems || !title.trim();
+                        saveBtn.style.opacity = (!hasItems || !title.trim()) ? '0.5' : '1';
+                        saveBtn.style.cursor = (!hasItems || !title.trim()) ? 'not-allowed' : 'pointer';
                     }
                 }
             })
@@ -757,10 +790,26 @@
         }
     }
 
+    function updateSaveButtonState() {
+        const saveBtn = document.getElementById('saveSagaBtn');
+        const titleInput = document.getElementById('sagaTitle');
+        
+        if (!saveBtn || !titleInput) return;
+        
+        const title = titleInput.value.trim();
+        const hasItems = window.currentSagaItems && window.currentSagaItems.length > 0;
+        const isInvalid = titleInput.classList.contains('is-invalid');
+        
+        saveBtn.disabled = !title || !hasItems || isInvalid;
+        saveBtn.style.opacity = (!title || !hasItems || isInvalid) ? '0.5' : '1';
+        saveBtn.style.cursor = (!title || !hasItems || isInvalid) ? 'not-allowed' : 'pointer';
+    }
+    
     function saveSaga() {
         const title = document.getElementById('sagaTitle')?.value.trim();
         const imageFile = document.getElementById('sagaImageFile')?.files[0];
         const titleInput = document.getElementById('sagaTitle');
+        const saveBtn = document.getElementById('saveSagaBtn');
         
         if (!title) {
             alert('Por favor ingresa un título para la saga');
@@ -778,7 +827,10 @@
             return;
         }
         
-        const saveBtn = document.getElementById('saveSagaBtn');
+        if (saveBtn && saveBtn.disabled) {
+            return;
+        }
+        
         if (saveBtn) {
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
