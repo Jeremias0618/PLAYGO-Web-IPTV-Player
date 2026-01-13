@@ -3,6 +3,7 @@
 
     let moviesCache = [];
     let groupedMovies = {};
+    let ungroupedMovies = [];
 
     function collectMovies() {
         const btn = document.getElementById('collectMoviesBtn');
@@ -45,6 +46,7 @@
 
     function groupMoviesByName() {
         groupedMovies = {};
+        ungroupedMovies = [];
         
         moviesCache.forEach(movie => {
             if (!movie.name || !movie.id) return;
@@ -57,74 +59,164 @@
             
             groupedMovies[baseName].push(movie);
         });
+        
+        Object.keys(groupedMovies).forEach(baseName => {
+            if (groupedMovies[baseName].length < 2) {
+                ungroupedMovies = ungroupedMovies.concat(groupedMovies[baseName]);
+                delete groupedMovies[baseName];
+            }
+        });
     }
 
     function extractBaseName(name) {
+        if (!name) return '';
+        
         name = name.trim();
         
         name = name.replace(/^(Saga|SAGA|Série|SERIE|Serie|Series|SERIES|Movie|MOVIE|Film|FILM)\s*/i, '');
         
-        name = name.replace(/\s*-\s*Parte\s*\d+.*$/i, '');
-        name = name.replace(/\s*-\s*Part\s*\d+.*$/i, '');
-        name = name.replace(/\s*-\s*Vol\.\s*\d+.*$/i, '');
-        name = name.replace(/\s*-\s*Volume\s*\d+.*$/i, '');
-        name = name.replace(/\s*\(Parte\s*\d+\)/i, '');
-        name = name.replace(/\s*\(Part\s*\d+\)/i, '');
+        const patterns = [
+            /\s*-\s*Parte\s*\d+.*$/i,
+            /\s*-\s*Part\s*\d+.*$/i,
+            /\s*-\s*Vol\.\s*\d+.*$/i,
+            /\s*-\s*Volume\s*\d+.*$/i,
+            /\s*\(Parte\s*\d+\)/i,
+            /\s*\(Part\s*\d+\)/i,
+            /\s*-\s*\d{4}.*$/i,
+            /\s*\(\d{4}\).*$/i,
+            /\s*-\s*S\d+E\d+.*$/i,
+            /\s*:\s*El\s+.*$/i,
+            /\s*:\s*La\s+.*$/i,
+            /\s*:\s*Un\s+.*$/i,
+            /\s*:\s*Una\s+.*$/i,
+            /\s*:\s*.*$/i
+        ];
         
-        name = name.replace(/\s*-\s*\d{4}.*$/i, '');
-        name = name.replace(/\s*\(\d{4}\).*$/i, '');
+        patterns.forEach(pattern => {
+            name = name.replace(pattern, '');
+        });
         
-        name = name.replace(/\s*:\s*.*$/i, '');
+        name = name.trim();
         
-        name = name.replace(/\s*-\s*S\d+E\d+.*$/i, '');
+        const commonPrefixes = [
+            /^(Spider-Man|SPIDER-MAN|Spider Man|SPIDER MAN)/i,
+            /^(Iron Man|IRON MAN|Iron-Man|IRON-MAN)/i,
+            /^(Doctor Strange|DOCTOR STRANGE|Dr\. Strange|DR\. STRANGE)/i,
+            /^(Captain America|CAPTAIN AMERICA|Capitán América|CAPITÁN AMÉRICA)/i,
+            /^(Thor|THOR)/i,
+            /^(Hulk|HULK)/i,
+            /^(Black Widow|BLACK WIDOW|Viuda Negra|VIUDA NEGRA)/i,
+            /^(Ant-Man|ANT-MAN|Ant Man|ANT MAN|Hormiga|HORMIGA)/i,
+            /^(Guardians of the Galaxy|GUARDIANS OF THE GALAXY|Guardianes|GUARDIANES)/i,
+            /^(Avengers|AVENGERS|Vengadores|VENGADORES)/i,
+            /^(X-Men|X-MEN|X Men|X MEN)/i,
+            /^(Deadpool|DEADPOOL)/i,
+            /^(Wolverine|WOLVERINE)/i,
+            /^(Batman|BATMAN)/i,
+            /^(Superman|SUPERMAN)/i,
+            /^(Wonder Woman|WONDER WOMAN)/i
+        ];
         
-        return name.trim();
+        for (const prefix of commonPrefixes) {
+            const match = name.match(prefix);
+            if (match) {
+                return match[1].trim();
+            }
+        }
+        
+        const words = name.split(/\s+/);
+        if (words.length >= 2) {
+            const firstTwo = words.slice(0, 2).join(' ');
+            if (firstTwo.length > 3) {
+                return firstTwo;
+            }
+        }
+        
+        return words[0] || name;
     }
 
     function displayGroupedMovies() {
         const container = document.getElementById('groupedMoviesContainer');
         if (!container) return;
 
-        if (Object.keys(groupedMovies).length === 0) {
-            container.innerHTML = '<div class="sagas-admin-message">No se encontraron agrupaciones</div>';
-            return;
-        }
-
-        let html = '<div class="sagas-admin-groups">';
+        let html = '';
         
-        Object.keys(groupedMovies).sort().forEach(baseName => {
-            const movies = groupedMovies[baseName];
-            if (movies.length < 2) return;
+        if (Object.keys(groupedMovies).length > 0) {
+            html += '<h3 style="color: #fff; margin-bottom: 20px; font-size: 1.5rem;">Agrupaciones Detectadas</h3>';
+            html += '<div class="sagas-admin-groups">';
             
-            const groupId = 'group_' + baseName.replace(/[^a-zA-Z0-9]/g, '_');
-            
-            html += `
-                <div class="sagas-admin-group" data-group-name="${baseName}">
-                    <div class="sagas-admin-group-header" onclick="toggleGroup('${groupId}')">
-                        <span class="sagas-admin-group-title">${escapeHtml(baseName)}</span>
-                        <span class="sagas-admin-group-count">${movies.length} películas</span>
-                        <i class="fas fa-chevron-down sagas-admin-group-icon" id="icon_${groupId}"></i>
-                    </div>
-                    <div class="sagas-admin-group-content" id="${groupId}" style="display: none;">
-                        <div class="sagas-admin-movies-list">
-                            ${movies.map(movie => `
-                                <div class="sagas-admin-movie-item">
-                                    <span class="sagas-admin-movie-name">${escapeHtml(movie.name)}</span>
-                                    <span class="sagas-admin-movie-id">ID: ${movie.id}</span>
-                                </div>
-                            `).join('')}
+            Object.keys(groupedMovies).sort().forEach(baseName => {
+                const movies = groupedMovies[baseName];
+                const defaultTitle = 'SAGA ' + baseName.toUpperCase();
+                const posters = movies.slice(0, 6).map(m => m.poster || '').filter(p => p);
+                
+                const itemsWithType = movies.map(m => ({...m, type: 'movie'}));
+                html += `
+                    <div class="sagas-admin-group-card" onclick="openSagaModal('${baseName}', ${JSON.stringify(itemsWithType).replace(/"/g, '&quot;')})">
+                        <div class="sagas-admin-group-card-header">
+                            <h3 class="sagas-admin-group-card-title">${escapeHtml(defaultTitle)}</h3>
+                            <p class="sagas-admin-group-card-count">${movies.length} películas</p>
                         </div>
-                        <button class="sagas-admin-btn-confirm" onclick="openSagaModal('${baseName}', ${JSON.stringify(movies).replace(/"/g, '&quot;')})">
-                            <i class="fas fa-check"></i> Crear Saga
-                        </button>
+                        <div class="sagas-admin-group-card-posters">
+                            ${posters.length > 0 ? posters.map(poster => `
+                                <img src="${escapeHtml(poster)}" alt="" class="sagas-admin-group-poster" onerror="this.style.display='none'">
+                            `).join('') : '<div class="sagas-admin-group-poster-placeholder">Sin imágenes</div>'}
+                        </div>
                     </div>
-                </div>
-            `;
-        });
+                `;
+            });
+            
+            html += '</div>';
+        }
         
-        html += '</div>';
+        if (ungroupedMovies.length > 0) {
+            html += '<h3 style="color: #fff; margin: 40px 0 20px 0; font-size: 1.5rem;">Películas No Agrupadas</h3>';
+            html += '<div class="sagas-admin-ungrouped-grid">';
+            
+            ungroupedMovies.forEach(movie => {
+                html += `
+                    <div class="sagas-admin-ungrouped-item" data-movie-id="${movie.id}">
+                        <input type="checkbox" class="ungrouped-checkbox" data-movie='${JSON.stringify(movie).replace(/"/g, '&quot;')}'>
+                        ${movie.poster ? `
+                            <img src="${escapeHtml(movie.poster)}" alt="${escapeHtml(movie.name)}" class="sagas-admin-ungrouped-poster" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="sagas-admin-ungrouped-poster-placeholder" style="display: none;">${escapeHtml(movie.name)}</div>
+                        ` : `
+                            <div class="sagas-admin-ungrouped-poster-placeholder">${escapeHtml(movie.name)}</div>
+                        `}
+                        <div class="sagas-admin-ungrouped-title">${escapeHtml(movie.name)}</div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            html += '<div class="sagas-admin-ungrouped-actions">';
+            html += '<button class="sagas-admin-btn" onclick="createSagaFromSelected()">';
+            html += '<i class="fas fa-plus"></i> Crear Saga con Seleccionadas';
+            html += '</button>';
+            html += '</div>';
+        }
+        
+        if (html === '') {
+            html = '<div class="sagas-admin-message">No se encontraron agrupaciones</div>';
+        }
+        
         container.innerHTML = html;
     }
+    
+    window.createSagaFromSelected = function() {
+        const checkboxes = document.querySelectorAll('.ungrouped-checkbox:checked');
+        if (checkboxes.length === 0) {
+            alert('Por favor selecciona al menos una película');
+            return;
+        }
+        
+        const selectedMovies = Array.from(checkboxes).map(cb => {
+            const movie = JSON.parse(cb.getAttribute('data-movie').replace(/&quot;/g, '"'));
+            return {...movie, type: 'movie'};
+        });
+        
+        openSagaModal('Nueva Saga', selectedMovies);
+    };
 
     function escapeHtml(text) {
         const div = document.createElement('div');

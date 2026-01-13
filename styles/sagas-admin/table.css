@@ -3,6 +3,7 @@
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .sagas-admin-btn {
@@ -40,9 +41,147 @@
 }
 
 .sagas-admin-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.sagas-admin-group-card {
+    background: #1a1a1f;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sagas-admin-group-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.sagas-admin-group-card-header {
+    padding: 16px;
+    background: #232027;
+    border-bottom: 1px solid #2a2a32;
+}
+
+.sagas-admin-group-card-title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    text-align: center;
+}
+
+.sagas-admin-group-card-count {
+    color: #bfc1c8;
+    font-size: 0.85rem;
+    text-align: center;
+    margin: 0;
+}
+
+.sagas-admin-group-card-posters {
+    padding: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    min-height: 200px;
+}
+
+.sagas-admin-group-poster {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #232027;
+}
+
+.sagas-admin-group-poster-placeholder {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: #232027;
+    border-radius: 6px;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #bfc1c8;
+    font-size: 0.8rem;
+}
+
+.sagas-admin-ungrouped-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
+    margin-top: 30px;
+    padding: 20px;
+    background: #1a1a1f;
+    border-radius: 12px;
+}
+
+.sagas-admin-ungrouped-item {
+    background: #232027;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.sagas-admin-ungrouped-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.sagas-admin-ungrouped-item.selected {
+    border: 2px solid #5dc1b9;
+    box-shadow: 0 0 0 2px rgba(93, 193, 185, 0.3);
+}
+
+.sagas-admin-ungrouped-item input[type="checkbox"] {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.sagas-admin-ungrouped-poster {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    background: #1a1a1f;
+}
+
+.sagas-admin-ungrouped-poster-placeholder {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: #1a1a1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bfc1c8;
+    font-size: 0.75rem;
+    text-align: center;
+    padding: 10px;
+}
+
+.sagas-admin-ungrouped-title {
+    padding: 10px;
+    color: #fff;
+    font-size: 0.9rem;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sagas-admin-ungrouped-actions {
+    margin-top: 20px;
+    text-align: center;
 }
 
 .sagas-admin-group {

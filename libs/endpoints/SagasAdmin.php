@@ -8,7 +8,7 @@ if (!isset($_COOKIE['xuserm']) || !isset($_COOKIE['xpwdm']) || empty($_COOKIE['x
     exit;
 }
 
-if (!defined('SAGAS_ADMIN_ENABLED') || SAGAS_ADMIN_ENABLED !== true) {
+if (!defined('SAGAS_ADMIN_ENABLED') || SAGAS_ADMIN_ENABLED !== false) {
     http_response_code(403);
     echo json_encode(['error' => 'Forbidden']);
     exit;
@@ -28,7 +28,8 @@ if ($action === 'collect_movies') {
     $moviesData = array_map(function($movie) {
         return [
             'id' => $movie['stream_id'] ?? null,
-            'name' => $movie['name'] ?? ''
+            'name' => $movie['name'] ?? '',
+            'poster' => $movie['stream_icon'] ?? ($movie['cover'] ?? '')
         ];
     }, $movies);
     
@@ -36,6 +37,27 @@ if ($action === 'collect_movies') {
         'success' => true,
         'movies' => $moviesData,
         'total' => count($moviesData)
+    ]);
+    exit;
+}
+
+if ($action === 'collect_series') {
+    require_once(__DIR__ . '/../services/series.php');
+    
+    $series = getSeriesData($user, $pwd, null);
+    
+    $seriesData = array_map(function($serie) {
+        return [
+            'id' => $serie['series_id'] ?? null,
+            'name' => $serie['name'] ?? '',
+            'poster' => $serie['cover'] ?? ($serie['stream_icon'] ?? '')
+        ];
+    }, $series);
+    
+    echo json_encode([
+        'success' => true,
+        'series' => $seriesData,
+        'total' => count($seriesData)
     ]);
     exit;
 }
@@ -59,13 +81,23 @@ if ($action === 'get_sagas') {
 
 if ($action === 'save_saga') {
     $sagaTitle = $_POST['title'] ?? '';
-    $sagaMovies = $_POST['movies'] ?? [];
+    $sagaItems = isset($_POST['items']) ? json_decode($_POST['items'], true) : [];
+    $sagaMovies = isset($_POST['movies']) ? json_decode($_POST['movies'], true) : [];
     $sagaImage = $_POST['image'] ?? '';
     
-    if (empty($sagaTitle) || empty($sagaMovies) || !is_array($sagaMovies)) {
-        echo json_encode(['error' => 'Invalid data']);
+    if (empty($sagaTitle)) {
+        echo json_encode(['error' => 'Invalid title']);
         exit;
     }
+    
+    if (empty($sagaItems) && empty($sagaMovies)) {
+        echo json_encode(['error' => 'No items selected']);
+        exit;
+    }
+    
+    $items = !empty($sagaItems) ? $sagaItems : (is_array($sagaMovies) ? array_map(function($m) {
+        return array_merge($m, ['type' => 'movie']);
+    }, $sagaMovies) : []);
     
     $sagasFile = __DIR__ . '/../../storage/sagas.json';
     
@@ -82,7 +114,8 @@ if ($action === 'save_saga') {
         'id' => $sagaId,
         'title' => $sagaTitle,
         'image' => $sagaImage,
-        'movies' => $sagaMovies,
+        'items' => $items,
+        'movies' => $items,
         'created_at' => date('Y-m-d H:i:s')
     ];
     

@@ -1,26 +1,143 @@
+.modal {
+    z-index: 10000 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    pointer-events: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    display: none !important;
+    isolation: isolate !important;
+}
+
+.modal.show {
+    display: block !important;
+    pointer-events: auto !important;
+    z-index: 10000 !important;
+}
+
+.modal:not(.show) {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9999 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    pointer-events: auto !important;
+    cursor: pointer;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+}
+
+.modal-backdrop.show {
+    opacity: 1 !important;
+}
+
+.modal-dialog {
+    z-index: 10002 !important;
+    position: relative !important;
+    margin: 40px auto !important;
+    max-width: 90% !important;
+    width: 1200px !important;
+    pointer-events: auto !important;
+    user-select: auto !important;
+    -webkit-user-select: auto !important;
+    -moz-user-select: auto !important;
+    -ms-user-select: auto !important;
+    isolation: isolate !important;
+}
+
+#sagaModal .modal-dialog {
+    z-index: 10002 !important;
+    position: relative !important;
+}
+
+#sagaModal.show .modal-dialog {
+    z-index: 10002 !important;
+    position: relative !important;
+}
+
+.modal.show .modal-dialog {
+    z-index: 10002 !important;
+    position: relative !important;
+}
+
 .saga-modal-content {
-    background: #1a1a1f;
-    border: none;
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #831f5e 0%, #f50b60 100%);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(131, 31, 94, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    z-index: 10003 !important;
+    position: relative !important;
+    max-height: calc(100vh - 80px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#sagaModal .saga-modal-content {
+    z-index: 10003 !important;
+    position: relative !important;
+}
+
+#sagaModal.show .saga-modal-content {
+    z-index: 10003 !important;
+    position: relative !important;
+}
+
+.modal.show .saga-modal-content {
+    z-index: 10003 !important;
+    position: relative !important;
+}
+
+.modal.show .modal-dialog .saga-modal-content {
+    z-index: 10003 !important;
+    position: relative !important;
 }
 
 .saga-modal-content .modal-header {
-    border-bottom: 1px solid #2a2a32;
-    padding: 24px 30px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+    padding: 28px 35px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px 20px 0 0;
+    backdrop-filter: blur(10px);
 }
 
 .saga-modal-content .modal-body {
-    padding: 30px;
+    padding: 35px;
+    overflow-y: auto;
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
 }
 
 .saga-modal-content .modal-footer {
-    border-top: 1px solid #2a2a32;
-    padding: 20px 30px;
+    border-top: 2px solid rgba(255, 255, 255, 0.15);
+    padding: 25px 35px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 20px 20px;
+    backdrop-filter: blur(10px);
 }
 
 .saga-modal-header {
-    background: #232027;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -28,9 +145,10 @@
 
 .saga-modal-header h2 {
     color: #fff;
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 1.75rem;
+    font-weight: 700;
     margin: 0;
+    letter-spacing: 0.5px;
 }
 
 .saga-modal-close {
@@ -59,71 +177,471 @@
 }
 
 .saga-modal-section {
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+}
+
+.saga-modal-section:last-child {
+    margin-bottom: 0;
 }
 
 .saga-modal-section label {
     display: block;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 10px;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.saga-modal-section input[type="text"],
-.saga-modal-section input[type="file"] {
+.saga-modal-section input[type="text"] {
     width: 100%;
-    padding: 12px 16px;
-    background: #232027;
-    border: 1px solid #2a2a32;
-    border-radius: 8px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
     color: #fff;
-    font-size: 1rem;
+    font-size: 1.05rem;
+    font-weight: 500;
     box-sizing: border-box;
+    transition: all 0.3s;
+}
+
+.saga-modal-section input[type="text"]::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .saga-modal-section input[type="text"]:focus {
     outline: none;
-    border-color: #e50914;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
 }
 
 .saga-modal-section input[type="file"] {
+    width: 100%;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1rem;
+    box-sizing: border-box;
     cursor: pointer;
+    transition: all 0.3s;
 }
 
-.saga-modal-movies {
-    max-height: 300px;
-    overflow-y: auto;
-    background: #232027;
+.saga-modal-section input[type="file"]:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.saga-modal-section input[type="file"]::file-selector-button {
+    padding: 10px 20px;
+    margin-right: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 8px;
-    padding: 15px;
-    margin-top: 10px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
 }
 
-.saga-modal-movie-item {
+.saga-modal-section input[type="file"]::file-selector-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.saga-modal-movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+    max-height: 450px;
+    overflow-y: auto;
+    background: #151518;
+    border: 1px solid #1a1a1f;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 12px;
+}
+
+.saga-modal-movies-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.saga-modal-movies-grid::-webkit-scrollbar-track {
+    background: #1a1a1f;
+    border-radius: 4px;
+}
+
+.saga-modal-movies-grid::-webkit-scrollbar-thumb {
+    background: #2a2a32;
+    border-radius: 4px;
+}
+
+.saga-modal-movies-grid::-webkit-scrollbar-thumb:hover {
+    background: #3a3a42;
+}
+
+.saga-modal-movie-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: move;
+}
+
+.saga-modal-movie-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.saga-modal-movie-card.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg);
+}
+
+.sortable-placeholder {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px dashed rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    margin: 8px 0;
+}
+
+.saga-modal-movie-order {
+    position: absolute;
+    top: 8px;
+    left: 8px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px 12px;
-    background: #1a1a1f;
-    border-radius: 6px;
-    margin-bottom: 8px;
+    gap: 6px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 4px 8px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.saga-modal-movie-item:last-child {
-    margin-bottom: 0;
+.order-number {
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    min-width: 20px;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-.saga-modal-movie-item span:first-child {
+.order-handle {
+    color: rgba(255, 255, 255, 0.8);
+    cursor: grab;
+    display: flex;
+    align-items: center;
+}
+
+.order-handle:active {
+    cursor: grabbing;
+}
+
+.saga-modal-movie-type {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.saga-modal-movie-poster {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    background: #232027;
+}
+
+.saga-modal-movie-poster-placeholder {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: #232027;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bfc1c8;
+    font-size: 0.85rem;
+}
+
+.saga-modal-movie-info {
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.saga-modal-movie-name {
     color: #fff;
     font-size: 0.95rem;
-    flex: 1;
+    font-weight: 600;
+    margin-bottom: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.3;
 }
 
 .saga-modal-movie-id {
     color: #bfc1c8;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-family: monospace;
+    opacity: 0.8;
+}
+
+.saga-modal-remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    background: rgba(229, 9, 20, 0.9);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.saga-modal-remove-btn:hover {
+    background: rgba(229, 9, 20, 1);
+}
+
+.saga-search-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #1a1a1f;
+}
+
+.saga-search-tab {
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    color: #bfc1c8;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.saga-search-tab:hover {
+    color: #fff;
+    background: rgba(93, 193, 185, 0.05);
+}
+
+.saga-search-tab.active {
+    color: #5dc1b9;
+    border-bottom-color: #5dc1b9;
+    background: rgba(93, 193, 185, 0.1);
+}
+
+.saga-search-tab i {
+    font-size: 0.9rem;
+}
+
+.saga-search-tab-content {
+    display: none;
+}
+
+.saga-search-tab-content.active {
+    display: block;
+}
+
+.saga-search-input {
+    width: 100%;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #1a1a1f 0%, #23232a 100%);
+    border: 2px solid #2a2a32;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1rem;
+    box-sizing: border-box;
+    margin-top: 12px;
+    transition: all 0.3s;
+}
+
+.saga-search-input:focus {
+    outline: none;
+    border-color: #5dc1b9;
+    box-shadow: 0 0 0 4px rgba(93, 193, 185, 0.15);
+    background: linear-gradient(135deg, #23232a 0%, #2a2a32 100%);
+}
+
+.saga-empty-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #bfc1c8;
+    font-size: 1.1rem;
+}
+
+.saga-search-result-type {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.saga-search-results {
+    max-height: 450px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.saga-search-results::-webkit-scrollbar {
+    width: 8px;
+}
+
+.saga-search-results::-webkit-scrollbar-track {
+    background: #1a1a1f;
+    border-radius: 4px;
+}
+
+.saga-search-results::-webkit-scrollbar-thumb {
+    background: #2a2a32;
+    border-radius: 4px;
+}
+
+.saga-search-results::-webkit-scrollbar-thumb:hover {
+    background: #3a3a42;
+}
+
+.saga-search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.saga-search-result-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateX(4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.saga-search-result-poster {
+    width: 80px;
+    min-width: 80px;
+    height: 120px;
+    object-fit: cover;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.saga-search-result-poster-placeholder {
+    width: 80px;
+    min-width: 80px;
+    height: 120px;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.7rem;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.saga-search-result-info {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+}
+
+.saga-search-result-name {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.saga-search-result-id {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+    font-family: monospace;
+    margin: 0;
+}
+
+.saga-search-add-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.saga-search-add-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+}
+
+.saga-search-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #bfc1c8;
+    font-size: 1rem;
+    grid-column: 1 / -1;
 }
 
 .saga-image-preview {
@@ -181,15 +699,24 @@
 }
 
 @media (max-width: 600px) {
+    .modal-dialog {
+        max-width: 95% !important;
+        width: 95% !important;
+        margin: 20px auto !important;
+    }
+    
     .saga-modal-content {
-        width: 95%;
-        margin: 20px auto;
+        max-height: calc(100vh - 40px);
     }
     
     .saga-modal-header,
     .saga-modal-body,
     .saga-modal-footer {
         padding: 20px;
+    }
+    
+    .saga-modal-header h2 {
+        font-size: 1.4rem;
     }
     
     .saga-modal-footer {

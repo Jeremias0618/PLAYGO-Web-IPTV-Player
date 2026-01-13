@@ -44,6 +44,25 @@ $backdrop_fondo = $data['backdrop'];
     <link rel="stylesheet" href="./styles/sagas-admin/content.css">
     <link rel="stylesheet" href="./styles/sagas-admin/table.css">
     <link rel="stylesheet" href="./styles/sagas-admin/modal.css">
+    <style>
+    #sagaModal {
+        z-index: 10000 !important;
+    }
+    #sagaModal.show {
+        z-index: 10000 !important;
+    }
+    #sagaModal .modal-dialog {
+        z-index: 10002 !important;
+        position: relative !important;
+    }
+    #sagaModal .saga-modal-content {
+        z-index: 10003 !important;
+        position: relative !important;
+    }
+    .modal-backdrop {
+        z-index: 9999 !important;
+    }
+    </style>
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - Administración de Sagas</title>
 </head>
@@ -128,8 +147,8 @@ $backdrop_fondo = $data['backdrop'];
         </div>
     </div>
     
-    <div class="modal fade" id="sagaModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal fade" id="sagaModal" tabindex="-1" aria-hidden="true" aria-modal="false" role="dialog" style="z-index: 10000; display: none;">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 1200px; width: 90%; margin: 40px auto; z-index: 10002;">
             <div class="modal-content saga-modal-content">
                 <div class="modal-header saga-modal-header">
                     <h2 class="modal-title">Crear Nueva Saga</h2>
@@ -148,8 +167,27 @@ $backdrop_fondo = $data['backdrop'];
                     </div>
                     
                     <div class="saga-modal-section">
-                        <label>Películas en esta Saga</label>
-                        <div id="sagaMoviesList" class="saga-modal-movies"></div>
+                        <label>Contenido de esta Saga</label>
+                        <div id="sagaMoviesList" class="saga-modal-movies-grid sortable-list"></div>
+                    </div>
+                    
+                    <div class="saga-modal-section">
+                        <div class="saga-search-tabs">
+                            <button class="saga-search-tab active" data-tab="movies" onclick="switchSearchTab('movies')">
+                                <i class="fas fa-film"></i> Películas
+                            </button>
+                            <button class="saga-search-tab" data-tab="series" onclick="switchSearchTab('series')">
+                                <i class="fas fa-tv"></i> Series
+                            </button>
+                        </div>
+                        <div id="searchMoviesTab" class="saga-search-tab-content active">
+                            <input type="text" id="sagaSearchMovies" placeholder="Buscar películas por nombre..." class="saga-search-input">
+                            <div id="sagaSearchResults" class="saga-search-results"></div>
+                        </div>
+                        <div id="searchSeriesTab" class="saga-search-tab-content">
+                            <input type="text" id="sagaSearchSeries" placeholder="Buscar series por nombre..." class="saga-search-input">
+                            <div id="sagaSearchSeriesResults" class="saga-search-results"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer saga-modal-footer">
