@@ -19,6 +19,18 @@
         const titleInput = document.getElementById('sagaTitle');
         if (titleInput) {
             titleInput.value = baseName === 'Nueva Saga' ? '' : 'SAGA ' + baseName.toUpperCase();
+            titleInput.classList.remove('is-invalid');
+            const existingFeedback = titleInput.parentElement.querySelector('.invalid-feedback');
+            if (existingFeedback) {
+                existingFeedback.remove();
+            }
+            
+            titleInput.removeEventListener('input', validateTitle);
+            titleInput.addEventListener('input', validateTitle);
+            
+            if (titleInput.value.trim()) {
+                validateTitle();
+            }
         }
         
         const imagePreview = document.getElementById('sagaImagePreview');
@@ -619,7 +631,6 @@
         
         const exists = window.currentSagaItems.some(i => String(i.id) === String(item.id) && i.type === item.type);
         if (!exists) {
-            console.log('[SAGAS-ADMIN] addItemToSaga: adding item', { itemId: item.id, itemType: item.type });
             window.currentSagaItems.push(item);
             updateItemsList();
             
@@ -656,6 +667,60 @@
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+    
+    let validationTimeout;
+    function validateTitle() {
+        const titleInput = document.getElementById('sagaTitle');
+        if (!titleInput) return;
+        
+        clearTimeout(validationTimeout);
+        validationTimeout = setTimeout(() => {
+            const title = titleInput.value.trim();
+            if (!title) {
+                titleInput.classList.remove('is-invalid');
+                const existingFeedback = titleInput.parentElement.querySelector('.invalid-feedback');
+                if (existingFeedback) {
+                    existingFeedback.remove();
+                }
+                return;
+            }
+            
+            fetch('libs/endpoints/SagasAdmin.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=check_title&title=' + encodeURIComponent(title)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.exists) {
+                    titleInput.classList.add('is-invalid');
+                    let feedback = titleInput.parentElement.querySelector('.invalid-feedback');
+                    if (!feedback) {
+                        feedback = document.createElement('div');
+                        feedback.className = 'invalid-feedback';
+                        titleInput.parentElement.appendChild(feedback);
+                    }
+                    feedback.textContent = 'Ya existe una saga con ese nombre';
+                } else {
+                    titleInput.classList.remove('is-invalid');
+                    const existingFeedback = titleInput.parentElement.querySelector('.invalid-feedback');
+                    if (existingFeedback) {
+                        existingFeedback.remove();
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error validating title:', error);
+            });
+        }, 500);
     }
     
     function closeSagaModal() {
@@ -695,9 +760,16 @@
     function saveSaga() {
         const title = document.getElementById('sagaTitle')?.value.trim();
         const imageFile = document.getElementById('sagaImageFile')?.files[0];
+        const titleInput = document.getElementById('sagaTitle');
         
         if (!title) {
             alert('Por favor ingresa un título para la saga');
+            return;
+        }
+        
+        if (titleInput && titleInput.classList.contains('is-invalid')) {
+            alert('El título de la saga ya está en uso. Por favor, elige otro nombre.');
+            titleInput.focus();
             return;
         }
         
@@ -750,36 +822,57 @@
     }
 
     function saveSagaData(title, imageUrl) {
+        const items = window.currentSagaItems.map((item, index) => ({
+            id: item.id,
+            title: item.name,
+            type: item.type || 'movie',
+            order: index + 1
+        }));
+        
         const formData = new FormData();
         formData.append('action', 'save_saga');
         formData.append('title', title);
-        formData.append('items', JSON.stringify(window.currentSagaItems));
+        formData.append('items', JSON.stringify(items));
         formData.append('image', imageUrl);
         
         fetch('libs/endpoints/SagasAdmin.php', {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.status);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 alert('Saga guardada exitosamente');
+                const saveBtn = document.getElementById('saveSagaBtn');
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Saga';
+                }
                 closeSagaModal();
                 if (typeof window.loadSagas === 'function') {
-                    window.loadSagas();
+                    try {
+                        window.loadSagas();
+                    } catch (e) {
+                        console.error('Error calling loadSagas:', e);
+                    }
                 }
             } else {
                 alert('Error al guardar saga: ' + (data.error || 'Error desconocido'));
-            }
-            
-            const saveBtn = document.getElementById('saveSagaBtn');
-            if (saveBtn) {
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Saga';
+                const saveBtn = document.getElementById('saveSagaBtn');
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Saga';
+                }
             }
         })
         .catch(error => {
-            alert('Error al guardar saga');
+            console.error('Error saving saga:', error);
+            alert('Error al guardar saga: ' + (error.message || 'Error desconocido'));
             const saveBtn = document.getElementById('saveSagaBtn');
             if (saveBtn) {
                 saveBtn.disabled = false;

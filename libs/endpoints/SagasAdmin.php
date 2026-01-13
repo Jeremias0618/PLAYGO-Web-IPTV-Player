@@ -62,6 +62,40 @@ if ($action === 'collect_series') {
     exit;
 }
 
+if ($action === 'check_title') {
+    $sagaTitle = trim($_POST['title'] ?? $_GET['title'] ?? '');
+    $sagaId = $_POST['saga_id'] ?? $_GET['saga_id'] ?? null;
+    
+    if (empty($sagaTitle)) {
+        echo json_encode(['exists' => false]);
+        exit;
+    }
+    
+    $sagasFile = __DIR__ . '/../../storage/sagas.json';
+    
+    if (file_exists($sagasFile)) {
+        $content = file_get_contents($sagasFile);
+        $sagas = json_decode($content, true) ?: [];
+    } else {
+        $sagas = [];
+    }
+    
+    $exists = false;
+    foreach ($sagas as $saga) {
+        $existingId = $saga['id'] ?? '';
+        if ($sagaId && $existingId === $sagaId) {
+            continue;
+        }
+        if (isset($saga['title']) && strtolower(trim($saga['title'])) === strtolower($sagaTitle)) {
+            $exists = true;
+            break;
+        }
+    }
+    
+    echo json_encode(['exists' => $exists]);
+    exit;
+}
+
 if ($action === 'get_sagas') {
     $sagasFile = __DIR__ . '/../../storage/sagas.json';
     
@@ -80,24 +114,20 @@ if ($action === 'get_sagas') {
 }
 
 if ($action === 'save_saga') {
-    $sagaTitle = $_POST['title'] ?? '';
+    $sagaTitle = trim($_POST['title'] ?? '');
     $sagaItems = isset($_POST['items']) ? json_decode($_POST['items'], true) : [];
-    $sagaMovies = isset($_POST['movies']) ? json_decode($_POST['movies'], true) : [];
     $sagaImage = $_POST['image'] ?? '';
+    $sagaId = $_POST['saga_id'] ?? null;
     
     if (empty($sagaTitle)) {
-        echo json_encode(['error' => 'Invalid title']);
+        echo json_encode(['error' => 'El título es requerido']);
         exit;
     }
     
-    if (empty($sagaItems) && empty($sagaMovies)) {
-        echo json_encode(['error' => 'No items selected']);
+    if (empty($sagaItems) || !is_array($sagaItems)) {
+        echo json_encode(['error' => 'No hay items seleccionados']);
         exit;
     }
-    
-    $items = !empty($sagaItems) ? $sagaItems : (is_array($sagaMovies) ? array_map(function($m) {
-        return array_merge($m, ['type' => 'movie']);
-    }, $sagaMovies) : []);
     
     $sagasFile = __DIR__ . '/../../storage/sagas.json';
     
@@ -108,18 +138,75 @@ if ($action === 'save_saga') {
         $sagas = [];
     }
     
-    $sagaId = strtoupper(str_replace([' ', '-'], '_', preg_replace('/[^a-zA-Z0-9\s\-]/', '', $sagaTitle)));
+    foreach ($sagas as $existingSaga) {
+        $existingId = $existingSaga['id'] ?? '';
+        if ($sagaId && $existingId === $sagaId) {
+            continue;
+        }
+        if (isset($existingSaga['title']) && strtolower(trim($existingSaga['title'])) === strtolower($sagaTitle)) {
+            echo json_encode(['error' => 'Ya existe una saga con ese nombre']);
+            exit;
+        }
+    }
     
-    $newSaga = [
-        'id' => $sagaId,
-        'title' => $sagaTitle,
-        'image' => $sagaImage,
-        'items' => $items,
-        'movies' => $items,
-        'created_at' => date('Y-m-d H:i:s')
-    ];
+    $items = array_map(function($item) {
+        return [
+            'id' => $item['id'] ?? null,
+            'title' => $item['title'] ?? '',
+            'type' => $item['type'] ?? 'movie',
+            'order' => intval($item['order'] ?? 0)
+        ];
+    }, $sagaItems);
     
-    $sagas[] = $newSaga;
+    usort($items, function($a, $b) {
+        return ($a['order'] ?? 0) - ($b['order'] ?? 0);
+    });
+    
+    if ($sagaId) {
+        $sagaIndex = -1;
+        foreach ($sagas as $index => $saga) {
+            if (($saga['id'] ?? '') === $sagaId) {
+                $sagaIndex = $index;
+                break;
+            }
+        }
+        
+        if ($sagaIndex >= 0) {
+            $sagas[$sagaIndex] = [
+                'id' => $sagaId,
+                'title' => $sagaTitle,
+                'image' => $sagaImage,
+                'items' => $items,
+                'created_at' => $sagas[$sagaIndex]['created_at'] ?? date('Y-m-d H:i:s')
+            ];
+            $newSaga = $sagas[$sagaIndex];
+        } else {
+            echo json_encode(['error' => 'Saga no encontrada']);
+            exit;
+        }
+    } else {
+        $maxId = 0;
+        foreach ($sagas as $saga) {
+            if (isset($saga['id']) && is_numeric($saga['id'])) {
+                $id = intval($saga['id']);
+                if ($id > $maxId) {
+                    $maxId = $id;
+                }
+            }
+        }
+        
+        $newSagaId = $maxId + 1;
+        
+        $newSaga = [
+            'id' => (string)$newSagaId,
+            'title' => $sagaTitle,
+            'image' => $sagaImage,
+            'items' => $items,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        
+        $sagas[] = $newSaga;
+    }
     
     if (!is_dir(dirname($sagasFile))) {
         mkdir(dirname($sagasFile), 0755, true);
