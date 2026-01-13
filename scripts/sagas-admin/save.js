@@ -198,18 +198,19 @@
         }
     }
     
+    let draggedElement = null;
+    let placeholder = null;
+    
     function initSortable() {
         const list = document.getElementById('sagaMoviesList');
         if (!list) return;
         
-        let draggedElement = null;
-        let placeholder = null;
-        
-        const items = Array.from(list.children).filter(item => !item.classList.contains('saga-empty-message'));
+        const items = Array.from(list.children).filter(item => 
+            !item.classList.contains('saga-empty-message') && 
+            !item.classList.contains('sortable-placeholder')
+        );
         
         items.forEach(item => {
-            if (item.classList.contains('sortable-placeholder')) return;
-            
             item.setAttribute('draggable', 'true');
             
             item.addEventListener('dragstart', function(e) {
@@ -231,9 +232,21 @@
             item.addEventListener('dragend', function(e) {
                 this.classList.remove('dragging');
                 this.style.opacity = '1';
-                if (placeholder && placeholder.parentNode) {
+                
+                if (placeholder && placeholder.parentNode && draggedElement) {
+                    const placeholderIndex = Array.from(list.children).indexOf(placeholder);
+                    if (placeholderIndex !== -1) {
+                        list.insertBefore(draggedElement, placeholder);
+                        list.removeChild(placeholder);
+                        updateItemsOrder();
+                        setTimeout(() => {
+                            initSortable();
+                        }, 50);
+                    }
+                } else if (placeholder && placeholder.parentNode) {
                     placeholder.parentNode.removeChild(placeholder);
                 }
+                
                 draggedElement = null;
                 placeholder = null;
             });
@@ -242,7 +255,7 @@
                 e.preventDefault();
                 e.dataTransfer.dropEffect = 'move';
                 
-                if (this !== draggedElement && this !== placeholder && draggedElement !== null) {
+                if (this !== draggedElement && this !== placeholder && draggedElement !== null && placeholder) {
                     const rect = this.getBoundingClientRect();
                     const next = (e.clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
                     
@@ -258,20 +271,54 @@
                 e.preventDefault();
                 e.stopPropagation();
                 
-                if (draggedElement !== this && draggedElement !== null && placeholder) {
+                if (draggedElement !== this && draggedElement !== null && placeholder && placeholder.parentNode) {
                     const placeholderIndex = Array.from(list.children).indexOf(placeholder);
-                    
                     if (placeholderIndex !== -1) {
                         list.insertBefore(draggedElement, placeholder);
                         list.removeChild(placeholder);
-                        
                         updateItemsOrder();
-                        initSortable();
+                        setTimeout(() => {
+                            initSortable();
+                        }, 50);
                     }
                 }
                 
                 return false;
             });
+        });
+        
+        list.addEventListener('dragover', function(e) {
+            if (placeholder && draggedElement) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            }
+        });
+        
+        list.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (draggedElement && placeholder && placeholder.parentNode) {
+                const placeholderIndex = Array.from(list.children).indexOf(placeholder);
+                if (placeholderIndex !== -1) {
+                    list.insertBefore(draggedElement, placeholder);
+                    list.removeChild(placeholder);
+                    updateItemsOrder();
+                    setTimeout(() => {
+                        initSortable();
+                    }, 50);
+                }
+            }
+            
+            if (draggedElement) {
+                draggedElement.classList.remove('dragging');
+                draggedElement.style.opacity = '1';
+            }
+            
+            draggedElement = null;
+            placeholder = null;
+            
+            return false;
         });
     }
     
