@@ -485,17 +485,19 @@
 
 .saga-search-icon {
     position: absolute;
-    left: 14px;
+    left: 16px;
     top: 50%;
     transform: translateY(-50%);
     color: #6b6b75;
     font-size: 0.9rem;
     pointer-events: none;
+    z-index: 10;
+    line-height: 1;
 }
 
 .saga-search-input {
     width: 100%;
-    padding: 12px 16px 12px 40px;
+    padding: 12px 16px 12px 52px;
     background: #25252d;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
@@ -503,6 +505,8 @@
     font-size: 0.95rem;
     box-sizing: border-box;
     transition: all 0.2s;
+    position: relative;
+    z-index: 1;
 }
 
 .saga-search-input:focus {
@@ -808,5 +812,78 @@
         width: 100%;
         justify-content: center;
     }
+}
+
+#sagaSuccessModal {
+    z-index: 10010 !important;
+}
+
+#sagaSuccessModal .modal-dialog {
+    z-index: 10011 !important;
+}
+
+.saga-success-modal-content {
+    background: linear-gradient(90deg, #831f5e 0%, #f50b60 100%);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 15px 45px rgba(131, 31, 94, 0.5);
+    max-width: 400px;
+    margin: 0 auto;
+    z-index: 10012 !important;
+}
+
+.saga-success-modal-body {
+    padding: 40px 30px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+}
+
+.saga-success-icon {
+    margin-bottom: 20px;
+}
+
+.saga-success-icon i {
+    font-size: 4rem;
+    color: #10b981;
+    text-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.saga-success-title {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.saga-success-message {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.saga-success-btn {
+    background: linear-gradient(90deg, #f50b60 0%, #831f5e 100%);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 40px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(245, 11, 96, 0.4);
+}
+
+.saga-success-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 11, 96, 0.5);
+}
+
+.saga-success-btn:active {
+    transform: translateY(0);
 }
 

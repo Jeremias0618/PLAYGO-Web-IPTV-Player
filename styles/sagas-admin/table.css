@@ -98,6 +98,144 @@
     background: #232027;
 }
 
+.sagas-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.saga-card {
+    background: #1a1a1f;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.saga-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.saga-card-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: #232027;
+}
+
+.saga-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.saga-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.saga-card:hover .saga-card-overlay {
+    opacity: 1;
+}
+
+.saga-card-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.saga-card-btn-edit {
+    background: linear-gradient(90deg, #5dc1b9 0%, #4a9a94 100%);
+    color: #fff;
+}
+
+.saga-card-btn-delete {
+    background: linear-gradient(90deg, #e50914 0%, #c8008f 100%);
+    color: #fff;
+}
+
+.saga-card-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.saga-card-info {
+    padding: 15px;
+    background: #232027;
+}
+
+.saga-card-title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.saga-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.saga-card-count,
+.saga-card-date {
+    color: #bfc1c8;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.saga-card-count i,
+.saga-card-date i {
+    font-size: 0.75rem;
+    color: #5dc1b9;
+}
+
+@media (max-width: 600px) {
+    .sagas-admin-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    
+    .saga-card-info {
+        padding: 12px;
+    }
+    
+    .saga-card-title {
+        font-size: 1rem;
+    }
+    
+    .saga-card-count,
+    .saga-card-date {
+        font-size: 0.8rem;
+    }
+}
+
 .sagas-admin-group-poster-placeholder {
     width: 100%;
     aspect-ratio: 2/3;

@@ -215,6 +215,23 @@ $backdrop_fondo = $data['backdrop'];
     </div>
 </div>
 
+<div class="modal fade" id="sagaSuccessModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content saga-success-modal-content">
+            <div class="modal-body saga-success-modal-body">
+                <div class="saga-success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="saga-success-title">¡Saga creada exitosamente!</h3>
+                <p class="saga-success-message">La saga ha sido guardada correctamente.</p>
+                <button type="button" class="saga-success-btn" onclick="closeAllModals()">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="./scripts/vendors/jquery-3.5.1.min.js"></script>
 <script src="./scripts/vendors/bootstrap.bundle.min.js"></script>
 <script src="./scripts/vendors/owl.carousel.min.js"></script>
@@ -233,9 +250,18 @@ $backdrop_fondo = $data['backdrop'];
 <script src="./scripts/vendors/provider.hlsjs.js"></script>
 <script src="./scripts/core/main.js"></script>
 <script src="./scripts/search/modal.js"></script>
-<script src="./scripts/sagas-admin/init.js"></script>
-<script src="./scripts/sagas-admin/collect.js"></script>
-<script src="./scripts/sagas-admin/save.js"></script>
+<script src="./scripts/sagas-admin/utils.js"></script>
+<script src="./scripts/sagas-admin/state.js"></script>
+<script src="./scripts/sagas-admin/modal.js"></script>
+<script src="./scripts/sagas-admin/items.js"></script>
+<script src="./scripts/sagas-admin/search.js"></script>
+<script src="./scripts/sagas-admin/validation.js"></script>
+<script src="./scripts/sagas-admin/image.js"></script>
+<script src="./scripts/sagas-admin/posters.js"></script>
+<script src="./scripts/sagas-admin/save-handler.js"></script>
+<script src="./scripts/sagas-admin/sagas.js"></script>
+<script src="./scripts/sagas-admin/collection.js"></script>
+<script src="./scripts/sagas-admin/index.js"></script>
 
 </body>
 </html>

@@ -81,9 +81,13 @@ if ($action === 'check_title') {
     }
     
     $exists = false;
+    $sagaIdClean = $sagaId ? trim((string)$sagaId) : null;
+    
     foreach ($sagas as $saga) {
         $existingId = $saga['id'] ?? '';
-        if ($sagaId && $existingId === $sagaId) {
+        $existingIdClean = trim((string)$existingId);
+        
+        if ($sagaIdClean && $existingIdClean === $sagaIdClean) {
             continue;
         }
         if (isset($saga['title']) && strtolower(trim($saga['title'])) === strtolower($sagaTitle)) {
@@ -117,7 +121,7 @@ if ($action === 'save_saga') {
     $sagaTitle = trim($_POST['title'] ?? '');
     $sagaItems = isset($_POST['items']) ? json_decode($_POST['items'], true) : [];
     $sagaImage = $_POST['image'] ?? '';
-    $sagaId = $_POST['saga_id'] ?? null;
+    $sagaId = isset($_POST['saga_id']) && $_POST['saga_id'] !== '' && $_POST['saga_id'] !== 'null' && $_POST['saga_id'] !== 'undefined' ? trim((string)$_POST['saga_id']) : null;
     
     if (empty($sagaTitle)) {
         echo json_encode(['error' => 'El título es requerido']);
@@ -139,11 +143,14 @@ if ($action === 'save_saga') {
     }
     
     foreach ($sagas as $existingSaga) {
-        $existingId = $existingSaga['id'] ?? '';
+        $existingId = isset($existingSaga['id']) ? trim((string)$existingSaga['id']) : '';
+        
         if ($sagaId && $existingId === $sagaId) {
             continue;
         }
-        if (isset($existingSaga['title']) && strtolower(trim($existingSaga['title'])) === strtolower($sagaTitle)) {
+        
+        $existingTitle = isset($existingSaga['title']) ? trim($existingSaga['title']) : '';
+        if ($existingTitle && strtolower($existingTitle) === strtolower($sagaTitle)) {
             echo json_encode(['error' => 'Ya existe una saga con ese nombre']);
             exit;
         }
@@ -153,6 +160,7 @@ if ($action === 'save_saga') {
         return [
             'id' => $item['id'] ?? null,
             'title' => $item['title'] ?? '',
+            'poster' => $item['poster'] ?? '',
             'type' => $item['type'] ?? 'movie',
             'order' => intval($item['order'] ?? 0)
         ];
@@ -165,7 +173,8 @@ if ($action === 'save_saga') {
     if ($sagaId) {
         $sagaIndex = -1;
         foreach ($sagas as $index => $saga) {
-            if (($saga['id'] ?? '') === $sagaId) {
+            $sagaIdFromFile = isset($saga['id']) ? trim((string)$saga['id']) : '';
+            if ($sagaIdFromFile === $sagaId) {
                 $sagaIndex = $index;
                 break;
             }
@@ -248,6 +257,62 @@ if ($action === 'delete_saga') {
     file_put_contents($sagasFile, json_encode($sagas, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     
     echo json_encode(['success' => true]);
+    exit;
+}
+
+if ($action === 'get_items_posters') {
+    $itemsJson = $_POST['items'] ?? $_GET['items'] ?? '[]';
+    $items = json_decode($itemsJson, true) ?: [];
+    
+    if (empty($items) || !is_array($items)) {
+        echo json_encode(['success' => true, 'posters' => []]);
+        exit;
+    }
+    
+    require_once(__DIR__ . '/../services/movies.php');
+    require_once(__DIR__ . '/../services/series.php');
+    
+    $posters = [];
+    
+    foreach ($items as $item) {
+        $itemId = $item['id'] ?? null;
+        $itemType = $item['type'] ?? 'movie';
+        
+        if (!$itemId) {
+            continue;
+        }
+        
+        $poster = '';
+        
+        if ($itemType === 'movie') {
+            $url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$itemId";
+            $response = apixtream($url);
+            $data = json_decode($response, true);
+            
+            if ($data && isset($data['info'])) {
+                $poster = $data['info']['movie_image'] ?? $data['info']['stream_icon'] ?? '';
+            }
+        } else if ($itemType === 'series') {
+            $url = IP."/player_api.php?username=$user&password=$pwd&action=get_series_info&series_id=$itemId";
+            $response = apixtream($url);
+            $data = json_decode($response, true);
+            
+            if ($data && isset($data['info'])) {
+                $poster = $data['info']['cover'] ?? $data['info']['stream_icon'] ?? '';
+            }
+        }
+        
+        $posters[] = [
+            'id' => $itemId,
+            'type' => $itemType,
+            'poster' => $poster
+        ];
+    }
+    
+    echo json_encode([
+        'success' => true,
+        'posters' => $posters
+    ]);
     exit;
 }
 
