@@ -293,7 +293,7 @@
 
             const titleInput = document.getElementById('sagaEditTitle');
             const currentTitle = titleInput ? titleInput.value.trim() : '';
-            const originalTitle = editOriginalState.title || '';
+            const originalTitle = (editOriginalState.title || '').trim();
 
             if (currentTitle !== originalTitle) {
                 return true;
@@ -311,9 +311,16 @@
                     return true;
                 }
 
-                if (String(current.id) !== String(original.id) || 
-                    (current.type || 'movie') !== (original.type || 'movie') ||
-                    (current.name || '') !== (original.name || '')) {
+                const currentId = String(current.id || '').trim();
+                const originalId = String(original.id || '').trim();
+                const currentType = (current.type || 'movie').trim();
+                const originalType = (original.type || 'movie').trim();
+                const currentName = (current.name || '').trim();
+                const originalName = (original.name || '').trim();
+
+                if (currentId !== originalId || 
+                    currentType !== originalType ||
+                    currentName !== originalName) {
                     return true;
                 }
             }
@@ -492,8 +499,9 @@
                 const btnClass = added ? 'saga-search-add-btn added' : 'saga-search-add-btn';
                 const btnText = added ? '<i class="fas fa-check"></i> Añadido' : '<i class="fas fa-plus"></i> Añadir';
                 
+                const itemData = JSON.stringify(item).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
                 return `
-                    <div class="saga-search-result-item" onclick="${!added ? `window.SagasAdminEditItems.add(${window.SagasAdminUtils.escapeHtml(JSON.stringify(item).replace(/"/g, '&quot;'))})` : ''}">
+                    <div class="saga-search-result-item" ${!added ? `data-item-data="${itemData}" style="cursor: pointer;"` : ''}>
                         ${item.poster ? `
                             <img src="${window.SagasAdminUtils.escapeHtml(item.poster)}" alt="${window.SagasAdminUtils.escapeHtml(item.name)}" class="saga-search-result-poster" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div class="saga-search-result-poster-placeholder" style="display: none;">Sin imagen</div>
@@ -505,12 +513,47 @@
                             <div class="saga-search-result-name">${window.SagasAdminUtils.escapeHtml(item.name)}</div>
                             <div class="saga-search-result-id">ID: ${item.id}</div>
                         </div>
-                        <button class="${btnClass}" onclick="event.stopPropagation(); ${!added ? `window.SagasAdminEditItems.add(${window.SagasAdminUtils.escapeHtml(JSON.stringify(item).replace(/"/g, '&quot;'))})` : ''}">
+                        <button class="${btnClass}" ${!added ? `data-item-data="${itemData}"` : ''}>
                             ${btnText}
                         </button>
                     </div>
                 `;
             }).join('');
+            
+            setTimeout(() => {
+                const resultItems = resultsContainer.querySelectorAll('.saga-search-result-item[data-item-data]');
+                resultItems.forEach(resultItem => {
+                    const itemData = resultItem.getAttribute('data-item-data');
+                    if (itemData) {
+                        resultItem.addEventListener('click', function() {
+                            const data = itemData.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+                            try {
+                                const item = JSON.parse(data);
+                                window.SagasAdminEditItems.add(item);
+                            } catch (e) {
+                                console.error('Error parsing item data:', e);
+                            }
+                        });
+                    }
+                });
+                
+                const addButtons = resultsContainer.querySelectorAll('button[data-item-data]');
+                addButtons.forEach(btn => {
+                    const itemData = btn.getAttribute('data-item-data');
+                    if (itemData) {
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const data = itemData.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+                            try {
+                                const item = JSON.parse(data);
+                                window.SagasAdminEditItems.add(item);
+                            } catch (e) {
+                                console.error('Error parsing item data:', e);
+                            }
+                        });
+                    }
+                });
+            }, 0);
         }
     };
 
