@@ -45,10 +45,10 @@ $backdrop_fondo = $data['backdrop'];
     <link rel="stylesheet" href="./styles/sagas-admin/table.css">
     <link rel="stylesheet" href="./styles/sagas-admin/modal.css">
     <style>
-    #sagaModal {
+    #sagaModal, #sagaEditModal {
         z-index: 10000 !important;
     }
-    #sagaModal.show {
+    #sagaModal.show, #sagaEditModal.show {
         z-index: 10000 !important;
     }
     #sagaModal .modal-dialog {
@@ -215,6 +215,73 @@ $backdrop_fondo = $data['backdrop'];
     </div>
 </div>
 
+<div class="modal fade" id="sagaEditModal" tabindex="-1" aria-hidden="true" aria-modal="false" role="dialog" style="z-index: 10000; display: none;">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 1200px; width: 90%; margin: 40px auto; z-index: 10002;">
+        <div class="modal-content saga-modal-content">
+            <div class="modal-header saga-modal-header">
+                <h2 class="modal-title">Editar Saga</h2>
+                <button type="button" class="btn-close btn-close-white saga-edit-modal-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body saga-modal-body">
+                <div class="saga-modal-section">
+                    <label for="sagaEditTitle" class="saga-field-label">Título de la Saga</label>
+                    <input type="text" id="sagaEditTitle" placeholder="Ej: SAGA IRON MAN" required>
+                </div>
+                
+                <div class="saga-modal-section">
+                    <label for="sagaEditImageFile" class="saga-field-label">Imagen de la Saga (JPG, PNG, WEBP)</label>
+                    <div class="saga-dropzone" id="sagaEditDropzone">
+                        <input type="file" id="sagaEditImageFile" accept="image/jpeg,image/jpg,image/png,image/webp" style="display: none;">
+                        <div class="saga-dropzone-content">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p class="saga-dropzone-text">Arrastra una imagen aquí o haz clic para seleccionar</p>
+                            <p class="saga-dropzone-hint">JPG, PNG o WEBP (máx. 5MB)</p>
+                        </div>
+                        <img id="sagaEditImagePreview" class="saga-image-preview" alt="Preview" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="saga-modal-section">
+                    <label>Contenido de esta Saga</label>
+                    <div id="sagaEditMoviesList" class="saga-modal-movies-grid sortable-list"></div>
+                </div>
+                
+                <div class="saga-modal-section">
+                    <div class="saga-search-wrapper">
+                        <div class="saga-search-input-wrapper">
+                            <i class="fas fa-search saga-search-icon"></i>
+                            <input type="text" id="sagaEditSearchMovies" placeholder="Buscar películas por nombre..." class="saga-search-input">
+                            <input type="text" id="sagaEditSearchSeries" placeholder="Buscar series por nombre..." class="saga-search-input" style="display: none;">
+                        </div>
+                        <div class="saga-segmented-control">
+                            <button class="saga-segmented-btn active" data-tab="movies" onclick="switchEditSearchTab('movies')">
+                                <i class="fas fa-film"></i> Películas
+                            </button>
+                            <button class="saga-segmented-btn" data-tab="series" onclick="switchEditSearchTab('series')">
+                                <i class="fas fa-tv"></i> Series
+                            </button>
+                        </div>
+                    </div>
+                    <div id="editSearchMoviesTab" class="saga-search-tab-content active">
+                        <div id="sagaEditSearchResults" class="saga-search-results"></div>
+                    </div>
+                    <div id="editSearchSeriesTab" class="saga-search-tab-content">
+                        <div id="sagaEditSearchSeriesResults" class="saga-search-results"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer saga-modal-footer">
+                <button type="button" class="saga-modal-btn saga-modal-btn-secondary saga-edit-modal-cancel" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" id="saveEditSagaBtn" class="saga-modal-btn saga-modal-btn-primary" onclick="saveEditSaga()">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="sagaSuccessModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content saga-success-modal-content">
@@ -261,6 +328,7 @@ $backdrop_fondo = $data['backdrop'];
 <script src="./scripts/sagas-admin/save-handler.js"></script>
 <script src="./scripts/sagas-admin/sagas.js"></script>
 <script src="./scripts/sagas-admin/collection.js"></script>
+<script src="./scripts/sagas-admin/edit-modal.js"></script>
 <script src="./scripts/sagas-admin/index.js"></script>
 
 </body>

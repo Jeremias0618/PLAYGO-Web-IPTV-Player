@@ -106,57 +106,9 @@
         },
 
         edit: function(sagaId) {
-            fetch('libs/endpoints/SagasAdmin.php?action=get_sagas')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success && data.sagas) {
-                        const saga = data.sagas.find(s => String(s.id) === String(sagaId));
-                        if (saga) {
-                            const sagaItems = saga.items.map(item => ({
-                                id: item.id,
-                                name: item.title,
-                                type: item.type || 'movie',
-                                poster: item.poster || ''
-                            }));
-                            const baseName = saga.title.replace(/^SAGA /, '');
-                            
-                            window.SagasAdminState.originalSagaState = {
-                                title: saga.title,
-                                items: JSON.parse(JSON.stringify(sagaItems)),
-                                image: saga.image || null
-                            };
-                            
-                            if (typeof window.SagasAdminModal.open === 'function') {
-                                window.SagasAdminModal.open(baseName, sagaItems, String(sagaId));
-                            }
-
-                            setTimeout(() => {
-                                const titleInput = document.getElementById('sagaTitle');
-                                if (titleInput) {
-                                    titleInput.value = saga.title;
-                                }
-
-                                const imagePreview = document.getElementById('sagaImagePreview');
-                                const dropzone = document.getElementById('sagaDropzone');
-                                const dropzoneContent = dropzone?.querySelector('.saga-dropzone-content');
-                                if (saga.image && imagePreview && dropzone) {
-                                    imagePreview.src = saga.image;
-                                    imagePreview.style.display = 'block';
-                                    if (dropzoneContent) {
-                                        dropzoneContent.style.display = 'none';
-                                    }
-                                }
-
-                                if (typeof window.SagasAdminPosters.loadItems === 'function') {
-                                    window.SagasAdminPosters.loadItems(sagaItems);
-                                }
-                            }, 200);
-                        }
-                    }
-                })
-                .catch(() => {
-                    alert('Error al cargar la saga para editar');
-                });
+            if (typeof window.SagasAdminEditModal.open === 'function') {
+                window.SagasAdminEditModal.open(sagaId);
+            }
         }
     };
 })();
