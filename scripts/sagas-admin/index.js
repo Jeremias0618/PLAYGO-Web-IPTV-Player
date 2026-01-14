@@ -208,8 +208,8 @@
             formData.append('title', title);
             formData.append('items', JSON.stringify(items));
             formData.append('image', imageUrl);
-            if (editCurrentSagaId) {
-                formData.append('saga_id', editCurrentSagaId);
+            if (window.SagasAdminEditModal && window.SagasAdminEditModal.currentSagaId) {
+                formData.append('saga_id', window.SagasAdminEditModal.currentSagaId);
             }
 
             fetch('libs/endpoints/SagasAdmin.php', {
