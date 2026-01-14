@@ -185,8 +185,11 @@
                 } catch (e) {
                     imageUrl = imagePreview.src.replace(/^https?:\/\/[^\/]+/, '').replace(/^\//, '');
                 }
-            } else if (editOriginalState) {
-                imageUrl = editOriginalState.image || '';
+                if (typeof window.SagasAdminUtils !== 'undefined' && typeof window.SagasAdminUtils.normalizeImagePath === 'function') {
+                    imageUrl = window.SagasAdminUtils.normalizeImagePath(imageUrl) || imageUrl;
+                }
+            } else if (window.SagasAdminEditModal && window.SagasAdminEditModal.originalState) {
+                imageUrl = window.SagasAdminEditModal.originalState.image || '';
             }
             saveEditSagaData(title, imageUrl);
         }

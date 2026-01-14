@@ -74,6 +74,9 @@
                     } catch (e) {
                         imageUrl = imagePreview.src.replace(/^https?:\/\/[^\/]+/, '').replace(/^\//, '');
                     }
+                    if (typeof window.SagasAdminUtils !== 'undefined' && typeof window.SagasAdminUtils.normalizeImagePath === 'function') {
+                        imageUrl = window.SagasAdminUtils.normalizeImagePath(imageUrl) || imageUrl;
+                    }
                 } else if (window.SagasAdminState.originalSagaState && window.SagasAdminState.originalSagaState.image) {
                     imageUrl = window.SagasAdminState.originalSagaState.image;
                 }

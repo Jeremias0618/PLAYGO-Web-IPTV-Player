@@ -138,6 +138,20 @@
                 }
             }
 
+            const normalizeImagePath = function(path) {
+                if (typeof window.SagasAdminUtils !== 'undefined' && typeof window.SagasAdminUtils.normalizeImagePath === 'function') {
+                    return window.SagasAdminUtils.normalizeImagePath(path);
+                }
+                if (!path) return null;
+                let normalized = path.replace(/^https?:\/\/[^\/]+/, '').replace(/^\//, '');
+                const pathParts = normalized.split('/');
+                const assetsIndex = pathParts.indexOf('assets');
+                if (assetsIndex >= 0) {
+                    normalized = pathParts.slice(assetsIndex).join('/');
+                }
+                return normalized || null;
+            };
+
             const imagePreview = document.getElementById('sagaImagePreview');
             let currentImage = null;
             
@@ -162,8 +176,11 @@
                 }
             }
 
-            if (currentImage !== originalImage) {
-                if ((currentImage === null || currentImage === '') && (originalImage === null || originalImage === '')) {
+            const normalizedCurrentImage = normalizeImagePath(currentImage);
+            const normalizedOriginalImage = normalizeImagePath(originalImage);
+
+            if (normalizedCurrentImage !== normalizedOriginalImage) {
+                if ((normalizedCurrentImage === null || normalizedCurrentImage === '') && (normalizedOriginalImage === null || normalizedOriginalImage === '')) {
                     return false;
                 }
                 return true;
