@@ -1,6 +1,17 @@
 (function() {
     'use strict';
 
+    function getRandomSagaWallpaper() {
+        const wallpapers = [
+            'assets/image/wallpaper_02.webp',
+            'assets/image/wallpaper_03.webp',
+            'assets/image/wallpaper_04.webp',
+            'assets/image/wallpaper_05.webp',
+            'assets/image/wallpaper_channels.webp'
+        ];
+        return wallpapers[Math.floor(Math.random() * wallpapers.length)];
+    }
+
     window.SagasAdminSagas = {
         load: function() {
             const container = document.getElementById('savedSagasContainer');
@@ -35,14 +46,15 @@
             html += '<div class="sagas-admin-grid">';
 
             sagas.forEach(saga => {
-                const imageUrl = saga.image || 'assets/image/placeholder.jpg';
+                const imageUrl = saga.image || getRandomSagaWallpaper();
+                const fallbackImage = getRandomSagaWallpaper();
                 const itemCount = saga.items ? saga.items.length : 0;
                 const createdDate = saga.created_at ? new Date(saga.created_at).toLocaleDateString('es-ES') : '';
 
                 html += `
                     <div class="saga-card" data-saga-id="${saga.id}">
                         <div class="saga-card-image">
-                            <img src="${imageUrl}" alt="${window.SagasAdminUtils.escapeHtml(saga.title)}" onerror="this.src='assets/image/placeholder.jpg'">
+                            <img src="${imageUrl}" alt="${window.SagasAdminUtils.escapeHtml(saga.title)}" onerror="this.src='${fallbackImage}'">
                             <div class="saga-card-overlay">
                                 <button class="saga-card-btn saga-card-btn-edit" onclick="window.SagasAdminSagas.edit('${saga.id}')" title="Editar">
                                     <i class="fas fa-edit"></i>
@@ -108,6 +120,12 @@
                             }));
                             const baseName = saga.title.replace(/^SAGA /, '');
                             
+                            window.SagasAdminState.originalSagaState = {
+                                title: saga.title,
+                                items: JSON.parse(JSON.stringify(sagaItems)),
+                                image: saga.image || null
+                            };
+                            
                             if (typeof window.SagasAdminModal.open === 'function') {
                                 window.SagasAdminModal.open(baseName, sagaItems, String(sagaId));
                             }
@@ -128,12 +146,6 @@
                                         dropzoneContent.style.display = 'none';
                                     }
                                 }
-
-                                window.SagasAdminState.originalSagaState = {
-                                    title: saga.title,
-                                    items: JSON.parse(JSON.stringify(sagaItems)),
-                                    image: saga.image || null
-                                };
 
                                 if (typeof window.SagasAdminPosters.loadItems === 'function') {
                                     window.SagasAdminPosters.loadItems(sagaItems);

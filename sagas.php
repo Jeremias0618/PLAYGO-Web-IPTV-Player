@@ -27,6 +27,17 @@ $sagas = [
 ];
 
 $backdrop_fondo = 'assets/image/wallpaper_03.webp';
+
+function getRandomSagaWallpaper() {
+    $wallpapers = [
+        'assets/image/wallpaper_02.webp',
+        'assets/image/wallpaper_03.webp',
+        'assets/image/wallpaper_04.webp',
+        'assets/image/wallpaper_05.webp',
+        'assets/image/wallpaper_channels.webp'
+    ];
+    return $wallpapers[array_rand($wallpapers)];
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -746,8 +757,12 @@ if (!empty($sagas) && is_array($sagas)) {
     foreach($sagas as $saga) {
         $saga_id = $saga['id'];
         $saga_nombre = $saga['nombre'];
-        $saga_imagen = $saga['imagen'];
-        $imagen_path = file_exists($saga_imagen) ? $saga_imagen : 'assets/image/saga_default.webp';
+        $saga_imagen = $saga['imagen'] ?? '';
+        if (empty($saga_imagen) || !file_exists($saga_imagen)) {
+            $imagen_path = getRandomSagaWallpaper();
+        } else {
+            $imagen_path = $saga_imagen;
+        }
 ?>
     <div class="col-6 col-sm-4 col-lg-3 col-xl-3">
         <div class="saga-card">

@@ -118,6 +118,17 @@ if ($action === 'get_sagas') {
 }
 
 if ($action === 'save_saga') {
+    function getRandomSagaWallpaper() {
+        $wallpapers = [
+            'assets/image/wallpaper_02.webp',
+            'assets/image/wallpaper_03.webp',
+            'assets/image/wallpaper_04.webp',
+            'assets/image/wallpaper_05.webp',
+            'assets/image/wallpaper_channels.webp'
+        ];
+        return $wallpapers[array_rand($wallpapers)];
+    }
+    
     $sagaTitle = trim($_POST['title'] ?? '');
     $sagaItems = isset($_POST['items']) ? json_decode($_POST['items'], true) : [];
     $sagaImage = $_POST['image'] ?? '';
@@ -181,6 +192,15 @@ if ($action === 'save_saga') {
         }
         
         if ($sagaIndex >= 0) {
+            if (empty($sagaImage)) {
+                $existingImage = $sagas[$sagaIndex]['image'] ?? '';
+                if (empty($existingImage)) {
+                    $sagaImage = getRandomSagaWallpaper();
+                } else {
+                    $sagaImage = $existingImage;
+                }
+            }
+            
             $sagas[$sagaIndex] = [
                 'id' => $sagaId,
                 'title' => $sagaTitle,
@@ -194,6 +214,10 @@ if ($action === 'save_saga') {
             exit;
         }
     } else {
+        if (empty($sagaImage)) {
+            $sagaImage = getRandomSagaWallpaper();
+        }
+        
         $maxId = 0;
         foreach ($sagas as $saga) {
             if (isset($saga['id']) && is_numeric($saga['id'])) {

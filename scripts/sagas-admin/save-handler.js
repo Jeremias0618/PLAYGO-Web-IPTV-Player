@@ -66,6 +66,17 @@
                     }
                 });
             } else {
+                const imagePreview = document.getElementById('sagaImagePreview');
+                if (imagePreview && imagePreview.style.display !== 'none' && imagePreview.src) {
+                    try {
+                        const url = new URL(imagePreview.src, window.location.origin);
+                        imageUrl = url.pathname.replace(/^\//, '');
+                    } catch (e) {
+                        imageUrl = imagePreview.src.replace(/^https?:\/\/[^\/]+/, '').replace(/^\//, '');
+                    }
+                } else if (window.SagasAdminState.originalSagaState && window.SagasAdminState.originalSagaState.image) {
+                    imageUrl = window.SagasAdminState.originalSagaState.image;
+                }
                 window.SagasAdminSave.saveData(title, imageUrl);
             }
         },

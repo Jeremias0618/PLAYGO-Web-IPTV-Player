@@ -39,12 +39,14 @@
             window.SagasAdminState.allSeriesCache = window.SagasAdminState.allSeriesCache || [];
             window.SagasAdminState.currentSearchTab = 'movies';
             
-            const titleValue = baseName === 'Nueva Saga' ? '' : 'SAGA ' + baseName.toUpperCase();
-            window.SagasAdminState.originalSagaState = {
-                title: titleValue,
-                items: JSON.parse(JSON.stringify(items || [])),
-                image: null
-            };
+            if (!window.SagasAdminState.originalSagaState) {
+                const titleValue = baseName === 'Nueva Saga' ? '' : 'SAGA ' + baseName.toUpperCase();
+                window.SagasAdminState.originalSagaState = {
+                    title: titleValue,
+                    items: JSON.parse(JSON.stringify(items || [])),
+                    image: null
+                };
+            }
             window.SagasAdminState.sagaHasUnsavedChanges = false;
             
             const modal = document.getElementById('sagaModal');

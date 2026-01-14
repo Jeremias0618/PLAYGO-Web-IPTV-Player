@@ -110,7 +110,7 @@
 
             const titleInput = document.getElementById('sagaTitle');
             const currentTitle = titleInput ? titleInput.value.trim() : '';
-            const originalTitle = window.SagasAdminState.originalSagaState.title || '';
+            const originalTitle = (window.SagasAdminState.originalSagaState.title || '').trim();
 
             if (currentTitle !== originalTitle) {
                 return true;
@@ -127,32 +127,45 @@
                 const current = currentItems[i];
                 const original = originalItems[i];
 
-                if (!original || 
-                    String(current.id) !== String(original.id) || 
-                    current.type !== original.type ||
-                    current.name !== original.name) {
+                if (!original) {
+                    return true;
+                }
+
+                if (String(current.id) !== String(original.id) || 
+                    (current.type || 'movie') !== (original.type || 'movie') ||
+                    (current.name || '') !== (original.name || '')) {
                     return true;
                 }
             }
 
             const imagePreview = document.getElementById('sagaImagePreview');
-            let currentImage = imagePreview && imagePreview.style.display !== 'none' ? imagePreview.src : null;
-            let originalImage = window.SagasAdminState.originalSagaState.image;
-
-            if (currentImage) {
+            let currentImage = null;
+            
+            if (imagePreview && imagePreview.style.display !== 'none' && imagePreview.src) {
                 try {
-                    const url = new URL(currentImage, window.location.origin);
+                    const url = new URL(imagePreview.src, window.location.origin);
                     currentImage = url.pathname.replace(/^\//, '');
                 } catch (e) {
-                    currentImage = currentImage.replace(/^https?:\/\/[^\/]+/, '').replace(/^\//, '');
+                    currentImage = imagePreview.src.replace(/^https?:\/\/[^\/]+/, '').replace(/^\//, '');
+                }
+            }
+            
+            if (currentImage === '') {
+                currentImage = null;
+            }
+
+            let originalImage = window.SagasAdminState.originalSagaState.image || null;
+            if (originalImage) {
+                originalImage = originalImage.replace(/^https?:\/\/[^\/]+/, '').replace(/^\//, '');
+                if (originalImage === '') {
+                    originalImage = null;
                 }
             }
 
-            if (originalImage) {
-                originalImage = originalImage.replace(/^https?:\/\/[^\/]+/, '').replace(/^\//, '');
-            }
-
             if (currentImage !== originalImage) {
+                if ((currentImage === null || currentImage === '') && (originalImage === null || originalImage === '')) {
+                    return false;
+                }
                 return true;
             }
 
@@ -160,4 +173,5 @@
         }
     };
 })();
+
 
