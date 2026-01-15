@@ -175,8 +175,14 @@ window.movieDuration = <?php echo json_encode($duracao); ?>;
                                     <li><span><strong>Reparto:</strong></span> <?php echo $cast; ?></li>
                                 </ul>
                     <div class="card__description card__description--details">
-                        <?php echo $plot; ?>
-    </div>
+                        <div class="plot-text-wrapper">
+                            <div class="plot-text" id="plotText"><?php echo htmlspecialchars($plot); ?></div>
+                            <button type="button" class="plot-toggle-btn" id="plotToggleBtn" style="display: none;">
+                                <span class="plot-toggle-text">Ver más</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                    </div>
                     <div style="display: flex; gap: 16px; margin-top: 20px;">
                         <?php if (!empty($youtube_id)): ?>
                             <button id="btnTrailer" style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#ff0000 60%,#c80000 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
@@ -353,7 +359,54 @@ window.movieDuration = <?php echo json_encode($duracao); ?>;
     }
 })();
 </script>
-
+<script>
+(function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        const plotText = document.getElementById('plotText');
+        const plotToggleBtn = document.getElementById('plotToggleBtn');
+        
+        if (!plotText || !plotToggleBtn) {
+            return;
+        }
+        
+        const lineHeight = 25;
+        const maxLines = 4;
+        const maxHeight = lineHeight * maxLines;
+        
+        function checkTextHeight() {
+            const originalHeight = plotText.scrollHeight;
+            
+            if (originalHeight > maxHeight) {
+                plotToggleBtn.style.display = 'flex';
+                plotText.classList.add('collapsed');
+                plotToggleBtn.classList.remove('expanded');
+            } else {
+                plotToggleBtn.style.display = 'none';
+                plotText.classList.remove('collapsed');
+            }
+        }
+        
+        plotToggleBtn.addEventListener('click', function() {
+            const toggleText = plotToggleBtn.querySelector('.plot-toggle-text');
+            if (plotText.classList.contains('collapsed')) {
+                plotText.classList.remove('collapsed');
+                plotText.classList.add('expanded');
+                plotToggleBtn.classList.add('expanded');
+                if (toggleText) toggleText.textContent = 'Ver menos';
+            } else {
+                plotText.classList.remove('expanded');
+                plotText.classList.add('collapsed');
+                plotToggleBtn.classList.remove('expanded');
+                if (toggleText) toggleText.textContent = 'Ver más';
+            }
+        });
+        
+        checkTextHeight();
+        
+        window.addEventListener('resize', checkTextHeight);
+    });
+})();
+</script>
 
 </body>
 </html>

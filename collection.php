@@ -12,7 +12,9 @@ $pwd = $_COOKIE['xpwdm'];
 $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
 $saga_id = isset($_GET['saga']) ? $_GET['saga'] : '';
 
+$page_start = microtime(true);
 $collection_data = getCollectionData($saga_id, $user, $pwd);
+$page_generation_time = (microtime(true) - $page_start) * 1000;
 
 if (!$collection_data) {
     header("Location: sagas.php");
@@ -42,8 +44,6 @@ $backdrop_fondo = $collection_data['backdrop_fondo'];
     <link rel="stylesheet" href="./styles/vendors/font-awesome-6.5.0.min.css">
     <link rel="stylesheet" href="./styles/collection/layout.css">
     <link rel="stylesheet" href="./styles/collection/items.css">
-    <link rel="stylesheet" href="./styles/collection/buttons.css">
-    <link rel="stylesheet" href="./styles/collection/modal.css">
     <link rel="stylesheet" href="./styles/collection/search.css">
     <link rel="stylesheet" href="./styles/collection/pagination.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
@@ -137,42 +137,21 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
         $filme_ano = isset($index['year']) ? $index['year'] : '';
         $filme_duration = isset($index['duration']) ? $index['duration'] : '';
         $filme_country = isset($index['country']) ? $index['country'] : '';
-        $filme_cast = isset($index['cast']) ? $index['cast'] : '';
         $filme_plot = isset($index['plot']) ? $index['plot'] : '';
         $filme_genre = isset($index['genre']) ? $index['genre'] : '';
-        $youtube_id = isset($index['youtube_id']) ? $index['youtube_id'] : '';
-        
-        if (empty($youtube_id) && isset($index['stream_id'])) {
-            $vod_id_temp = $index['stream_id'];
-            $url_info_temp = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$vod_id_temp";
-            $res_info_temp = apixtream($url_info_temp);
-            $data_info_temp = json_decode($res_info_temp, true);
-            
-            if (!empty($data_info_temp) && isset($data_info_temp['info'])) {
-                if (!empty($data_info_temp['info']['youtube_trailer'])) {
-                    $trailer_temp = $data_info_temp['info']['youtube_trailer'];
-                    if (preg_match('/^[A-Za-z0-9_\-]{11}$/', $trailer_temp)) {
-                        $youtube_id = $trailer_temp;
-                    } else if (preg_match('/(?:youtube\.com\/(?:embed\/|watch\?v=)|youtu\.be\/)([A-Za-z0-9_\-]+)/', $trailer_temp, $matches)) {
-                        $youtube_id = $matches[1];
-                    }
-                }
-            }
-        }
-        
-        $has_trailer = !empty($youtube_id);
+        $filme_cast = isset($index['cast']) ? $index['cast'] : '';
 ?>
             <div class="col-12">
                 <div class="collection-list-item">
                     <div class="row">
                         <div class="col-12 col-sm-4 col-md-3 col-lg-3">
-                            <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>">
+                            <a href="<?php echo ($filme_type === 'series' || $filme_type === 'serie') ? 'serie.php' : 'movie.php'; ?>?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo ($filme_type === 'series' || $filme_type === 'serie') ? 'serie' : 'movie'; ?>">
                                 <img loading="lazy" src="<?php echo htmlspecialchars($filme_img); ?>" alt="<?php echo htmlspecialchars($filme_nome); ?>" class="collection-poster">
                             </a>
                         </div>
                         <div class="col-12 col-sm-8 col-md-9 col-lg-9">
                             <h2 class="collection-info-title">
-                                <a href="movie.php?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo $filme_type; ?>" style="color: #fff; text-decoration: none;">
+                                <a href="<?php echo ($filme_type === 'series' || $filme_type === 'serie') ? 'serie.php' : 'movie.php'; ?>?stream=<?php echo $filme_id; ?>&streamtipo=<?php echo ($filme_type === 'series' || $filme_type === 'serie') ? 'serie' : 'movie'; ?>" style="color: #fff; text-decoration: none;">
                                     <?php echo htmlspecialchars($filme_nome); ?>
                                 </a>
                             </h2>
@@ -195,7 +174,7 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
                                 <span style="color: #fff; font-size: 1.1rem;">
                                     <?php echo $filme_ano; ?>
                                     <?php if (!empty($filme_rat)): ?>
-                                        &nbsp; <i class="fa-solid fa-star" style="color: #e50914;"></i> <?php echo $filme_rat; ?>
+                                        &nbsp; <i class="fa-solid fa-star" style="background: -webkit-linear-gradient(0deg, #831f5e 0%, #f50b60 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i> <?php echo $filme_rat; ?>
                                     <?php endif; ?>
                                 </span>
                             </div>
@@ -213,13 +192,13 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
                                         }
                                     }
                                 ?>
-                                <li><strong>Duración:</strong> <?php echo htmlspecialchars($duracao_formatted); ?></li>
+                                <li><strong style="background: -webkit-linear-gradient(0deg, #831f5e 0%, #f50b60 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Duración:</strong> <?php echo htmlspecialchars($duracao_formatted); ?></li>
                                 <?php endif; ?>
                                 <?php if (!empty($filme_country)): ?>
-                                <li><strong>País:</strong> <?php echo htmlspecialchars($filme_country); ?></li>
+                                <li><strong style="background: -webkit-linear-gradient(0deg, #831f5e 0%, #f50b60 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">País:</strong> <?php echo htmlspecialchars($filme_country); ?></li>
                                 <?php endif; ?>
                                 <?php if (!empty($filme_cast)): ?>
-                                <li><strong>Reparto:</strong> <?php echo htmlspecialchars($filme_cast); ?></li>
+                                <li><strong style="background: -webkit-linear-gradient(0deg, #831f5e 0%, #f50b60 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Reparto:</strong> <?php echo htmlspecialchars($filme_cast); ?></li>
                                 <?php endif; ?>
                             </ul>
                             <?php if (!empty($filme_plot)): ?>
@@ -227,16 +206,6 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
                                 <?php echo htmlspecialchars($filme_plot); ?>
                             </div>
                             <?php endif; ?>
-                            <div class="collection-buttons">
-                                <button class="collection-btn-trailer" data-youtube-id="<?php echo $has_trailer ? htmlspecialchars($youtube_id) : ''; ?>" data-movie-title="<?php echo htmlspecialchars($filme_nome); ?>" <?php echo $has_trailer ? '' : 'disabled'; ?> style="<?php echo $has_trailer ? 'cursor:pointer;' : 'opacity:0.5;cursor:not-allowed;'; ?>">
-                                    <i class="fab fa-youtube" style="font-size:1.5rem;"></i>
-                                    <span>Tráiler</span>
-                                </button>
-                                <button class="collection-btn-fav" data-movie-id="<?php echo $filme_id; ?>" data-movie-name="<?php echo htmlspecialchars($filme_nome); ?>" data-movie-img="<?php echo htmlspecialchars($filme_img); ?>" data-movie-year="<?php echo htmlspecialchars($filme_ano); ?>" data-movie-rating="<?php echo htmlspecialchars($filme_rat); ?>">
-                                    <i class="fa fa-star" style="font-size:1.4rem;"></i>
-                                    <span class="fav-text-<?php echo $filme_id; ?>">Agregar a Favoritos</span>
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -247,24 +216,9 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
     echo '<div class="col-12" style="color:#fff;font-size:1.2rem;text-align:center;">No hay películas disponibles en esta saga.</div>';
                     }
                     ?>
-            </div>
-        </div>
-</section>
-<div class="modal fade" id="trailerModal" tabindex="-1" role="dialog" aria-labelledby="trailerModalTitle" aria-modal="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="trailerModalTitle">Tráiler</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar" tabindex="0"></button>
-            </div>
-            <div class="modal-body p-0">
-                <div class="ratio ratio-16x9">
-                    <iframe id="trailerIframe" src="" allow="autoplay; encrypted-media" allowfullscreen style="border: none;"></iframe>
-                </div>
-            </div>
         </div>
     </div>
-</div>
+</section>
 <footer class="footer">
     <div class="container">
         <div class="row">
@@ -292,8 +246,6 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
 <script src="./scripts/vendors/jwplayer.core.controls.js"></script>
 <script src="./scripts/vendors/provider.hlsjs.js"></script>
 <script src="./scripts/core/main.js"></script>
-<script src="./scripts/collection/trailer.js"></script>
-<script src="./scripts/collection/favorites.js"></script>
 <script src="./scripts/collection/init.js"></script>
 </body>
 </html>

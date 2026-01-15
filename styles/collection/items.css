@@ -58,7 +58,10 @@
 }
 
 .collection-info-meta li strong {
-    color: #e50914;
+    background: -webkit-linear-gradient(0deg, #831f5e 0%, #f50b60 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-right: 8px;
 }
 
