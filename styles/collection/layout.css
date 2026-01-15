@@ -1,0 +1,120 @@
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.header__content {
+    background: #000 !important;
+    border-radius: 12px;
+    padding: 12px 24px;
+}
+
+.header__wrap {
+    background: #000 !important;
+}
+
+.navbar-overlay {
+    display: none !important;
+}
+
+.bg-animate {
+    animation: navbarBgMove 8s linear infinite alternate;
+    background-size: 200% 100%;
+}
+
+@keyframes navbarBgMove {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+#bg-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.78);
+    z-index: 0;
+    pointer-events: none;
+}
+
+body > *:not(#bg-overlay) {
+    position: relative;
+    z-index: 1;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #000 !important;
+    z-index: 2000 !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.header__wrap {
+    background: #000 !important;
+    border-radius: 0 !important;
+}
+
+.header__content {
+    background: #000 !important;
+    border-radius: 12px;
+    padding: 12px 24px;
+}
+
+body {
+    padding-top: 90px;
+    overflow-x: hidden !important;
+}
+
+html {
+    overflow-x: hidden !important;
+}
+
+.card__cover img {
+    width: 100%;
+    height: 440px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #232027;
+    display: block;
+}
+
+.section.details {
+    position: relative;
+}
+
+@media (max-width: 600px) {
+    .card__cover img {
+        height: 260px !important;
+    }
+    .header__logo {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+        margin-right: auto !important;
+    }
+    .header__content {
+        padding-left: 4px !important;
+    }
+}
+
+@media (min-width: 601px) {
+    .header__logo img {
+        width: 240px !important;
+        height: 80px !important;
+        max-width: none !important;
+        object-fit: contain;
+    }
+}
+
+@media (max-width: 600px) {
+    .header__logo img {
+        width: 240px !important;
+        height: 60px !important;
+        max-width: 100% !important;
+        object-fit: contain;
+    }
+}
+

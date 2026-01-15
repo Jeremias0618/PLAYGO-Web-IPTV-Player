@@ -1,0 +1,63 @@
+.collection-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.collection-btn-trailer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(90deg, #ff0000 60%, #c80000 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.collection-btn-trailer:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,0,0,0.4);
+}
+
+.collection-btn-fav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(90deg, #232027 60%, #444 100%);
+    color: #ffd700;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    transition: all 0.2s;
+}
+
+.collection-btn-fav:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,215,0,0.3);
+}
+
+.collection-btn-fav.favorito-active {
+    background: linear-gradient(90deg, #ffd700 60%, #ffed4e 100%);
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .collection-buttons {
+        flex-direction: column;
+    }
+    .collection-btn-trailer,
+    .collection-btn-fav {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
