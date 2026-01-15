@@ -127,6 +127,9 @@ $backdrop_fondo = $data['backdrop'];
             <div class="row">
                 <div class="col-12">
                     <div class="sagas-admin-actions">
+                        <button id="createCustomSagaBtn" class="sagas-admin-btn sagas-admin-btn-primary">
+                            <i class="fas fa-plus-circle"></i> Crear Saga Personalizada
+                        </button>
                         <button id="collectMoviesBtn" class="sagas-admin-btn">
                             <i class="fas fa-download"></i> Recolectar Películas
                         </button>

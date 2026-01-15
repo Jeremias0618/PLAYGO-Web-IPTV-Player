@@ -33,6 +33,16 @@
     transform: none;
 }
 
+.sagas-admin-btn-primary {
+    background: linear-gradient(90deg, #831f5e 0%, #f50b60 100%);
+    box-shadow: 0 2px 8px rgba(131, 31, 94, 0.3);
+}
+
+.sagas-admin-btn-primary:hover {
+    background: linear-gradient(90deg, #9a2569 0%, #ff0d6b 100%);
+    box-shadow: 0 4px 12px rgba(131, 31, 94, 0.4);
+}
+
 .sagas-admin-message {
     text-align: center;
     padding: 40px 20px;
@@ -502,6 +512,10 @@
     .sagas-admin-btn {
         width: 100%;
         justify-content: center;
+    }
+    
+    .sagas-admin-btn-primary {
+        order: -1;
     }
     
     .sagas-admin-saved-list {

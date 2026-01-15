@@ -24,6 +24,15 @@
             window.SagasAdminModal.setupCloseButtons();
         }
 
+        const createCustomSagaBtn = document.getElementById('createCustomSagaBtn');
+        if (createCustomSagaBtn) {
+            createCustomSagaBtn.addEventListener('click', function() {
+                if (typeof window.SagasAdminModal.open === 'function') {
+                    window.SagasAdminModal.open('Nueva Saga', []);
+                }
+            });
+        }
+
         const collectBtn = document.getElementById('collectMoviesBtn');
         if (collectBtn) {
             collectBtn.addEventListener('click', function() {
