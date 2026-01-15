@@ -11,11 +11,15 @@ $pwd = $_COOKIE['xpwdm'];
 
 $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
 
+$page_start_time = microtime(true);
+error_log("[collection.php] PAGE_START - Saga ID: " . (isset($_GET['saga']) ? $_GET['saga'] : 'none'));
+
 $saga_id = isset($_GET['saga']) ? $_GET['saga'] : '';
 
 $sagasFile = __DIR__ . '/storage/sagas.json';
 $saga_actual = null;
 
+$load_start = microtime(true);
 if (file_exists($sagasFile)) {
     $content = file_get_contents($sagasFile);
     $sagasData = json_decode($content, true) ?: [];
@@ -32,14 +36,21 @@ if (file_exists($sagasFile)) {
         }
     }
 }
+$load_time = (microtime(true) - $load_start) * 1000;
+error_log("[collection.php] LOAD_SAGA - Time: " . number_format($load_time, 2) . "ms - Items: " . (isset($saga_actual['items']) ? count($saga_actual['items']) : 0));
 
 if(!$saga_actual || empty($saga_actual['items'])) {
+    error_log("[collection.php] REDIRECT - No saga found or empty items");
     header("Location: sagas.php");
     exit;
 }
 
 function getTmdbInfo($title, $year = '', $type = 'movie') {
+    $start_time = microtime(true);
+    error_log("[collection.php] getTmdbInfo START - Title: $title, Type: $type, Year: $year");
+    
     if (!defined('TMDB_API_KEY') || empty(TMDB_API_KEY)) {
+        error_log("[collection.php] getTmdbInfo SKIP - No TMDB_API_KEY defined");
         return null;
     }
     
@@ -54,57 +65,76 @@ function getTmdbInfo($title, $year = '', $type = 'movie') {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $tmdb_search_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     $tmdb_search_json = @curl_exec($ch);
+    $curl_error = curl_error($ch);
     curl_close($ch);
     
+    $search_time = (microtime(true) - $start_time) * 1000;
+    error_log("[collection.php] getTmdbInfo SEARCH - Time: " . number_format($search_time, 2) . "ms");
+    
+    if ($curl_error) {
+        error_log("[collection.php] getTmdbInfo ERROR - CURL: $curl_error");
+        return null;
+    }
+    
     $tmdb_search_data = @json_decode($tmdb_search_json, true);
-    if (!empty($tmdb_search_data['results'][0])) {
-        $result = $tmdb_search_data['results'][0];
+    if (empty($tmdb_search_data['results'][0])) {
+        error_log("[collection.php] getTmdbInfo NO_RESULTS - No results found for: $title");
+        return null;
+    }
+    
+    $result = $tmdb_search_data['results'][0];
+    
+    // Solo obtener detalles si realmente necesitamos información adicional
+    if (!empty($result['id'])) {
+        $tmdb_id = $result['id'];
+        $detail_url = "https://api.themoviedb.org/3/{$search_type}/{$tmdb_id}?api_key=" . TMDB_API_KEY . "&language=" . $language . "&append_to_response=credits,videos";
         
-        if (!empty($result['id'])) {
-            $tmdb_id = $result['id'];
-            $detail_url = "https://api.themoviedb.org/3/{$search_type}/{$tmdb_id}?api_key=" . TMDB_API_KEY . "&language=" . $language . "&append_to_response=credits,videos";
-            
-            $ch2 = curl_init();
-            curl_setopt($ch2, CURLOPT_URL, $detail_url);
-            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch2, CURLOPT_TIMEOUT, 3);
-            curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 3);
-            curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
-            $tmdb_detail_json = @curl_exec($ch2);
-            curl_close($ch2);
-            
-            $tmdb_detail = @json_decode($tmdb_detail_json, true);
-            if ($tmdb_detail) {
-                if (!empty($tmdb_detail['overview'])) $result['overview'] = $tmdb_detail['overview'];
-                if (!empty($tmdb_detail['vote_average'])) $result['vote_average'] = $tmdb_detail['vote_average'];
-                if (!empty($tmdb_detail['release_date'])) $result['release_date'] = $tmdb_detail['release_date'];
-                if (!empty($tmdb_detail['first_air_date'])) $result['first_air_date'] = $tmdb_detail['first_air_date'];
-                if (!empty($tmdb_detail['genres']) && is_array($tmdb_detail['genres'])) {
-                    $result['genres'] = array_map(function($g) { return $g['name']; }, $tmdb_detail['genres']);
-                }
-                if (!empty($tmdb_detail['credits']['cast']) && is_array($tmdb_detail['credits']['cast'])) {
-                    $cast_names = array_slice(array_map(function($c) { return $c['name']; }, $tmdb_detail['credits']['cast']), 0, 5);
-                    $result['cast'] = implode(', ', $cast_names);
-                }
-                if (!empty($tmdb_detail['videos']['results']) && is_array($tmdb_detail['videos']['results'])) {
-                    foreach ($tmdb_detail['videos']['results'] as $video) {
-                        if (isset($video['type']) && $video['type'] === 'Trailer' && isset($video['key'])) {
-                            $result['youtube_key'] = $video['key'];
-                            break;
-                        }
+        $detail_start = microtime(true);
+        $ch2 = curl_init();
+        curl_setopt($ch2, CURLOPT_URL, $detail_url);
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch2, CURLOPT_TIMEOUT, 1);
+        curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 1);
+        curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+        $tmdb_detail_json = @curl_exec($ch2);
+        curl_close($ch2);
+        
+        $detail_time = (microtime(true) - $detail_start) * 1000;
+        error_log("[collection.php] getTmdbInfo DETAIL - Time: " . number_format($detail_time, 2) . "ms");
+        
+        $tmdb_detail = @json_decode($tmdb_detail_json, true);
+        if ($tmdb_detail) {
+            if (!empty($tmdb_detail['overview'])) $result['overview'] = $tmdb_detail['overview'];
+            if (!empty($tmdb_detail['vote_average'])) $result['vote_average'] = $tmdb_detail['vote_average'];
+            if (!empty($tmdb_detail['release_date'])) $result['release_date'] = $tmdb_detail['release_date'];
+            if (!empty($tmdb_detail['first_air_date'])) $result['first_air_date'] = $tmdb_detail['first_air_date'];
+            if (!empty($tmdb_detail['poster_path'])) $result['poster_path'] = $tmdb_detail['poster_path'];
+            if (!empty($tmdb_detail['genres']) && is_array($tmdb_detail['genres'])) {
+                $result['genres'] = array_map(function($g) { return $g['name']; }, $tmdb_detail['genres']);
+            }
+            if (!empty($tmdb_detail['credits']['cast']) && is_array($tmdb_detail['credits']['cast'])) {
+                $cast_names = array_slice(array_map(function($c) { return $c['name']; }, $tmdb_detail['credits']['cast']), 0, 5);
+                $result['cast'] = implode(', ', $cast_names);
+            }
+            if (!empty($tmdb_detail['videos']['results']) && is_array($tmdb_detail['videos']['results'])) {
+                foreach ($tmdb_detail['videos']['results'] as $video) {
+                    if (isset($video['type']) && $video['type'] === 'Trailer' && isset($video['key'])) {
+                        $result['youtube_key'] = $video['key'];
+                        break;
                     }
                 }
             }
         }
-        
-        return $result;
     }
     
-    return null;
+    $total_time = (microtime(true) - $start_time) * 1000;
+    error_log("[collection.php] getTmdbInfo END - Total Time: " . number_format($total_time, 2) . "ms");
+    
+    return $result;
 }
 
 $peliculas = [];
@@ -116,32 +146,125 @@ usort($items, function($a, $b) {
     return $orderA <=> $orderB;
 });
 
+$items_count = count($items);
+error_log("[collection.php] PROCESSING_ITEMS - Total: $items_count");
+
+// Array para almacenar información de llamadas API para JavaScript
+$api_calls_log = [];
+
+// Preparar todas las llamadas para ejecutarlas en paralelo
+$parallel_start = microtime(true);
+$multi_handle = curl_multi_init();
+$curl_handles = [];
+$items_data = [];
+
+$item_index = 0;
 foreach($items as $item) {
+    $item_index++;
     $vod_id = isset($item['id']) ? $item['id'] : null;
     $item_type = isset($item['type']) ? $item['type'] : 'movie';
     
-    if (!$vod_id) continue;
+    if (!$vod_id) {
+        error_log("[collection.php] ITEM_$item_index SKIP - No VOD ID");
+        continue;
+    }
     
     $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$vod_id";
-    $res_info = apixtream($url_info);
-    $data_info = json_decode($res_info, true);
+    error_log("[collection.php] ITEM_$item_index XTREAM_API_CALL - URL: " . str_replace($pwd, '***', $url_info));
     
-    $movie_data = [];
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url_info);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    
+    curl_multi_add_handle($multi_handle, $ch);
+    
+    $curl_handles[$item_index] = $ch;
+    $items_data[$item_index] = [
+        'item' => $item,
+        'vod_id' => $vod_id,
+        'item_type' => $item_type,
+        'start_time' => microtime(true)
+    ];
+}
+
+// Ejecutar todas las llamadas en paralelo
+$running = null;
+do {
+    curl_multi_exec($multi_handle, $running);
+    curl_multi_select($multi_handle, 0.1);
+} while ($running > 0);
+
+$parallel_time = (microtime(true) - $parallel_start) * 1000;
+error_log("[collection.php] PARALLEL_API_CALLS - Total Time: " . number_format($parallel_time, 2) . "ms for " . count($curl_handles) . " calls");
+
+// Procesar resultados
+foreach($curl_handles as $item_index => $ch) {
+    $item_start = $items_data[$item_index]['start_time'];
+    $item = $items_data[$item_index]['item'];
+    $vod_id = $items_data[$item_index]['vod_id'];
+    $item_type = $items_data[$item_index]['item_type'];
+    
+    $res_info = curl_multi_getcontent($ch);
+    $xtream_time = (microtime(true) - $item_start) * 1000;
+    
+    $xtream_success = !empty($res_info);
+    $data_info = json_decode($res_info, true);
+    $xtream_has_data = !empty($data_info);
+    
+    error_log("[collection.php] ITEM_$item_index XTREAM_API_RESPONSE - Time: " . number_format($xtream_time, 2) . "ms, Success: " . ($xtream_success ? 'YES' : 'NO') . ", Has Data: " . ($xtream_has_data ? 'YES' : 'NO'));
+    
+    curl_multi_remove_handle($multi_handle, $ch);
+    curl_close($ch);
+    
+    // Usar información del JSON primero (más rápido)
+    $movie_name = isset($item['title']) ? $item['title'] : '';
+    $stream_icon = isset($item['poster']) ? $item['poster'] : '';
+    
+    // Registrar llamada para JavaScript
+    $api_calls_log[] = [
+        'item_index' => $item_index,
+        'vod_id' => $vod_id,
+        'api' => 'Xtream UI',
+        'endpoint' => 'get_vod_info',
+        'time_ms' => round($xtream_time, 2),
+        'success' => $xtream_success,
+        'has_data' => $xtream_has_data,
+        'movie_name' => $movie_name
+    ];
+    
+    // Inicializar variables con valores por defecto
+    $rating = '';
+    $year = '';
+    $duration = '';
+    $country = '';
+    $cast = '';
+    $plot = '';
+    $genre = '';
+    $trailer = '';
     $info_data = [];
+    $movie_data = [];
     
     if ($item_type === 'movie' && !empty($data_info['movie_data'])) {
         $movie_data = $data_info['movie_data'];
         $info_data = isset($data_info['info']) ? $data_info['info'] : [];
+        // Actualizar nombre si viene de Xtream y es diferente
+        if (!empty($movie_data['name']) && $movie_data['name'] !== $movie_name) {
+            $movie_name = $movie_data['name'];
+        }
     } elseif ($item_type === 'series' && !empty($data_info['info'])) {
         $info_data = $data_info['info'];
-        $movie_data = ['name' => isset($info_data['name']) ? $info_data['name'] : ''];
-    } else {
-        $movie_data = ['name' => isset($item['title']) ? $item['title'] : ''];
-        $info_data = [];
+        if (!empty($info_data['name']) && $info_data['name'] !== $movie_name) {
+            $movie_name = $info_data['name'];
+        }
     }
     
-    $movie_name = isset($movie_data['name']) ? $movie_data['name'] : (isset($item['title']) ? $item['title'] : '');
-    $stream_icon = isset($info_data['movie_image']) ? $info_data['movie_image'] : (isset($item['poster']) ? $item['poster'] : '');
+    // Extraer información de Xtream (sobrescribe valores del JSON si están disponibles)
+    if (!empty($info_data['movie_image']) && empty($stream_icon)) {
+        $stream_icon = $info_data['movie_image'];
+    }
     $rating = isset($info_data['rating']) ? $info_data['rating'] : '';
     $year = isset($info_data['releasedate']) ? substr($info_data['releasedate'], 0, 4) : '';
     $duration = isset($info_data['duration']) ? $info_data['duration'] : '';
@@ -160,8 +283,35 @@ foreach($items as $item) {
         }
     }
     
-    if ((empty($plot) || empty($cast) || empty($genre) || empty($rating) || empty($youtube_id)) && !empty($movie_name)) {
+    $needs_tmdb = false;
+    
+    if (empty($plot) && empty($stream_icon) && empty($rating) && empty($year) && !empty($movie_name)) {
+        $needs_tmdb = true;
+        error_log("[collection.php] ITEM_$item_index TMDB ENABLED - Missing all critical info");
+    }
+    
+    if ($needs_tmdb) {
+        $tmdb_start = microtime(true);
+        error_log("[collection.php] ITEM_$item_index TMDB_API_CALL - Title: $movie_name, Year: $year, Type: $item_type");
+        
         $tmdb_info = getTmdbInfo($movie_name, $year, $item_type);
+        $tmdb_time = (microtime(true) - $tmdb_start) * 1000;
+        $tmdb_success = !empty($tmdb_info);
+        
+        error_log("[collection.php] ITEM_$item_index TMDB_API_RESPONSE - Time: " . number_format($tmdb_time, 2) . "ms, Success: " . ($tmdb_success ? 'YES' : 'NO') . " - Missing fields: $missing_fields");
+        
+        // Registrar llamada para JavaScript
+        $api_calls_log[] = [
+            'item_index' => $item_index,
+            'vod_id' => $vod_id,
+            'api' => 'TMDB',
+            'endpoint' => 'search/' . ($item_type === 'series' ? 'tv' : 'movie'),
+            'time_ms' => round($tmdb_time, 2),
+            'success' => $tmdb_success,
+            'has_data' => $tmdb_success,
+            'movie_name' => $movie_name
+        ];
+        
         if ($tmdb_info) {
             if (empty($plot) && !empty($tmdb_info['overview'])) {
                 $plot = $tmdb_info['overview'];
@@ -190,6 +340,9 @@ foreach($items as $item) {
         }
     }
     
+    $item_time = (microtime(true) - $item_start) * 1000;
+    error_log("[collection.php] ITEM_$item_index END - Processing Time: " . number_format($item_time, 2) . "ms");
+    
     $peliculas[] = [
         'stream_id' => $vod_id,
         'name' => $movie_name,
@@ -205,6 +358,11 @@ foreach($items as $item) {
         'genre' => $genre,
         'youtube_id' => $youtube_id
     ];
+}
+
+// Cerrar el multi handle después de procesar todos los resultados
+if (isset($multi_handle)) {
+    curl_multi_close($multi_handle);
 }
 
 $output = $peliculas;
@@ -230,6 +388,25 @@ if (!empty($peliculas) && is_array($peliculas) && count($peliculas) > 0) {
 }
 
 $peliculas_pagina = $peliculas;
+
+$page_total_time = (microtime(true) - $page_start_time) * 1000;
+
+// Calcular estadísticas de llamadas API
+$total_api_calls = count($api_calls_log);
+$xtream_calls = array_filter($api_calls_log, function($call) { return $call['api'] === 'Xtream UI'; });
+$tmdb_calls = array_filter($api_calls_log, function($call) { return $call['api'] === 'TMDB'; });
+
+$xtream_total_time = array_sum(array_column($xtream_calls, 'time_ms'));
+$tmdb_total_time = array_sum(array_column($tmdb_calls, 'time_ms'));
+
+error_log("[collection.php] PAGE_END - Total Time: " . number_format($page_total_time, 2) . "ms");
+error_log("[collection.php] API_CALLS_SUMMARY - Total Calls: $total_api_calls");
+error_log("[collection.php] API_CALLS_SUMMARY - Xtream UI: " . count($xtream_calls) . " calls, Total Time: " . number_format($xtream_total_time, 2) . "ms, Avg: " . (count($xtream_calls) > 0 ? number_format($xtream_total_time / count($xtream_calls), 2) : 0) . "ms");
+error_log("[collection.php] API_CALLS_SUMMARY - TMDB: " . count($tmdb_calls) . " calls, Total Time: " . number_format($tmdb_total_time, 2) . "ms, Avg: " . (count($tmdb_calls) > 0 ? number_format($tmdb_total_time / count($tmdb_calls), 2) : 0) . "ms");
+error_log("[collection.php] API_CALLS_SUMMARY - Other Processing: " . number_format($page_total_time - $xtream_total_time - $tmdb_total_time, 2) . "ms");
+
+$page_total_time = (microtime(true) - $page_start_time) * 1000;
+error_log("[collection.php] PAGE_END - Total Time: " . number_format($page_total_time, 2) . "ms - Items Processed: " . count($peliculas_pagina));
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -1280,6 +1457,59 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
 <script src="./scripts/core/main.js"></script>
 
 <script>
+console.log('[collection.php] Page loaded - Saga ID: <?php echo htmlspecialchars($saga_id); ?>');
+console.log('[collection.php] Items count: <?php echo count($peliculas_pagina); ?>');
+console.log('[collection.php] Page generation time: <?php echo isset($page_total_time) ? number_format($page_total_time, 2) : 'N/A'; ?>ms');
+
+// Mostrar información detallada de llamadas API
+var apiCallsLog = <?php echo json_encode($api_calls_log ?? [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE); ?>;
+
+console.log('[collection.php] ========== API CALLS DETAILED LOG ==========');
+console.log('[collection.php] Total API Calls: ' + apiCallsLog.length);
+
+var xtreamCalls = apiCallsLog.filter(function(call) { return call.api === 'Xtream UI'; });
+var tmdbCalls = apiCallsLog.filter(function(call) { return call.api === 'TMDB'; });
+
+console.log('[collection.php] --- Xtream UI Calls: ' + xtreamCalls.length + ' ---');
+xtreamCalls.forEach(function(call, index) {
+    console.log('[collection.php] Xtream Call #' + (index + 1) + ':', {
+        'Item': call.item_index + 1,
+        'VOD ID': call.vod_id,
+        'Movie': call.movie_name,
+        'Time': call.time_ms + 'ms',
+        'Success': call.success ? '✓' : '✗',
+        'Has Data': call.has_data ? '✓' : '✗'
+    });
+});
+
+if (tmdbCalls.length > 0) {
+    console.log('[collection.php] --- TMDB Calls: ' + tmdbCalls.length + ' ---');
+    tmdbCalls.forEach(function(call, index) {
+        console.log('[collection.php] TMDB Call #' + (index + 1) + ':', {
+            'Item': call.item_index + 1,
+            'VOD ID': call.vod_id,
+            'Movie': call.movie_name,
+            'Endpoint': call.endpoint,
+            'Time': call.time_ms + 'ms',
+            'Success': call.success ? '✓' : '✗',
+            'Has Data': call.has_data ? '✓' : '✗'
+        });
+    });
+}
+
+// Resumen de tiempos
+var xtreamTotalTime = xtreamCalls.reduce(function(sum, call) { return sum + call.time_ms; }, 0);
+var tmdbTotalTime = tmdbCalls.reduce(function(sum, call) { return sum + call.time_ms; }, 0);
+var xtreamAvgTime = xtreamCalls.length > 0 ? (xtreamTotalTime / xtreamCalls.length).toFixed(2) : 0;
+var tmdbAvgTime = tmdbCalls.length > 0 ? (tmdbTotalTime / tmdbCalls.length).toFixed(2) : 0;
+
+console.log('[collection.php] --- API CALLS SUMMARY ---');
+console.log('[collection.php] Xtream UI: ' + xtreamCalls.length + ' calls, Total: ' + xtreamTotalTime.toFixed(2) + 'ms, Avg: ' + xtreamAvgTime + 'ms');
+if (tmdbCalls.length > 0) {
+    console.log('[collection.php] TMDB: ' + tmdbCalls.length + ' calls, Total: ' + tmdbTotalTime.toFixed(2) + 'ms, Avg: ' + tmdbAvgTime + 'ms');
+}
+console.log('[collection.php] ============================================');
+
 (function() {
     function initTrailerModal() {
         const trailerButtons = document.querySelectorAll('.collection-btn-trailer');
