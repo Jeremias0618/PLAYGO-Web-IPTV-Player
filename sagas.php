@@ -510,7 +510,7 @@ function getRandomSagaWallpaper() {
     }
         .card__cover img {
     width: 100%;
-    height: 440px;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
     border-radius: 10px;
     background: #232027;
@@ -518,16 +518,14 @@ function getRandomSagaWallpaper() {
 }
 @media (max-width: 600px) {
   .card__cover img {
-    height: 260px !important;
+    aspect-ratio: 16 / 9;
   }
 }
     .saga-card {
         text-align: center;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transition: box-shadow 0.3s ease;
         cursor: pointer;
-    }
-    .saga-card:hover {
-        transform: translateY(-8px);
+        margin-bottom: 40px;
     }
     .saga-card a {
         text-decoration: none;
@@ -537,11 +535,11 @@ function getRandomSagaWallpaper() {
     .saga-card-cover {
         position: relative;
         width: 100%;
-        height: 440px;
+        aspect-ratio: 16 / 9;
         border-radius: 10px;
         overflow: hidden;
         background: #232027;
-        margin-bottom: 16px;
+        margin-bottom: 20px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.3);
         transition: all 0.3s ease;
     }
@@ -560,6 +558,7 @@ function getRandomSagaWallpaper() {
         font-size: 1.3rem;
         font-weight: 700;
         margin: 0;
+        margin-top: 8px;
         padding: 0 8px;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -581,15 +580,28 @@ function getRandomSagaWallpaper() {
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
         .saga-card-cover {
-            height: 260px !important;
+            aspect-ratio: 16 / 9;
         }
         .saga-card-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
         .saga-card-count {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+        }
+    }
+    @media (min-width: 769px) {
+        .saga-card-cover {
+            aspect-ratio: 16 / 9;
+        }
+        .saga-card-title {
+            font-size: 1.5rem;
+            margin-top: 12px;
+        }
+        .saga-card-count {
+            font-size: 1.1rem;
+            margin-top: 10px;
         }
     }
 
@@ -788,16 +800,13 @@ if (!empty($sagas) && is_array($sagas)) {
             $imagen_path = $saga_imagen;
         }
 ?>
-    <div class="col-6 col-sm-4 col-lg-3 col-xl-3">
+    <div class="col-12 col-md-6">
         <div class="saga-card">
             <a href="collection.php?saga=<?php echo urlencode($saga_id); ?>">
                 <div class="saga-card-cover">
                     <img loading="lazy" src="<?php echo htmlspecialchars($imagen_path); ?>" alt="<?php echo htmlspecialchars($saga_nombre); ?>">
                 </div>
                 <h3 class="saga-card-title"><?php echo htmlspecialchars($saga_nombre); ?></h3>
-                <div class="saga-card-count">
-                    <i class="fas fa-film"></i> <?php echo $saga_items_count; ?> <?php echo $saga_items_count === 1 ? 'película' : 'películas'; ?>
-                </div>
             </a>
         </div>
     </div>
