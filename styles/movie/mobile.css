@@ -111,7 +111,8 @@
     
     #btnTrailer,
     #btnFavorito,
-    #btnPlaylist {
+    #btnPlaylist,
+    #btnSaga {
         width: 100% !important;
         min-width: 0 !important;
         display: flex !important;
@@ -128,14 +129,16 @@
     
     #btnTrailer i,
     #btnFavorito i,
-    #btnPlaylist i {
+    #btnPlaylist i,
+    #btnSaga i {
         font-size: 1.35rem !important;
         margin-right: 8px !important;
     }
     
     #btnTrailer span,
     #btnFavorito span,
-    #btnPlaylist span {
+    #btnPlaylist span,
+    #btnSaga span {
         font-size: 1.08rem !important;
         font-weight: 500;
         letter-spacing: 0.5px;
@@ -182,9 +185,23 @@
         color: #5dc1b9 !important;
     }
     
+    #btnSaga {
+        background: linear-gradient(90deg,#831f5e 60%,#f50b60 100%) !important;
+        color: #fff !important;
+    }
+    
+    #btnSaga i.fa-layer-group {
+        color: #fff !important;
+    }
+    
+    #btnSaga span {
+        color: #fff !important;
+    }
+    
     #btnTrailer:active,
     #btnFavorito:active,
-    #btnPlaylist:active {
+    #btnPlaylist:active,
+    #btnSaga:active {
         opacity: 0.85;
     }
     

@@ -40,6 +40,23 @@ $pais = $movieData['country'];
 $nota = $movieData['rating'];
 $ano = $movieData['year'];
 
+$saga_id = null;
+$sagasFile = __DIR__ . '/storage/sagas.json';
+if (file_exists($sagasFile)) {
+    $sagasContent = file_get_contents($sagasFile);
+    $sagasData = json_decode($sagasContent, true) ?: [];
+    foreach ($sagasData as $saga) {
+        if (isset($saga['items']) && is_array($saga['items'])) {
+            foreach ($saga['items'] as $item) {
+                if (isset($item['id']) && (string)$item['id'] === (string)$id && isset($item['type']) && ($item['type'] === 'movie' || $item['type'] === 'Movie')) {
+                    $saga_id = $saga['id'];
+                    break 2;
+                }
+            }
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -205,6 +222,15 @@ window.movieDuration = <?php echo json_encode($duracao); ?>;
                         </button>
                         <div id="playlistTooltip" style="display: none; position: absolute; top: 100%; left: 0; margin-top: 8px; z-index: 10000;"></div>
                     </div>
+                    <?php if ($saga_id !== null): ?>
+                    <a href="collection.php?saga=<?php echo htmlspecialchars($saga_id); ?>" style="text-decoration: none;">
+                        <button id="btnSaga"
+                            style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#831f5e 60%,#f50b60 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
+                            <i class="fa fa-layer-group" style="font-size:1.4rem;color:#fff;"></i>
+                            <span style="color:#fff;">Saga</span>
+                        </button>
+                    </a>
+                    <?php endif; ?>
             </div>
             </div>
         </div>

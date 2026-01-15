@@ -27,6 +27,23 @@ $ano_short = $ano ? substr($ano, 0, 4) : '';
 $poster_final = $poster_tmdb ?: $poster_img;
 $backdrop_final = $wallpaper_tmdb ?: ($backdrop ?: $poster_final);
 
+$saga_id = null;
+$sagasFile = __DIR__ . '/storage/sagas.json';
+if (file_exists($sagasFile)) {
+    $sagasContent = file_get_contents($sagasFile);
+    $sagasData = json_decode($sagasContent, true) ?: [];
+    foreach ($sagasData as $saga) {
+        if (isset($saga['items']) && is_array($saga['items'])) {
+            foreach ($saga['items'] as $item) {
+                if (isset($item['id']) && (string)$item['id'] === (string)$id && isset($item['type']) && ($item['type'] === 'series' || $item['type'] === 'serie' || $item['type'] === 'Series' || $item['type'] === 'Serie')) {
+                    $saga_id = $saga['id'];
+                    break 2;
+                }
+            }
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -204,6 +221,15 @@ body::before {
                 </button>
                 <div id="playlistTooltip" style="display: none; position: absolute; top: 100%; left: 0; margin-top: 8px; z-index: 10000;"></div>
             </div>
+            <?php if ($saga_id !== null): ?>
+            <a href="collection.php?saga=<?php echo htmlspecialchars($saga_id); ?>" style="text-decoration: none;">
+                <button id="btnSaga"
+                    style="display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#831f5e 60%,#f50b60 100%);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px #0003;transition:background 0.2s;">
+                    <i class="fa fa-layer-group" style="font-size:1.4rem;color:#fff;"></i>
+                    <span style="color:#fff;">Saga</span>
+                </button>
+            </a>
+            <?php endif; ?>
         </div>
     </div>
   </div>
