@@ -13,125 +13,209 @@ $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
 
 $saga_id = isset($_GET['saga']) ? $_GET['saga'] : '';
 
-$sagas = [
-    [
-        'id' => 'iron_man',
-        'nombre' => 'SAGA IRON MAN',
-        'imagen' => 'assets/image/saga_iron_man.webp',
-        'peliculas_ids' => []
-    ],
-    [
-        'id' => 'predator',
-        'nombre' => 'SAGA PREDATOR',
-        'imagen' => 'assets/image/saga_predator.webp',
-        'peliculas_ids' => [7716, 2693, 2690, 2689, 2692, 2691, 2450, 2449]
-    ]
-];
-
+// Cargar sagas desde storage/sagas.json
+$sagasFile = __DIR__ . '/storage/sagas.json';
 $saga_actual = null;
-foreach($sagas as $saga) {
-    if($saga['id'] === $saga_id) {
-        $saga_actual = $saga;
-        break;
+
+if (file_exists($sagasFile)) {
+    $content = file_get_contents($sagasFile);
+    $sagasData = json_decode($content, true) ?: [];
+    
+    foreach ($sagasData as $saga) {
+        if (isset($saga['id']) && (string)$saga['id'] === (string)$saga_id) {
+            $saga_actual = [
+                'id' => $saga['id'],
+                'nombre' => $saga['title'] ?? '',
+                'imagen' => $saga['image'] ?? '',
+                'items' => $saga['items'] ?? []
+            ];
+            break;
+        }
     }
 }
 
-if(!$saga_actual) {
+if(!$saga_actual || empty($saga_actual['items'])) {
     header("Location: sagas.php");
     exit;
 }
 
-$peliculas_ids = $saga_actual['peliculas_ids'];
-$peliculas = [];
-
-if(!empty($peliculas_ids)) {
-    foreach($peliculas_ids as $vod_id) {
-        $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$vod_id";
-        $res_info = apixtream($url_info);
-        $data_info = json_decode($res_info, true);
-        if (!empty($data_info['movie_data'])) {
-            $trailer = isset($data_info['info']['youtube_trailer']) ? $data_info['info']['youtube_trailer'] : '';
-            $youtube_id = '';
-            if (!empty($trailer)) {
-                if (preg_match('/^[A-Za-z0-9_\-]{11}$/', $trailer)) {
-                    $youtube_id = $trailer;
-                } else if (preg_match('/(?:youtube\.com\/(?:embed\/|watch\?v=)|youtu\.be\/)([A-Za-z0-9_\-]+)/', $trailer, $matches)) {
-                    $youtube_id = $matches[1];
-                }
-            }
+// Función para obtener información adicional de TMDB si falta
+function getTmdbInfo($title, $year = '', $type = 'movie') {
+    if (!defined('TMDB_API_KEY') || empty(TMDB_API_KEY)) {
+        return null;
+    }
+    
+    $query = urlencode($title);
+    $language = defined('LANGUAGE') ? LANGUAGE : 'es-ES';
+    $search_type = ($type === 'series') ? 'tv' : 'movie';
+    $tmdb_search_url = "https://api.themoviedb.org/3/search/{$search_type}?api_key=" . TMDB_API_KEY . "&language=" . $language . "&query=$query";
+    if (!empty($year)) {
+        $tmdb_search_url .= "&first_air_date_year=" . urlencode(substr($year, 0, 4));
+    }
+    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $tmdb_search_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $tmdb_search_json = @curl_exec($ch);
+    curl_close($ch);
+    
+    $tmdb_search_data = @json_decode($tmdb_search_json, true);
+    if (!empty($tmdb_search_data['results'][0])) {
+        $result = $tmdb_search_data['results'][0];
+        
+        // Obtener información detallada si tenemos el ID
+        if (!empty($result['id'])) {
+            $tmdb_id = $result['id'];
+            $detail_url = "https://api.themoviedb.org/3/{$search_type}/{$tmdb_id}?api_key=" . TMDB_API_KEY . "&language=" . $language . "&append_to_response=credits,videos";
             
-            $peliculas[] = [
-                'stream_id' => $vod_id,
-                'name' => $data_info['movie_data']['name'],
-                'stream_icon' => isset($data_info['info']['movie_image']) ? $data_info['info']['movie_image'] : '',
-                'rating' => isset($data_info['info']['rating']) ? $data_info['info']['rating'] : '',
-                'rating_5based' => isset($data_info['info']['rating']) ? $data_info['info']['rating'] : '',
-                'year' => isset($data_info['info']['releasedate']) ? substr($data_info['info']['releasedate'], 0, 4) : '',
-                'stream_type' => 'movie',
-                'duration' => isset($data_info['info']['duration']) ? $data_info['info']['duration'] : '',
-                'country' => isset($data_info['info']['country']) ? $data_info['info']['country'] : '',
-                'cast' => isset($data_info['info']['cast']) ? $data_info['info']['cast'] : '',
-                'plot' => isset($data_info['info']['plot']) ? $data_info['info']['plot'] : '',
-                'genre' => isset($data_info['info']['genre']) ? $data_info['info']['genre'] : '',
-                'youtube_id' => $youtube_id
-            ];
-        }
-    }
-} else {
-    $search_terms = [
-        'iron_man' => ['Iron Man', 'iron man', 'IRON MAN'],
-        'predator' => ['Predator', 'predator', 'PREDATOR']
-    ];
-    
-    $search_key = $saga_id;
-    $search_words = isset($search_terms[$search_key]) ? $search_terms[$search_key] : [ucfirst(str_replace('_', ' ', $saga_id))];
-
-$url = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_streams";
-$resposta = apixtream($url);
-    $all_movies = json_decode($resposta, true);
-    
-    if ($all_movies && is_array($all_movies)) {
-        foreach($all_movies as $movie) {
-            $movie_name = isset($movie['name']) ? $movie['name'] : '';
-            foreach($search_words as $term) {
-                if (stripos($movie_name, $term) !== false) {
-                    $vod_id = $movie['stream_id'];
-                    $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$vod_id";
-                    $res_info = apixtream($url_info);
-                    $data_info = json_decode($res_info, true);
-                    
-                    if (!empty($data_info['movie_data'])) {
-                        $trailer = isset($data_info['info']['youtube_trailer']) ? $data_info['info']['youtube_trailer'] : '';
-                        $youtube_id = '';
-                        if (!empty($trailer)) {
-                            if (preg_match('/^[A-Za-z0-9_\-]{11}$/', $trailer)) {
-                                $youtube_id = $trailer;
-                            } else if (preg_match('/(?:youtube\.com\/(?:embed\/|watch\?v=)|youtu\.be\/)([A-Za-z0-9_\-]+)/', $trailer, $matches)) {
-                                $youtube_id = $matches[1];
-                            }
+            $ch2 = curl_init();
+            curl_setopt($ch2, CURLOPT_URL, $detail_url);
+            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch2, CURLOPT_TIMEOUT, 3);
+            curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 3);
+            curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+            $tmdb_detail_json = @curl_exec($ch2);
+            curl_close($ch2);
+            
+            $tmdb_detail = @json_decode($tmdb_detail_json, true);
+            if ($tmdb_detail) {
+                // Combinar información de búsqueda y detalle
+                if (!empty($tmdb_detail['overview'])) $result['overview'] = $tmdb_detail['overview'];
+                if (!empty($tmdb_detail['vote_average'])) $result['vote_average'] = $tmdb_detail['vote_average'];
+                if (!empty($tmdb_detail['release_date'])) $result['release_date'] = $tmdb_detail['release_date'];
+                if (!empty($tmdb_detail['first_air_date'])) $result['first_air_date'] = $tmdb_detail['first_air_date'];
+                if (!empty($tmdb_detail['genres']) && is_array($tmdb_detail['genres'])) {
+                    $result['genres'] = array_map(function($g) { return $g['name']; }, $tmdb_detail['genres']);
+                }
+                if (!empty($tmdb_detail['credits']['cast']) && is_array($tmdb_detail['credits']['cast'])) {
+                    $cast_names = array_slice(array_map(function($c) { return $c['name']; }, $tmdb_detail['credits']['cast']), 0, 5);
+                    $result['cast'] = implode(', ', $cast_names);
+                }
+                if (!empty($tmdb_detail['videos']['results']) && is_array($tmdb_detail['videos']['results'])) {
+                    foreach ($tmdb_detail['videos']['results'] as $video) {
+                        if (isset($video['type']) && $video['type'] === 'Trailer' && isset($video['key'])) {
+                            $result['youtube_key'] = $video['key'];
+                            break;
                         }
-                        
-                        $peliculas[] = [
-                            'stream_id' => $vod_id,
-                            'name' => $data_info['movie_data']['name'],
-                            'stream_icon' => isset($data_info['info']['movie_image']) ? $data_info['info']['movie_image'] : '',
-                            'rating' => isset($data_info['info']['rating']) ? $data_info['info']['rating'] : '',
-                            'rating_5based' => isset($data_info['info']['rating']) ? $data_info['info']['rating'] : '',
-                            'year' => isset($data_info['info']['releasedate']) ? substr($data_info['info']['releasedate'], 0, 4) : '',
-                            'stream_type' => 'movie',
-                            'duration' => isset($data_info['info']['duration']) ? $data_info['info']['duration'] : '',
-                            'country' => isset($data_info['info']['country']) ? $data_info['info']['country'] : '',
-                            'cast' => isset($data_info['info']['cast']) ? $data_info['info']['cast'] : '',
-                            'plot' => isset($data_info['info']['plot']) ? $data_info['info']['plot'] : '',
-                            'genre' => isset($data_info['info']['genre']) ? $data_info['info']['genre'] : '',
-                            'youtube_id' => $youtube_id
-                        ];
                     }
-                    break;
                 }
             }
         }
+        
+        return $result;
     }
+    
+    return null;
+}
+
+// Obtener información de cada item de la saga en el orden especificado
+$peliculas = [];
+$items = $saga_actual['items'];
+
+// Ordenar items por el campo 'order' si existe
+usort($items, function($a, $b) {
+    $orderA = isset($a['order']) ? intval($a['order']) : 999;
+    $orderB = isset($b['order']) ? intval($b['order']) : 999;
+    return $orderA <=> $orderB;
+});
+
+foreach($items as $item) {
+    $vod_id = isset($item['id']) ? $item['id'] : null;
+    $item_type = isset($item['type']) ? $item['type'] : 'movie';
+    
+    if (!$vod_id) continue;
+    
+    // Obtener información de Xtream UI
+    $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$vod_id";
+    $res_info = apixtream($url_info);
+    $data_info = json_decode($res_info, true);
+    
+    $movie_data = [];
+    $info_data = [];
+    
+    if ($item_type === 'movie' && !empty($data_info['movie_data'])) {
+        $movie_data = $data_info['movie_data'];
+        $info_data = isset($data_info['info']) ? $data_info['info'] : [];
+    } elseif ($item_type === 'series' && !empty($data_info['info'])) {
+        $info_data = $data_info['info'];
+        $movie_data = ['name' => isset($info_data['name']) ? $info_data['name'] : ''];
+    } else {
+        // Si no hay información de Xtream, usar el título del item
+        $movie_data = ['name' => isset($item['title']) ? $item['title'] : ''];
+        $info_data = [];
+    }
+    
+    // Extraer información básica
+    $movie_name = isset($movie_data['name']) ? $movie_data['name'] : (isset($item['title']) ? $item['title'] : '');
+    $stream_icon = isset($info_data['movie_image']) ? $info_data['movie_image'] : (isset($item['poster']) ? $item['poster'] : '');
+    $rating = isset($info_data['rating']) ? $info_data['rating'] : '';
+    $year = isset($info_data['releasedate']) ? substr($info_data['releasedate'], 0, 4) : '';
+    $duration = isset($info_data['duration']) ? $info_data['duration'] : '';
+    $country = isset($info_data['country']) ? $info_data['country'] : '';
+    $cast = isset($info_data['cast']) ? $info_data['cast'] : '';
+    $plot = isset($info_data['plot']) ? $info_data['plot'] : '';
+    $genre = isset($info_data['genre']) ? $info_data['genre'] : '';
+    $trailer = isset($info_data['youtube_trailer']) ? $info_data['youtube_trailer'] : '';
+    
+    // Extraer YouTube ID del trailer
+    $youtube_id = '';
+    if (!empty($trailer)) {
+        if (preg_match('/^[A-Za-z0-9_\-]{11}$/', $trailer)) {
+            $youtube_id = $trailer;
+        } else if (preg_match('/(?:youtube\.com\/(?:embed\/|watch\?v=)|youtu\.be\/)([A-Za-z0-9_\-]+)/', $trailer, $matches)) {
+            $youtube_id = $matches[1];
+        }
+    }
+    
+    // Si falta información importante, intentar obtenerla de TMDB
+    if ((empty($plot) || empty($cast) || empty($genre) || empty($rating) || empty($youtube_id)) && !empty($movie_name)) {
+        $tmdb_info = getTmdbInfo($movie_name, $year, $item_type);
+        if ($tmdb_info) {
+            if (empty($plot) && !empty($tmdb_info['overview'])) {
+                $plot = $tmdb_info['overview'];
+            }
+            if (empty($rating) && !empty($tmdb_info['vote_average'])) {
+                $rating = number_format($tmdb_info['vote_average'], 1);
+            }
+            if (empty($year)) {
+                $release_date = !empty($tmdb_info['release_date']) ? $tmdb_info['release_date'] : (!empty($tmdb_info['first_air_date']) ? $tmdb_info['first_air_date'] : '');
+                if ($release_date) {
+                    $year = substr($release_date, 0, 4);
+                }
+            }
+            if (empty($stream_icon) && !empty($tmdb_info['poster_path'])) {
+                $stream_icon = 'https://image.tmdb.org/t/p/w500' . $tmdb_info['poster_path'];
+            }
+            if (empty($cast) && !empty($tmdb_info['cast'])) {
+                $cast = $tmdb_info['cast'];
+            }
+            if (empty($genre) && !empty($tmdb_info['genres']) && is_array($tmdb_info['genres'])) {
+                $genre = implode(', ', $tmdb_info['genres']);
+            }
+            if (empty($youtube_id) && !empty($tmdb_info['youtube_key'])) {
+                $youtube_id = $tmdb_info['youtube_key'];
+            }
+        }
+    }
+    
+    $peliculas[] = [
+        'stream_id' => $vod_id,
+        'name' => $movie_name,
+        'stream_icon' => $stream_icon,
+        'rating' => $rating,
+        'rating_5based' => $rating,
+        'year' => $year,
+        'stream_type' => $item_type,
+        'duration' => $duration,
+        'country' => $country,
+        'cast' => $cast,
+        'plot' => $plot,
+        'genre' => $genre,
+        'youtube_id' => $youtube_id
+    ];
 }
 
 $output = $peliculas;
@@ -156,15 +240,8 @@ if (!empty($peliculas) && is_array($peliculas) && count($peliculas) > 0) {
     }
 }
 
-if ($output && is_array($output)) {
-    usort($output, function($a, $b) {
-        $ra = isset($a['rating_5based']) ? floatval($a['rating_5based'])*2 : (isset($a['rating']) ? floatval($a['rating']) : 0);
-        $rb = isset($b['rating_5based']) ? floatval($b['rating_5based'])*2 : (isset($b['rating']) ? floatval($b['rating']) : 0);
-        return $rb <=> $ra;
-    });
-}
-
-$peliculas_pagina = $output;
+// Mantener el orden del JSON (ya está ordenado por 'order')
+$peliculas_pagina = $peliculas;
 ?>
 <!DOCTYPE html>
 <html lang="es">
