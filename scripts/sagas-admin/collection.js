@@ -97,32 +97,6 @@
 
             name = name.trim();
 
-            const commonPrefixes = [
-                /^(Spider-Man|SPIDER-MAN|Spider Man|SPIDER MAN)/i,
-                /^(Iron Man|IRON MAN|Iron-Man|IRON-MAN)/i,
-                /^(Doctor Strange|DOCTOR STRANGE|Dr\. Strange|DR\. STRANGE)/i,
-                /^(Captain America|CAPTAIN AMERICA|Capitán América|CAPITÁN AMÉRICA)/i,
-                /^(Thor|THOR)/i,
-                /^(Hulk|HULK)/i,
-                /^(Black Widow|BLACK WIDOW|Viuda Negra|VIUDA NEGRA)/i,
-                /^(Ant-Man|ANT-MAN|Ant Man|ANT MAN|Hormiga|HORMIGA)/i,
-                /^(Guardians of the Galaxy|GUARDIANS OF THE GALAXY|Guardianes|GUARDIANES)/i,
-                /^(Avengers|AVENGERS|Vengadores|VENGADORES)/i,
-                /^(X-Men|X-MEN|X Men|X MEN)/i,
-                /^(Deadpool|DEADPOOL)/i,
-                /^(Wolverine|WOLVERINE)/i,
-                /^(Batman|BATMAN)/i,
-                /^(Superman|SUPERMAN)/i,
-                /^(Wonder Woman|WONDER WOMAN)/i
-            ];
-
-            for (const prefix of commonPrefixes) {
-                const match = name.match(prefix);
-                if (match) {
-                    return match[1].trim();
-                }
-            }
-
             const words = name.split(/\s+/);
             if (words.length >= 2) {
                 const firstTwo = words.slice(0, 2).join(' ');
