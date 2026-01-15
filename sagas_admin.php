@@ -11,6 +11,14 @@ if (!defined('SAGAS_ADMIN_ENABLED') || SAGAS_ADMIN_ENABLED !== true) {
     exit;
 }
 
+$currentUser = $_COOKIE['xuserm'];
+$allowedUser = defined('SAGAS_ADMIN_USER') ? SAGAS_ADMIN_USER : '';
+
+if (!empty($allowedUser) && $currentUser !== $allowedUser) {
+    header("Location: home.php");
+    exit;
+}
+
 require_once(__DIR__ . '/libs/controllers/SagasAdminController.php');
 
 $user = $_COOKIE['xuserm'];
