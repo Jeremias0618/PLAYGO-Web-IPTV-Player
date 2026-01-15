@@ -69,7 +69,31 @@ window.serieRating = <?php echo json_encode(formatear_rating($nota)); ?>;
 body {
     background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo $backdrop_final; ?>') center center/cover no-repeat;
     color: #fff;
-    background-attachment: fixed;
+    background-attachment: fixed !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    position: relative;
+}
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
+    background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo $backdrop_final; ?>') center center/cover no-repeat;
+    background-attachment: fixed !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    z-index: -1;
+    pointer-events: none;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: auto;
 }
     </style>
 </head>
@@ -150,7 +174,15 @@ body {
         <b>Showrunner:</b> <?php echo $diretor; ?><br>
         <b>Reparto:</b> <?php echo $cast; ?>
         </div>
-        <div class="sinopsis"><?php echo $sinopsis; ?></div>
+        <div class="sinopsis">
+            <div class="plot-text-wrapper">
+                <div class="plot-text collapsed" id="plotText"><?php echo htmlspecialchars($sinopsis); ?></div>
+                <button type="button" class="plot-toggle-btn" id="plotToggleBtn" style="display: none;">
+                    <span class="plot-toggle-text">Ver más</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+        </div>
         <div style="display:flex;gap:12px;margin-top:18px;">
             <?php if (!empty($youtube_id)): ?>
 <button class="btn d-flex align-items-center" id="btnTrailer"
@@ -319,6 +351,126 @@ body {
 <script src="./scripts/serie/playlist.js"></script>
 <script src="./scripts/serie/seasons.js"></script>
 <script src="./scripts/serie/mobile.js"></script>
+<script>
+(function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        const plotText = document.getElementById('plotText');
+        const plotToggleBtn = document.getElementById('plotToggleBtn');
+        const plotWrapper = document.querySelector('.plot-text-wrapper');
+        const posterImg = document.querySelector('.serie-hero .poster');
+        
+        if (!plotText || !plotToggleBtn || !plotWrapper) {
+            return;
+        }
+        
+        function calculateMaxHeight() {
+            if (!posterImg) {
+                return null;
+            }
+            
+            const posterHeight = posterImg.offsetHeight;
+            const infoContainer = document.querySelector('.serie-hero .info');
+            
+            if (!infoContainer) {
+                return null;
+            }
+            
+            let usedHeight = 0;
+            
+            const title = document.querySelector('.serie-hero .title');
+            if (title) {
+                usedHeight += title.offsetHeight;
+                const titleMargin = window.getComputedStyle(title).marginBottom;
+                usedHeight += parseInt(titleMargin) || 0;
+            }
+            
+            const metaElements = document.querySelectorAll('.serie-hero .meta');
+            metaElements.forEach(function(meta) {
+                usedHeight += meta.offsetHeight;
+                const metaMargin = window.getComputedStyle(meta).marginBottom;
+                usedHeight += parseInt(metaMargin) || 0;
+            });
+            
+            const buttonsContainer = document.querySelector('.serie-hero .info > div[style*="display:flex"]');
+            if (buttonsContainer) {
+                usedHeight += buttonsContainer.offsetHeight;
+                const buttonsMargin = window.getComputedStyle(buttonsContainer).marginTop;
+                usedHeight += parseInt(buttonsMargin) || 0;
+            }
+            
+            const sinopsisMargin = window.getComputedStyle(plotWrapper.closest('.sinopsis')).marginTop;
+            usedHeight += parseInt(sinopsisMargin) || 0;
+            
+            const toggleBtnHeight = 40;
+            const padding = 20;
+            
+            const availableHeight = posterHeight - usedHeight - toggleBtnHeight - padding;
+            
+            return Math.max(50, availableHeight);
+        }
+        
+        function checkTextHeight() {
+            const maxHeight = calculateMaxHeight();
+            
+            if (maxHeight === null) {
+                return;
+            }
+            
+            plotText.style.maxHeight = '';
+            plotText.style.overflow = '';
+            plotText.classList.remove('collapsed', 'expanded');
+            
+            const originalHeight = plotText.scrollHeight;
+            
+            if (originalHeight > maxHeight) {
+                plotToggleBtn.style.display = 'flex';
+                plotText.style.maxHeight = maxHeight + 'px';
+                plotText.style.overflow = 'hidden';
+                plotText.classList.add('collapsed');
+                plotToggleBtn.classList.remove('expanded');
+            } else {
+                plotToggleBtn.style.display = 'none';
+                plotText.classList.remove('collapsed');
+            }
+        }
+        
+        plotToggleBtn.addEventListener('click', function() {
+            const toggleText = plotToggleBtn.querySelector('.plot-toggle-text');
+            if (plotText.classList.contains('collapsed')) {
+                plotText.style.maxHeight = '';
+                plotText.style.overflow = '';
+                plotText.classList.remove('collapsed');
+                plotText.classList.add('expanded');
+                plotToggleBtn.classList.add('expanded');
+                if (toggleText) toggleText.textContent = 'Ver menos';
+            } else {
+                const maxHeight = calculateMaxHeight();
+                if (maxHeight !== null) {
+                    plotText.style.maxHeight = maxHeight + 'px';
+                    plotText.style.overflow = 'hidden';
+                }
+                plotText.classList.remove('expanded');
+                plotText.classList.add('collapsed');
+                plotToggleBtn.classList.remove('expanded');
+                if (toggleText) toggleText.textContent = 'Ver más';
+            }
+        });
+        
+        setTimeout(checkTextHeight, 100);
+        
+        if (posterImg) {
+            posterImg.addEventListener('load', checkTextHeight);
+            if (posterImg.complete) {
+                checkTextHeight();
+            }
+        }
+        
+        window.addEventListener('resize', function() {
+            setTimeout(checkTextHeight, 100);
+        });
+    });
+})();
+</script>
 
 </body>
 </html>

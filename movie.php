@@ -176,7 +176,7 @@ window.movieDuration = <?php echo json_encode($duracao); ?>;
                                 </ul>
                     <div class="card__description card__description--details">
                         <div class="plot-text-wrapper">
-                            <div class="plot-text" id="plotText"><?php echo htmlspecialchars($plot); ?></div>
+                            <div class="plot-text collapsed" id="plotText"><?php echo htmlspecialchars($plot); ?></div>
                             <button type="button" class="plot-toggle-btn" id="plotToggleBtn" style="display: none;">
                                 <span class="plot-toggle-text">Ver más</span>
                                 <i class="fas fa-chevron-down"></i>
@@ -362,22 +362,76 @@ window.movieDuration = <?php echo json_encode($duracao); ?>;
 <script>
 (function() {
     document.addEventListener('DOMContentLoaded', function() {
+        
         const plotText = document.getElementById('plotText');
         const plotToggleBtn = document.getElementById('plotToggleBtn');
+        const plotWrapper = document.querySelector('.plot-text-wrapper');
         
-        if (!plotText || !plotToggleBtn) {
+        if (!plotText || !plotToggleBtn || !plotWrapper) {
             return;
         }
         
-        const lineHeight = 25;
-        const maxLines = 4;
-        const maxHeight = lineHeight * maxLines;
+        function calculateMaxHeight() {
+            const posterCover = document.querySelector('.card__cover');
+            const cardContent = document.querySelector('.card__content');
+            const cardWrap = document.querySelector('.card__wrap');
+            const cardMeta = document.querySelector('.card__meta');
+            const buttonsContainer = document.querySelector('.card__content > div[style*="display: flex"]');
+            
+            if (!posterCover || !cardContent) {
+                return null;
+            }
+            
+            const posterHeight = posterCover.offsetHeight;
+            
+            let usedHeight = 0;
+            
+            if (cardWrap) {
+                usedHeight += cardWrap.offsetHeight;
+                const cardWrapMargin = window.getComputedStyle(cardWrap).marginBottom;
+                usedHeight += parseInt(cardWrapMargin) || 0;
+            }
+            
+            if (cardMeta) {
+                usedHeight += cardMeta.offsetHeight;
+                const cardMetaMargin = window.getComputedStyle(cardMeta).marginBottom;
+                usedHeight += parseInt(cardMetaMargin) || 0;
+            }
+            
+            if (buttonsContainer) {
+                usedHeight += buttonsContainer.offsetHeight;
+                const buttonsMargin = window.getComputedStyle(buttonsContainer).marginTop;
+                usedHeight += parseInt(buttonsMargin) || 0;
+            }
+            
+            const plotWrapperMargin = window.getComputedStyle(plotWrapper).marginTop;
+            usedHeight += parseInt(plotWrapperMargin) || 0;
+            
+            const toggleBtnHeight = 40;
+            const padding = 20;
+            
+            const availableHeight = posterHeight - usedHeight - toggleBtnHeight - padding;
+            
+            return Math.max(50, availableHeight);
+        }
         
         function checkTextHeight() {
+            const maxHeight = calculateMaxHeight();
+            
+            if (maxHeight === null) {
+                return;
+            }
+            
+            plotText.style.maxHeight = '';
+            plotText.style.overflow = '';
+            plotText.classList.remove('collapsed', 'expanded');
+            
             const originalHeight = plotText.scrollHeight;
             
             if (originalHeight > maxHeight) {
                 plotToggleBtn.style.display = 'flex';
+                plotText.style.maxHeight = maxHeight + 'px';
+                plotText.style.overflow = 'hidden';
                 plotText.classList.add('collapsed');
                 plotToggleBtn.classList.remove('expanded');
             } else {
@@ -389,11 +443,18 @@ window.movieDuration = <?php echo json_encode($duracao); ?>;
         plotToggleBtn.addEventListener('click', function() {
             const toggleText = plotToggleBtn.querySelector('.plot-toggle-text');
             if (plotText.classList.contains('collapsed')) {
+                plotText.style.maxHeight = '';
+                plotText.style.overflow = '';
                 plotText.classList.remove('collapsed');
                 plotText.classList.add('expanded');
                 plotToggleBtn.classList.add('expanded');
                 if (toggleText) toggleText.textContent = 'Ver menos';
             } else {
+                const maxHeight = calculateMaxHeight();
+                if (maxHeight !== null) {
+                    plotText.style.maxHeight = maxHeight + 'px';
+                    plotText.style.overflow = 'hidden';
+                }
                 plotText.classList.remove('expanded');
                 plotText.classList.add('collapsed');
                 plotToggleBtn.classList.remove('expanded');
@@ -401,9 +462,19 @@ window.movieDuration = <?php echo json_encode($duracao); ?>;
             }
         });
         
-        checkTextHeight();
+        setTimeout(checkTextHeight, 100);
         
-        window.addEventListener('resize', checkTextHeight);
+        window.addEventListener('resize', function() {
+            setTimeout(checkTextHeight, 100);
+        });
+        
+        const posterImg = document.querySelector('.card__cover img');
+        if (posterImg) {
+            posterImg.addEventListener('load', checkTextHeight);
+            if (posterImg.complete) {
+                checkTextHeight();
+            }
+        }
     });
 })();
 </script>

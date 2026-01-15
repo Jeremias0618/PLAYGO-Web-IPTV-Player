@@ -54,6 +54,64 @@
     font-size: 1.13rem;
     color: #eee;
 }
+
+.plot-text-wrapper {
+    position: relative;
+}
+
+.plot-text {
+    font-size: 1.13rem;
+    line-height: 1.6;
+    color: #eee;
+    transition: max-height 0.3s ease;
+}
+
+.plot-text.collapsed {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    max-height: 100px;
+}
+
+.plot-text.expanded {
+    display: block;
+    max-height: none;
+}
+
+.plot-toggle-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    padding: 8px 0;
+    margin-top: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 14px;
+    transition: color 0.2s ease;
+    font-family: 'Open Sans', sans-serif;
+    width: 100%;
+}
+
+.plot-toggle-btn:hover {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.plot-toggle-btn i {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+}
+
+.plot-toggle-btn.expanded i {
+    transform: rotate(180deg);
+}
 .serie-hero .btn-trailer {
     margin-top: 18px;
     background: linear-gradient(90deg, #ff0000 60%, #c80000 100%);

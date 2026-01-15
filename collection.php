@@ -203,7 +203,13 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
                             </ul>
                             <?php if (!empty($filme_plot)): ?>
                             <div class="collection-info-plot">
-                                <?php echo htmlspecialchars($filme_plot); ?>
+                                <div class="plot-text-wrapper">
+                                    <div class="plot-text" data-item-id="<?php echo $filme_id; ?>"><?php echo htmlspecialchars($filme_plot); ?></div>
+                                    <button type="button" class="plot-toggle-btn" data-item-id="<?php echo $filme_id; ?>" style="display: none;">
+                                        <span class="plot-toggle-text">Ver más</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
                             </div>
                             <?php endif; ?>
                         </div>
@@ -247,5 +253,155 @@ if ($peliculas_pagina && is_array($peliculas_pagina)) {
 <script src="./scripts/vendors/provider.hlsjs.js"></script>
 <script src="./scripts/core/main.js"></script>
 <script src="./scripts/collection/init.js"></script>
+<script>
+(function() {
+    function initPlotTruncation() {
+        const plotWrappers = document.querySelectorAll('.collection-info-plot .plot-text-wrapper');
+        
+        plotWrappers.forEach(function(wrapper) {
+            const plotText = wrapper.querySelector('.plot-text');
+            const plotToggleBtn = wrapper.querySelector('.plot-toggle-btn');
+            const posterImg = wrapper.closest('.collection-list-item').querySelector('.collection-poster');
+            
+            if (!plotText || !plotToggleBtn || !posterImg) {
+                return;
+            }
+            
+            function calculateMaxHeight(includeToggleBtn) {
+                const posterHeight = posterImg.offsetHeight;
+                const listItem = wrapper.closest('.collection-list-item');
+                const infoSection = listItem.querySelector('.col-sm-8, .col-md-9, .col-lg-9');
+                
+                if (!infoSection || posterHeight === 0) {
+                    return null;
+                }
+                
+                let usedHeight = 0;
+                
+                const title = infoSection.querySelector('.collection-info-title');
+                if (title) {
+                    usedHeight += title.offsetHeight;
+                    const titleMargin = window.getComputedStyle(title).marginBottom;
+                    usedHeight += parseInt(titleMargin) || 0;
+                }
+                
+                const genres = infoSection.querySelector('.collection-info-genres');
+                if (genres) {
+                    usedHeight += genres.offsetHeight;
+                    const genresMargin = window.getComputedStyle(genres).marginBottom;
+                    usedHeight += parseInt(genresMargin) || 0;
+                }
+                
+                const yearRating = infoSection.querySelector('div[style*="margin-bottom: 16px"]');
+                if (yearRating) {
+                    usedHeight += yearRating.offsetHeight;
+                    const yearMargin = window.getComputedStyle(yearRating).marginBottom;
+                    usedHeight += parseInt(yearMargin) || 0;
+                }
+                
+                const meta = infoSection.querySelector('.collection-info-meta');
+                if (meta) {
+                    usedHeight += meta.offsetHeight;
+                    const metaMargin = window.getComputedStyle(meta).marginBottom;
+                    usedHeight += parseInt(metaMargin) || 0;
+                }
+                
+                const plotMargin = window.getComputedStyle(wrapper.closest('.collection-info-plot')).marginTop;
+                usedHeight += parseInt(plotMargin) || 0;
+                
+                const toggleBtnHeight = includeToggleBtn ? 40 : 0;
+                const padding = 10;
+                
+                const availableHeight = posterHeight - usedHeight - toggleBtnHeight - padding;
+                
+                return Math.max(50, availableHeight);
+            }
+            
+            function checkTextHeight() {
+                plotText.style.maxHeight = '';
+                plotText.style.overflow = '';
+                plotText.classList.remove('collapsed', 'expanded');
+                
+                const maxHeightWithoutBtn = calculateMaxHeight(false);
+                
+                if (maxHeightWithoutBtn === null || maxHeightWithoutBtn <= 0) {
+                    plotText.classList.remove('collapsed');
+                    plotText.style.maxHeight = '';
+                    plotText.style.overflow = '';
+                    plotToggleBtn.style.display = 'none';
+                    return;
+                }
+                
+                const originalHeight = plotText.scrollHeight;
+                
+                if (originalHeight <= maxHeightWithoutBtn) {
+                    plotToggleBtn.style.display = 'none';
+                    plotText.classList.remove('collapsed');
+                    plotText.style.maxHeight = '';
+                    plotText.style.overflow = '';
+                } else {
+                    const maxHeightWithBtn = calculateMaxHeight(true);
+                    if (maxHeightWithBtn !== null && maxHeightWithBtn > 0) {
+                        plotToggleBtn.style.display = 'flex';
+                        plotText.style.maxHeight = maxHeightWithBtn + 'px';
+                        plotText.style.overflow = 'hidden';
+                        plotText.classList.add('collapsed');
+                    } else {
+                        plotToggleBtn.style.display = 'none';
+                        plotText.classList.remove('collapsed');
+                        plotText.style.maxHeight = '';
+                        plotText.style.overflow = '';
+                    }
+                }
+            }
+            
+            plotToggleBtn.addEventListener('click', function() {
+                const toggleText = plotToggleBtn.querySelector('.plot-toggle-text');
+                if (plotText.classList.contains('collapsed')) {
+                    plotText.style.maxHeight = '';
+                    plotText.style.overflow = '';
+                    plotText.classList.remove('collapsed');
+                    plotText.classList.add('expanded');
+                    plotToggleBtn.classList.add('expanded');
+                    if (toggleText) toggleText.textContent = 'Ver menos';
+                } else {
+                    const maxHeightWithBtn = calculateMaxHeight(true);
+                    if (maxHeightWithBtn !== null && maxHeightWithBtn > 0) {
+                        plotText.style.maxHeight = maxHeightWithBtn + 'px';
+                        plotText.style.overflow = 'hidden';
+                    }
+                    plotText.classList.remove('expanded');
+                    plotText.classList.add('collapsed');
+                    plotToggleBtn.classList.remove('expanded');
+                    if (toggleText) toggleText.textContent = 'Ver más';
+                }
+            });
+            
+            function initItem() {
+                if (posterImg.complete && posterImg.offsetHeight > 0) {
+                    checkTextHeight();
+                } else {
+                    posterImg.addEventListener('load', function() {
+                        setTimeout(checkTextHeight, 50);
+                    });
+                    setTimeout(checkTextHeight, 100);
+                }
+            }
+            
+            initItem();
+        });
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPlotTruncation);
+    } else {
+        initPlotTruncation();
+    }
+    
+    window.addEventListener('resize', function() {
+        setTimeout(initPlotTruncation, 100);
+    });
+})();
+</script>
 </body>
 </html>

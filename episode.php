@@ -100,7 +100,31 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
 body {
     background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo htmlspecialchars($ep_backdrop ?: $wallpaper_img ?: $poster_img); ?>') center center/cover no-repeat;
     color: #fff;
-    background-attachment: fixed;
+    background-attachment: fixed !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    position: relative;
+}
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
+    background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo htmlspecialchars($ep_backdrop ?: $wallpaper_img ?: $poster_img); ?>') center center/cover no-repeat;
+    background-attachment: fixed !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    z-index: -1;
+    pointer-events: none;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: auto;
 }
     </style>
 </head>
@@ -189,7 +213,13 @@ body {
                                     <li><span><strong>Reparto:</strong></span> <?php echo htmlspecialchars($cast); ?></li>
                                 </ul>
                                 <div class="card__description card__description--details">
-                                    <?php echo htmlspecialchars($ep_plot ?: $sinopsis); ?>
+                                    <div class="plot-text-wrapper">
+                                        <div class="plot-text collapsed" id="plotText"><?php echo htmlspecialchars($ep_plot ?: $sinopsis); ?></div>
+                                        <button type="button" class="plot-toggle-btn" id="plotToggleBtn" style="display: none;">
+                                            <span class="plot-toggle-text">Ver más</span>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div style="display: flex; gap: 12px; margin-top: 20px;">
                                     <?php if (!empty($youtube_id)): ?>
@@ -461,6 +491,133 @@ body {
 <?php endif; ?>
 <script src="./scripts/serie/favorites.js"></script>
 <script src="./scripts/serie/playlist.js"></script>
+<script>
+(function() {
+    function initPlotTruncation() {
+        const plotText = document.getElementById('plotText');
+        const plotToggleBtn = document.getElementById('plotToggleBtn');
+        const plotWrapper = document.querySelector('.plot-text-wrapper');
+        const posterImg = document.querySelector('.card__cover img');
+        
+        if (!plotText || !plotToggleBtn || !plotWrapper || !posterImg) {
+            return;
+        }
+        
+        function calculateMaxHeight() {
+            const posterHeight = posterImg.offsetHeight;
+            const cardContent = document.querySelector('.card__content');
+            
+            if (!cardContent) {
+                return null;
+            }
+            
+            let usedHeight = 0;
+            
+            const title = document.querySelector('.details__title');
+            if (title) {
+                usedHeight += title.offsetHeight;
+                const titleMargin = window.getComputedStyle(title).marginBottom;
+                usedHeight += parseInt(titleMargin) || 0;
+            }
+            
+            const cardWrap = document.querySelector('.card__wrap');
+            if (cardWrap) {
+                usedHeight += cardWrap.offsetHeight;
+                const cardWrapMargin = window.getComputedStyle(cardWrap).marginBottom;
+                usedHeight += parseInt(cardWrapMargin) || 0;
+            }
+            
+            const cardMeta = document.querySelector('.card__meta');
+            if (cardMeta) {
+                usedHeight += cardMeta.offsetHeight;
+                const cardMetaMargin = window.getComputedStyle(cardMeta).marginBottom;
+                usedHeight += parseInt(cardMetaMargin) || 0;
+            }
+            
+            const buttonsContainer = document.querySelector('.card__content > div[style*="display: flex"]');
+            if (buttonsContainer) {
+                usedHeight += buttonsContainer.offsetHeight;
+                const buttonsMargin = window.getComputedStyle(buttonsContainer).marginTop;
+                usedHeight += parseInt(buttonsMargin) || 0;
+            }
+            
+            const plotWrapperMargin = window.getComputedStyle(plotWrapper).marginTop;
+            usedHeight += parseInt(plotWrapperMargin) || 0;
+            
+            const toggleBtnHeight = 40;
+            const padding = 20;
+            
+            const availableHeight = posterHeight - usedHeight - toggleBtnHeight - padding;
+            
+            return Math.max(50, availableHeight);
+        }
+        
+        function checkTextHeight() {
+            const maxHeight = calculateMaxHeight();
+            
+            if (maxHeight === null) {
+                return;
+            }
+            
+            plotText.style.maxHeight = '';
+            plotText.style.overflow = '';
+            plotText.classList.remove('expanded');
+            plotText.classList.add('collapsed');
+            
+            const originalHeight = plotText.scrollHeight;
+            
+            if (originalHeight > maxHeight) {
+                plotToggleBtn.style.display = 'flex';
+                plotText.style.maxHeight = maxHeight + 'px';
+                plotText.style.overflow = 'hidden';
+            } else {
+                plotToggleBtn.style.display = 'none';
+                plotText.classList.remove('collapsed');
+            }
+        }
+        
+        plotToggleBtn.addEventListener('click', function() {
+            const toggleText = plotToggleBtn.querySelector('.plot-toggle-text');
+            if (plotText.classList.contains('collapsed')) {
+                plotText.style.maxHeight = '';
+                plotText.style.overflow = '';
+                plotText.classList.remove('collapsed');
+                plotText.classList.add('expanded');
+                plotToggleBtn.classList.add('expanded');
+                if (toggleText) toggleText.textContent = 'Ver menos';
+            } else {
+                const maxHeight = calculateMaxHeight();
+                if (maxHeight !== null) {
+                    plotText.style.maxHeight = maxHeight + 'px';
+                    plotText.style.overflow = 'hidden';
+                }
+                plotText.classList.remove('expanded');
+                plotText.classList.add('collapsed');
+                plotToggleBtn.classList.remove('expanded');
+                if (toggleText) toggleText.textContent = 'Ver más';
+            }
+        });
+        
+        if (posterImg.complete) {
+            checkTextHeight();
+        } else {
+            posterImg.addEventListener('load', checkTextHeight);
+        }
+        
+        setTimeout(checkTextHeight, 0);
+        
+        window.addEventListener('resize', function() {
+            setTimeout(checkTextHeight, 100);
+        });
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPlotTruncation);
+    } else {
+        initPlotTruncation();
+    }
+})();
+</script>
 
 </body>
 </html>
