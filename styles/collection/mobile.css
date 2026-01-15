@@ -1,0 +1,179 @@
+@media (max-width: 600px) {
+    .collection-list-item {
+        padding: 18px !important;
+        margin-bottom: 24px !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+    }
+    
+    .collection-list-item .row {
+        flex-direction: column !important;
+        margin: 0 !important;
+        align-items: center !important;
+    }
+    
+    .collection-list-item .col-12.col-sm-4,
+    .collection-list-item .col-12.col-md-3,
+    .collection-list-item .col-12.col-lg-3 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        padding: 0 !important;
+        margin: 0 0 24px 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    
+    .collection-poster {
+        width: 100% !important;
+        max-width: 280px !important;
+        height: 420px !important;
+        object-fit: cover !important;
+        border-radius: 12px !important;
+        margin: 0 auto !important;
+        display: block !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+    }
+    
+    .collection-list-item .col-12.col-sm-8,
+    .collection-list-item .col-12.col-md-9,
+    .collection-list-item .col-12.col-lg-9 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        padding: 0 !important;
+        text-align: center !important;
+    }
+    
+    .collection-info-title {
+        font-size: 1.6rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 16px !important;
+        text-align: center !important;
+        line-height: 1.3 !important;
+        padding: 0 8px !important;
+    }
+    
+    .collection-info-title a {
+        color: #fff !important;
+        text-decoration: none !important;
+        display: inline-block !important;
+    }
+    
+    .collection-info-genres {
+        justify-content: center !important;
+        margin-bottom: 16px !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+    }
+    
+    .collection-info-genres li {
+        font-size: 0.88rem !important;
+        padding: 7px 16px !important;
+        border-radius: 20px !important;
+        background: rgba(255,255,255,0.12) !important;
+    }
+    
+    .collection-list-item > .row > div[style*="margin-bottom: 16px"] {
+        margin-bottom: 16px !important;
+        text-align: center !important;
+    }
+    
+    .collection-list-item > .row > div[style*="margin-bottom: 16px"] span {
+        font-size: 1.05rem !important;
+        display: inline-block !important;
+    }
+    
+    .collection-info-meta {
+        text-align: center !important;
+        margin-bottom: 18px !important;
+        padding: 0 8px !important;
+    }
+    
+    .collection-info-meta li {
+        font-size: 0.98rem !important;
+        margin-bottom: 12px !important;
+        line-height: 1.6 !important;
+        display: block !important;
+    }
+    
+    .collection-info-plot {
+        text-align: center !important;
+        margin-bottom: 0 !important;
+        padding: 0 8px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    
+    .collection-info-plot .plot-text-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        text-align: center !important;
+    }
+    
+    .collection-info-plot .plot-text {
+        font-size: 0.95rem !important;
+        line-height: 1.7 !important;
+        text-align: center !important;
+        color: rgba(255,255,255,0.85) !important;
+        margin: 0 auto !important;
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    .collection-info-plot .plot-text.collapsed {
+        text-align: center !important;
+    }
+    
+    .collection-info-plot .plot-text.expanded {
+        text-align: center !important;
+    }
+    
+    .collection-info-plot .plot-toggle-btn {
+        font-size: 0.92rem !important;
+        padding: 12px 0 !important;
+        margin-top: 12px !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    
+    .section.details {
+        padding: 0 16px !important;
+    }
+    
+    .section.details .container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        max-width: 100% !important;
+    }
+    
+    .section.details .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    .section.details .col-12 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    
+    div[style*="width:100%;text-align:center;margin:120px 0 15px 0"] {
+        margin: 100px 0 24px 0 !important;
+        padding: 0 16px !important;
+    }
+    
+    div[style*="width:100%;text-align:center"] h2 {
+        font-size: 1.9rem !important;
+        padding: 14px 28px !important;
+        letter-spacing: 1.5px !important;
+        line-height: 1.2 !important;
+    }
+    
+    .collection-list-item:hover {
+        transform: none !important;
+    }
+}
+

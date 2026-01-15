@@ -46,6 +46,7 @@ $backdrop_fondo = $collection_data['backdrop_fondo'];
     <link rel="stylesheet" href="./styles/collection/items.css">
     <link rel="stylesheet" href="./styles/collection/search.css">
     <link rel="stylesheet" href="./styles/collection/pagination.css">
+    <link rel="stylesheet" href="./styles/collection/mobile.css">
     <link rel="shortcut icon" href="assets/icon/favicon.ico">
     <title>PLAYGO - <?php echo htmlspecialchars($saga_actual['nombre']); ?></title>
 <?php if($backdrop_fondo): ?>
