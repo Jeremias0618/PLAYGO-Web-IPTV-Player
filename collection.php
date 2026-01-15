@@ -13,7 +13,6 @@ $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
 
 $saga_id = isset($_GET['saga']) ? $_GET['saga'] : '';
 
-// Cargar sagas desde storage/sagas.json
 $sagasFile = __DIR__ . '/storage/sagas.json';
 $saga_actual = null;
 
@@ -39,7 +38,6 @@ if(!$saga_actual || empty($saga_actual['items'])) {
     exit;
 }
 
-// Función para obtener información adicional de TMDB si falta
 function getTmdbInfo($title, $year = '', $type = 'movie') {
     if (!defined('TMDB_API_KEY') || empty(TMDB_API_KEY)) {
         return null;
@@ -66,7 +64,6 @@ function getTmdbInfo($title, $year = '', $type = 'movie') {
     if (!empty($tmdb_search_data['results'][0])) {
         $result = $tmdb_search_data['results'][0];
         
-        // Obtener información detallada si tenemos el ID
         if (!empty($result['id'])) {
             $tmdb_id = $result['id'];
             $detail_url = "https://api.themoviedb.org/3/{$search_type}/{$tmdb_id}?api_key=" . TMDB_API_KEY . "&language=" . $language . "&append_to_response=credits,videos";
@@ -82,7 +79,6 @@ function getTmdbInfo($title, $year = '', $type = 'movie') {
             
             $tmdb_detail = @json_decode($tmdb_detail_json, true);
             if ($tmdb_detail) {
-                // Combinar información de búsqueda y detalle
                 if (!empty($tmdb_detail['overview'])) $result['overview'] = $tmdb_detail['overview'];
                 if (!empty($tmdb_detail['vote_average'])) $result['vote_average'] = $tmdb_detail['vote_average'];
                 if (!empty($tmdb_detail['release_date'])) $result['release_date'] = $tmdb_detail['release_date'];
@@ -111,11 +107,9 @@ function getTmdbInfo($title, $year = '', $type = 'movie') {
     return null;
 }
 
-// Obtener información de cada item de la saga en el orden especificado
 $peliculas = [];
 $items = $saga_actual['items'];
 
-// Ordenar items por el campo 'order' si existe
 usort($items, function($a, $b) {
     $orderA = isset($a['order']) ? intval($a['order']) : 999;
     $orderB = isset($b['order']) ? intval($b['order']) : 999;
@@ -128,7 +122,6 @@ foreach($items as $item) {
     
     if (!$vod_id) continue;
     
-    // Obtener información de Xtream UI
     $url_info = IP."/player_api.php?username=$user&password=$pwd&action=get_vod_info&vod_id=$vod_id";
     $res_info = apixtream($url_info);
     $data_info = json_decode($res_info, true);
@@ -143,12 +136,10 @@ foreach($items as $item) {
         $info_data = $data_info['info'];
         $movie_data = ['name' => isset($info_data['name']) ? $info_data['name'] : ''];
     } else {
-        // Si no hay información de Xtream, usar el título del item
         $movie_data = ['name' => isset($item['title']) ? $item['title'] : ''];
         $info_data = [];
     }
     
-    // Extraer información básica
     $movie_name = isset($movie_data['name']) ? $movie_data['name'] : (isset($item['title']) ? $item['title'] : '');
     $stream_icon = isset($info_data['movie_image']) ? $info_data['movie_image'] : (isset($item['poster']) ? $item['poster'] : '');
     $rating = isset($info_data['rating']) ? $info_data['rating'] : '';
@@ -160,7 +151,6 @@ foreach($items as $item) {
     $genre = isset($info_data['genre']) ? $info_data['genre'] : '';
     $trailer = isset($info_data['youtube_trailer']) ? $info_data['youtube_trailer'] : '';
     
-    // Extraer YouTube ID del trailer
     $youtube_id = '';
     if (!empty($trailer)) {
         if (preg_match('/^[A-Za-z0-9_\-]{11}$/', $trailer)) {
@@ -170,7 +160,6 @@ foreach($items as $item) {
         }
     }
     
-    // Si falta información importante, intentar obtenerla de TMDB
     if ((empty($plot) || empty($cast) || empty($genre) || empty($rating) || empty($youtube_id)) && !empty($movie_name)) {
         $tmdb_info = getTmdbInfo($movie_name, $year, $item_type);
         if ($tmdb_info) {
@@ -240,7 +229,6 @@ if (!empty($peliculas) && is_array($peliculas) && count($peliculas) > 0) {
     }
 }
 
-// Mantener el orden del JSON (ya está ordenado por 'order')
 $peliculas_pagina = $peliculas;
 ?>
 <!DOCTYPE html>
