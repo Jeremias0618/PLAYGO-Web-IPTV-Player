@@ -11,20 +11,22 @@ $pwd = $_COOKIE['xpwdm'];
 
 $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
 
-$sagas = [
-    [
-        'id' => 'iron_man',
-        'nombre' => 'SAGA IRON MAN',
-        'imagen' => 'assets/image/saga_iron_man.webp',
-        'peliculas_ids' => []
-    ],
-    [
-        'id' => 'predator',
-        'nombre' => 'SAGA PREDATOR',
-        'imagen' => 'assets/image/saga_predator.webp',
-        'peliculas_ids' => [7716, 2693, 2690, 2689, 2692, 2691, 2450, 2449]
-    ]
-];
+$sagasFile = __DIR__ . '/storage/sagas.json';
+$sagas = [];
+
+if (file_exists($sagasFile)) {
+    $content = file_get_contents($sagasFile);
+    $sagasData = json_decode($content, true) ?: [];
+    
+    foreach ($sagasData as $saga) {
+        $sagas[] = [
+            'id' => $saga['id'] ?? '',
+            'nombre' => $saga['title'] ?? '',
+            'imagen' => $saga['image'] ?? '',
+            'items_count' => isset($saga['items']) && is_array($saga['items']) ? count($saga['items']) : 0
+        ];
+    }
+}
 
 $backdrop_fondo = 'assets/image/wallpaper_03.webp';
 
@@ -562,12 +564,32 @@ function getRandomSagaWallpaper() {
         text-transform: uppercase;
         letter-spacing: 1px;
     }
+    .saga-card-count {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+        margin-top: 8px;
+        padding: 0 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    .saga-card-count i {
+        font-size: 0.9rem;
+        background: linear-gradient(90deg, #831f5e 0%, #f50b60 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
     @media (max-width: 600px) {
         .saga-card-cover {
             height: 260px !important;
         }
         .saga-card-title {
             font-size: 1.1rem;
+        }
+        .saga-card-count {
+            font-size: 0.85rem;
         }
     }
 
@@ -758,6 +780,8 @@ if (!empty($sagas) && is_array($sagas)) {
         $saga_id = $saga['id'];
         $saga_nombre = $saga['nombre'];
         $saga_imagen = $saga['imagen'] ?? '';
+        $saga_items_count = $saga['items_count'] ?? 0;
+        
         if (empty($saga_imagen) || !file_exists($saga_imagen)) {
             $imagen_path = getRandomSagaWallpaper();
         } else {
@@ -768,16 +792,17 @@ if (!empty($sagas) && is_array($sagas)) {
         <div class="saga-card">
             <a href="collection.php?saga=<?php echo urlencode($saga_id); ?>">
                 <div class="saga-card-cover">
-                    <img loading="lazy" src="<?php echo $imagen_path; ?>" alt="<?php echo htmlspecialchars($saga_nombre); ?>">
+                    <img loading="lazy" src="<?php echo htmlspecialchars($imagen_path); ?>" alt="<?php echo htmlspecialchars($saga_nombre); ?>">
                 </div>
                 <h3 class="saga-card-title"><?php echo htmlspecialchars($saga_nombre); ?></h3>
+                <div class="saga-card-count">
+                    <i class="fas fa-film"></i> <?php echo $saga_items_count; ?> <?php echo $saga_items_count === 1 ? 'película' : 'películas'; ?>
+                </div>
             </a>
         </div>
     </div>
 <?php
     }
-} else {
-    echo '<div class="col-12" style="color:#fff;font-size:1.2rem;text-align:center;">No hay sagas disponibles.</div>';
 }
 ?>
         </div>
