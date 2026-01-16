@@ -15,6 +15,13 @@ $pageData = getProfilePageData($user, $pwd);
 $backdrop_fondo = $pageData['backdrop'];
 $username = $pageData['username'];
 $member_since = $pageData['member_since'];
+$last_login = $pageData['last_login'];
+$exp_date = $pageData['exp_date'];
+$next_renewal = $pageData['next_renewal'];
+$total_hours = $pageData['total_hours'];
+$movies_watched = $pageData['movies_watched'];
+$series_watched = $pageData['series_watched'];
+$consecutive_days = $pageData['consecutive_days'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -136,6 +143,69 @@ $member_since = $pageData['member_since'];
                             <span class="account-status"><i class="fas fa-check-circle"></i> Cuenta Activa</span>
                         </div>
                     </section>
+                    
+                    <h2 class="section-title"><i class="fas fa-user-circle"></i> Información de Cuenta</h2>
+                    <div class="section-grid">
+                        <div class="info-card">
+                            <h3><i class="fas fa-key"></i> Datos de Acceso</h3>
+                            <div class="info-item">
+                                <span class="info-label">Usuario:</span>
+                                <span class="info-value"><?php echo htmlspecialchars($username); ?></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Clave:</span>
+                                <span class="info-value">******</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Último inicio de sesión:</span>
+                                <span class="info-value"><?php echo htmlspecialchars($last_login); ?></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Autenticación 2FA:</span>
+                                <span class="info-value">Deshabilitado</span>
+                            </div>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h3><i class="fas fa-credit-card"></i> Suscripción</h3>
+                            <div class="info-item">
+                                <span class="info-label">Plan:</span>
+                                <span class="info-value">Estándar</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Pago mensual:</span>
+                                <span class="info-value">Ninguno</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Fecha de expiración:</span>
+                                <span class="info-value"><?php echo htmlspecialchars($exp_date); ?></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Próxima renovación:</span>
+                                <span class="info-value"><?php echo htmlspecialchars($next_renewal); ?></span>
+                            </div>
+                        </div>
+                        
+                        <div class="info-card">
+                            <h3><i class="fas fa-chart-line"></i> Estadísticas</h3>
+                            <div class="info-item">
+                                <span class="info-label">Total visualizado:</span>
+                                <span class="info-value"><?php echo $total_hours; ?> horas</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Películas vistas:</span>
+                                <span class="info-value"><?php echo $movies_watched; ?></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Series vistas:</span>
+                                <span class="info-value"><?php echo $series_watched; ?></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Días consecutivos:</span>
+                                <span class="info-value"><?php echo $consecutive_days; ?></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -113,7 +113,7 @@ html, body {
     right: -3px;
     bottom: -3px;
     border-radius: 12px;
-    background: linear-gradient(90deg, #831f5e 0%, #f50b60 100%);
+    background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
     z-index: -1;
 }
 
@@ -153,7 +153,7 @@ html, body {
 .profile-header .account-status {
     display: inline-block;
     padding: 5px 10px;
-    background: linear-gradient(90deg, #831f5e 0%, #f50b60 100%);
+    background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
     border-radius: 3px;
     font-size: 14px;
     font-weight: bold;
@@ -163,6 +163,73 @@ html, body {
 
 .profile-header .account-status i {
     margin-right: 5px;
+}
+
+.section-title {
+    font-size: 24px;
+    margin: 30px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(109, 109, 109, 0.5);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.info-card {
+    background-color: rgba(34, 34, 34, 0.85);
+    padding: 20px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.info-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.info-card h3 i {
+    font-size: 20px;
+}
+
+.info-item {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-label {
+    color: #b3b3b3;
+    font-size: 14px;
+}
+
+.info-value {
+    font-weight: bold;
+    color: #fff;
+    font-size: 14px;
 }
 
 @media (min-width: 601px) {

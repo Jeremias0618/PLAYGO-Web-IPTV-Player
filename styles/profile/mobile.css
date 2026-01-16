@@ -131,5 +131,38 @@
     .modal-buscador-card span {
         font-size: 0.93rem !important;
     }
+    
+    .section-title {
+        font-size: 20px;
+        margin: 25px 0 15px;
+        padding-bottom: 8px;
+    }
+    
+    .section-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .info-card {
+        padding: 15px;
+    }
+    
+    .info-card h3 {
+        font-size: 16px;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .info-label {
+        font-size: 13px;
+    }
+    
+    .info-value {
+        font-size: 13px;
+    }
 }
 

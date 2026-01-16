@@ -10,7 +10,9 @@ function handleLoginRequest() {
         $username = trim($_POST['usuario']);
         $password = trim($_POST['senha']);
 
-        if (validar_usuario($username, $password)) {
+        $validationResult = validar_usuario($username, $password);
+        
+        if ($validationResult['success']) {
             $safeUser = preg_replace('/[^a-zA-Z0-9_-]/', '_', $username);
             $storageDir = __DIR__ . '/../../storage/users/' . $safeUser;
             if (!is_dir($storageDir)) {
@@ -52,7 +54,8 @@ function handleLoginRequest() {
             header("Location: home.php");
             exit;
         } else {
-            header("Location: login.php?sess=erro");
+            $errorType = $validationResult['error'] ?? 'invalid_credentials';
+            header("Location: login.php?sess=" . $errorType);
             exit;
         }
     }

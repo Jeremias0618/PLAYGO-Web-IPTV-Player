@@ -76,7 +76,7 @@ handleLoginRequest();
                 <?php } ?>
 
 
-                <?php if(isset($_GET['sess']) && $_GET['sess'] == 'erro') { ?>
+                <?php if(isset($_GET['sess']) && ($_GET['sess'] == 'erro' || $_GET['sess'] == 'invalid_credentials')) { ?>
                     <div class="alert-error" role="alert" aria-live="polite">
                         <div class="alert-row">
                             <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -84,7 +84,35 @@ handleLoginRequest();
                             </svg>
                             <div class="alert-text">
                                 <p class="alert-title">Datos inválidos</p>
-                                <p class="alert-message">No fue posible iniciar sesión, datos no encontrados en el sistema.</p>
+                                <p class="alert-message">No fue posible iniciar sesión. Las credenciales ingresadas no son válidas.</p>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+
+                <?php if(isset($_GET['sess']) && $_GET['sess'] == 'expired') { ?>
+                    <div class="alert-error" role="alert" aria-live="polite">
+                        <div class="alert-row">
+                            <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                            <div class="alert-text">
+                                <p class="alert-title">Cuenta expirada</p>
+                                <p class="alert-message">No fue posible iniciar sesión. La cuenta ha expirado. Por favor, renueve su plan</p>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+
+                <?php if(isset($_GET['sess']) && $_GET['sess'] == 'banned') { ?>
+                    <div class="alert-error" role="alert" aria-live="polite">
+                        <div class="alert-row">
+                            <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                            <div class="alert-text">
+                                <p class="alert-title">Cuenta baneada</p>
+                                <p class="alert-message">No fue posible iniciar sesión. La cuenta ha sido baneada. Por favor, contacte al administrador.</p>
                             </div>
                         </div>
                     </div>
