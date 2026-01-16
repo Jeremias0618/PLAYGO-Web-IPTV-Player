@@ -11,6 +11,69 @@
     display: block;
     background: #000;
 }
+
+#plyr-video.vertical-poster,
+video.vertical-poster {
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #000 !important;
+}
+
+.plyr__poster.vertical-poster,
+.plyr--video .plyr__poster.vertical-poster,
+.plyr--video.vertical-poster .plyr__poster,
+div.plyr__poster.vertical-poster {
+    background-size: contain !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-color: #000 !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    margin: 0 auto !important;
+    display: block !important;
+}
+
+.plyr--video .plyr__video-wrapper {
+    background: #000 !important;
+    position: relative !important;
+    width: 100% !important;
+    aspect-ratio: 16 / 9 !important;
+    overflow: hidden !important;
+}
+
+.plyr--video.vertical-poster .plyr__poster {
+    background-size: contain !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-color: #000 !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+}
+
+.plyr--video.vertical-poster .plyr__video-wrapper {
+    background: #000 !important;
+    position: relative !important;
+    width: 100% !important;
+    aspect-ratio: 16 / 9 !important;
+    overflow: hidden !important;
+    display: block !important;
+}
+
+.plyr--video .plyr__video-wrapper.vertical-poster,
+.plyr--video.vertical-poster .plyr__video-wrapper {
+    background: #000 !important;
+    position: relative !important;
+    width: 100% !important;
+    aspect-ratio: 16 / 9 !important;
+    overflow: hidden !important;
+    display: block !important;
+}
 .player-nav-btns {
     display: flex;
     justify-content: center;

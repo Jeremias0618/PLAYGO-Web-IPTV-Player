@@ -97,24 +97,35 @@ $next_url = $next_ep_id ? "episode.php?serie_id=" . urlencode($serie_id) . "&epi
         };
     </script>
     <style>
-body {
+html {
+    min-height: 100%;
+    height: auto;
     background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo htmlspecialchars($ep_backdrop ?: $wallpaper_img ?: $poster_img); ?>') center center/cover no-repeat;
-    color: #fff;
     background-attachment: fixed !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
+}
+body {
+    background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo htmlspecialchars($ep_backdrop ?: $wallpaper_img ?: $poster_img); ?>') center center/cover no-repeat;
+    background-attachment: fixed !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    color: #fff;
     position: relative;
+    min-height: 100vh;
 }
 body::before {
     content: "";
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     width: 100vw;
     height: 100vh;
     min-height: 100vh;
-    max-height: 100vh;
     background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo htmlspecialchars($ep_backdrop ?: $wallpaper_img ?: $poster_img); ?>') center center/cover no-repeat;
     background-attachment: fixed !important;
     background-size: cover !important;
@@ -280,10 +291,112 @@ body::before {
                                 });
                                 window.player = player;
                                 
+                                (function() {
+                                    function checkPosterAspectRatio() {
+                                        const video = document.getElementById('plyr-video');
+                                        
+                                        if (!video) {
+                                            return;
+                                        }
+                                        
+                                        const posterUrl = video.poster || video.getAttribute('poster');
+                                        if (!posterUrl) {
+                                            return;
+                                        }
+                                        
+                                        const img = new Image();
+                                        
+                                        img.onload = function() {
+                                            const aspectRatio = this.width / this.height;
+                                            
+                                            if (aspectRatio < 1) {
+                                                video.classList.add('vertical-poster');
+                                                
+                                                function applyVerticalPosterStyles() {
+                                                    const plyrPoster = document.querySelector('.plyr__poster');
+                                                    const plyrWrapper = document.querySelector('.plyr__video-wrapper');
+                                                    
+                                                    if (plyrPoster) {
+                                                        plyrPoster.classList.add('vertical-poster');
+                                                        
+                                                        plyrPoster.style.setProperty('background-size', 'contain', 'important');
+                                                        plyrPoster.style.setProperty('background-position', 'center center', 'important');
+                                                        plyrPoster.style.setProperty('background-repeat', 'no-repeat', 'important');
+                                                        plyrPoster.style.setProperty('background-color', '#000', 'important');
+                                                        plyrPoster.style.setProperty('position', 'absolute', 'important');
+                                                        plyrPoster.style.setProperty('top', '0', 'important');
+                                                        plyrPoster.style.setProperty('left', '0', 'important');
+                                                        plyrPoster.style.setProperty('right', '0', 'important');
+                                                        plyrPoster.style.setProperty('bottom', '0', 'important');
+                                                        plyrPoster.style.setProperty('width', '100%', 'important');
+                                                        plyrPoster.style.setProperty('height', '100%', 'important');
+                                                        plyrPoster.style.setProperty('margin', '0', 'important');
+                                                        
+                                                        const observer = new MutationObserver(function(mutations) {
+                                                            mutations.forEach(function(mutation) {
+                                                                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                                                                    plyrPoster.style.setProperty('background-size', 'contain', 'important');
+                                                                    plyrPoster.style.setProperty('background-position', 'center center', 'important');
+                                                                    plyrPoster.style.setProperty('background-repeat', 'no-repeat', 'important');
+                                                                    plyrPoster.style.setProperty('background-color', '#000', 'important');
+                                                                    plyrPoster.style.setProperty('position', 'absolute', 'important');
+                                                                    plyrPoster.style.setProperty('top', '0', 'important');
+                                                                    plyrPoster.style.setProperty('left', '0', 'important');
+                                                                    plyrPoster.style.setProperty('right', '0', 'important');
+                                                                    plyrPoster.style.setProperty('bottom', '0', 'important');
+                                                                    plyrPoster.style.setProperty('width', '100%', 'important');
+                                                                    plyrPoster.style.setProperty('height', '100%', 'important');
+                                                                    plyrPoster.style.setProperty('margin', '0', 'important');
+                                                                }
+                                                            });
+                                                        });
+                                                        
+                                                        observer.observe(plyrPoster, {
+                                                            attributes: true,
+                                                            attributeFilter: ['style', 'class']
+                                                        });
+                                                    }
+                                                    
+                                                    if (plyrWrapper) {
+                                                        plyrWrapper.classList.add('vertical-poster');
+                                                        plyrWrapper.style.setProperty('background', '#000', 'important');
+                                                        plyrWrapper.style.setProperty('position', 'relative', 'important');
+                                                        plyrWrapper.style.setProperty('width', '100%', 'important');
+                                                        plyrWrapper.style.setProperty('aspect-ratio', '16 / 9', 'important');
+                                                        plyrWrapper.style.setProperty('overflow', 'hidden', 'important');
+                                                        plyrWrapper.style.setProperty('display', 'block', 'important');
+                                                    }
+                                                }
+                                                
+                                                setTimeout(applyVerticalPosterStyles, 100);
+                                                setTimeout(applyVerticalPosterStyles, 500);
+                                                setTimeout(applyVerticalPosterStyles, 1000);
+                                            }
+                                        };
+                                        
+                                        img.onerror = function() {
+                                        };
+                                        
+                                        img.src = posterUrl;
+                                    }
+                                    
+                                    if (document.readyState === 'loading') {
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            setTimeout(checkPosterAspectRatio, 500);
+                                        });
+                                    } else {
+                                        setTimeout(checkPosterAspectRatio, 500);
+                                    }
+                                    
+                                    player.on('ready', function() {
+                                        setTimeout(checkPosterAspectRatio, 100);
+                                    });
+                                })();
                                 </script>
                             <?php else: ?>
                                 <div style="width:100%;max-width:1100px;margin:auto;">
                                     <video
+                                        id="episode-video"
                                         controls
                                         playsinline
                                         webkit-playsinline
@@ -295,6 +408,39 @@ body::before {
                                         <source src="<?php echo htmlspecialchars($video_url); ?>" />
                                         Tu navegador no soporta este formato de video.
                                     </video>
+                                    <script>
+                                    (function() {
+                                        const video = document.getElementById('episode-video');
+                                        
+                                        if (!video) {
+                                            return;
+                                        }
+                                        
+                                        const posterUrl = video.poster || video.getAttribute('poster');
+                                        
+                                        if (!posterUrl) {
+                                            return;
+                                        }
+                                        
+                                        const img = new Image();
+                                        
+                                        img.onload = function() {
+                                            const aspectRatio = this.width / this.height;
+                                            
+                                            if (aspectRatio < 1) {
+                                                video.classList.add('vertical-poster');
+                                                video.style.objectFit = 'contain';
+                                                video.style.objectPosition = 'center center';
+                                                video.style.background = '#000';
+                                            }
+                                        };
+                                        
+                                        img.onerror = function() {
+                                        };
+                                        
+                                        img.src = posterUrl;
+                                    })();
+                                    </script>
                 </div>
                             <?php endif; ?>
             </div>

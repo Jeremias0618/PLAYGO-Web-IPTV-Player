@@ -83,24 +83,35 @@ window.serieYear = <?php echo json_encode($ano); ?>;
 window.serieRating = <?php echo json_encode(formatear_rating($nota)); ?>;
     </script>
     <style>
-body {
+html {
+    min-height: 100%;
+    height: auto;
     background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo $backdrop_final; ?>') center center/cover no-repeat;
-    color: #fff;
     background-attachment: fixed !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
+}
+body {
+    background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo $backdrop_final; ?>') center center/cover no-repeat;
+    background-attachment: fixed !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    color: #fff;
     position: relative;
+    min-height: 100vh;
 }
 body::before {
     content: "";
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     width: 100vw;
     height: 100vh;
     min-height: 100vh;
-    max-height: 100vh;
     background: linear-gradient(180deg,rgba(24,24,24,0.80) 0%,rgba(24,24,24,0.80) 100%), url('<?php echo $backdrop_final; ?>') center center/cover no-repeat;
     background-attachment: fixed !important;
     background-size: cover !important;
