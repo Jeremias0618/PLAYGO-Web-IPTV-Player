@@ -1,0 +1,101 @@
+@media (max-width: 600px) {
+    .header__logo {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+    
+    .header__content {
+        padding-left: 4px !important;
+    }
+    
+    .header__logo img {
+        width: 240px !important;
+        height: 60px !important;
+        max-width: 100% !important;
+        object-fit: contain;
+    }
+    
+    .main-bg-fondo > div[style*="PERFIL"] {
+        margin-top: 70px !important;
+        margin-bottom: 18px !important;
+    }
+    
+    .profile-page-title {
+        margin: 80px 0 25px 0;
+    }
+    
+    .profile-page-title h2 {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+    }
+    
+    .profile-content {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .modal-buscador {
+        max-width: 98vw !important;
+        width: 98vw !important;
+        min-width: 0 !important;
+        padding: 18px 6px 16px 6px !important;
+        border-radius: 14px !important;
+        box-shadow: 0 4px 24px #000a !important;
+        top: 10vw !important;
+        left: 1vw !important;
+        right: 1vw !important;
+        position: relative !important;
+    }
+    
+    .modal-buscador-inputbox {
+        flex-direction: column !important;
+        gap: 10px;
+        margin-bottom: 18px !important;
+    }
+    
+    .modal-buscador-inputbox input {
+        font-size: 1.15rem !important;
+        padding: 12px 10px !important;
+        border-radius: 8px !important;
+        width: 100% !important;
+        margin-right: 0 !important;
+    }
+    
+    .modal-buscador-inputbox button {
+        width: 100% !important;
+        font-size: 1.13rem !important;
+        padding: 12px 0 !important;
+        border-radius: 8px !important;
+        margin-top: 4px;
+    }
+    
+    .modal-buscador-close {
+        top: 10px !important;
+        right: 12px !important;
+        font-size: 2.1rem !important;
+        padding: 0 8px !important;
+    }
+    
+    .modal-buscador-section h3 {
+        font-size: 1.08rem !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .modal-buscador-grid {
+        gap: 10px !important;
+    }
+    
+    .modal-buscador-card {
+        width: 90px !important;
+    }
+    
+    .modal-buscador-card img {
+        height: 110px !important;
+        border-radius: 8px !important;
+    }
+    
+    .modal-buscador-card span {
+        font-size: 0.93rem !important;
+    }
+}
+
