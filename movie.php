@@ -368,6 +368,18 @@ window.movieDuration = <?php echo json_encode($duracao); ?>;
                 const data = typeof response === 'string' ? JSON.parse(response) : response;
                 if (data.html) {
                     jQuery('#recomendadas-container').html(data.html);
+                    
+                    setTimeout(function() {
+                        const images = jQuery('#recomendadas-container .card__cover img');
+                        images.each(function() {
+                            const img = jQuery(this);
+                            img.css({
+                                'opacity': '1',
+                                'z-index': '1',
+                                'display': 'block'
+                            });
+                        });
+                    }, 100);
                 } else if (data.error) {
                     jQuery('#recomendadas-container').html('<div class="col-12 text-center" style="color: #ff4444; padding: 40px;">Error: ' + data.error + '</div>');
                 }

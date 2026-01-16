@@ -254,6 +254,13 @@
                     alert('Por favor ingresa un nombre para la playlist');
                     return;
                 }
+                const existingPlaylists = Object.keys(playlists);
+                if (existingPlaylists.includes(newName)) {
+                    alert('Ya existe una playlist con ese nombre. Por favor elige otro nombre.');
+                    nameInput.focus();
+                    nameInput.select();
+                    return;
+                }
                 createPlaylist(newName);
             };
             
@@ -310,7 +317,18 @@
                         }
                     }
                 } else if (data.error === 'playlist_exists') {
-                    alert('Ya existe una playlist con ese nombre');
+                    alert('Ya existe una playlist con ese nombre. Por favor elige otro nombre.');
+                    const nameInput = document.getElementById('newPlaylistNameInput');
+                    if (nameInput) {
+                        nameInput.focus();
+                        nameInput.select();
+                    }
+                } else if (data.error === 'empty_name') {
+                    alert('Por favor ingresa un nombre para la playlist');
+                    const nameInput = document.getElementById('newPlaylistNameInput');
+                    if (nameInput) {
+                        nameInput.focus();
+                    }
                 }
             });
         }
