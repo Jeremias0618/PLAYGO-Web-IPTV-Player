@@ -13,6 +13,8 @@ $pwd = $_COOKIE['xpwdm'];
 
 $pageData = getProfilePageData($user, $pwd);
 $backdrop_fondo = $pageData['backdrop'];
+$username = $pageData['username'];
+$member_since = $pageData['member_since'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -123,6 +125,17 @@ $backdrop_fondo = $pageData['backdrop'];
         <div class="container">
             <div class="row">
                 <div class="col-12">
+                    <section class="profile-header">
+                        <div class="avatar">
+                            <img src="assets/image/profile.webp" alt="Avatar del usuario">
+                        </div>
+                        <div class="profile-info">
+                            <h1>¡Bienvenido, <?php echo htmlspecialchars($username); ?>!</h1>
+                            <p><i class="fas fa-user"></i> <?php echo htmlspecialchars($username); ?>@playgo.pe</p>
+                            <p><i class="fas fa-calendar-alt"></i> Miembro Desde: <?php echo htmlspecialchars($member_since); ?></p>
+                            <span class="account-status"><i class="fas fa-check-circle"></i> Cuenta Activa</span>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>

@@ -34,6 +34,40 @@
         padding-top: 0 !important;
     }
     
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 15px;
+        gap: 20px;
+    }
+    
+    .profile-header .avatar {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+    }
+    
+    .profile-header .profile-info {
+        width: 100%;
+    }
+    
+    .profile-header .profile-info h1 {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+    
+    .profile-header .profile-info p {
+        font-size: 14px;
+        justify-content: center;
+        margin-bottom: 4px;
+    }
+    
+    .profile-header .account-status {
+        font-size: 12px;
+        padding: 4px 8px;
+        margin-top: 8px;
+    }
+    
     .modal-buscador {
         max-width: 98vw !important;
         width: 98vw !important;
