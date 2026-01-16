@@ -302,13 +302,108 @@ html, body {
     max-width: 100%;
     margin: 0 auto;
     display: block;
-    background: #181818;
+    background: transparent;
     border-radius: 12px;
+}
+
+.history-carousel .card.card--big .card__content {
+    background: transparent !important;
+    padding: 10px 0 0 0;
+    box-shadow: none !important;
+}
+
+.history-carousel .card.card--big .card__title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 8px;
+    margin-top: 0;
+    min-height: unset;
+}
+
+.history-carousel .card.card--big .card__title a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.history-carousel .card.card--big .card__rate {
+    font-size: 14px;
+    color: #b3b3b3;
+    display: block;
+    margin-top: 4px;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+.history-carousel .card.card--big .card__rate i {
+    color: #FFD700;
+    font-size: 14px;
 }
 
 .history-carousel .owl-item {
     display: flex;
     justify-content: center;
+}
+
+.favorites-carousel {
+    position: relative;
+}
+
+.favorites-carousel .owl-item {
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.favorites-carousel .owl-stage-outer {
+    overflow: hidden;
+}
+
+.favorites-carousel .card.card--big {
+    width: 200px;
+    min-width: 200px;
+    max-width: 100%;
+    margin: 0 auto;
+    display: block;
+    background: transparent;
+    border-radius: 12px;
+}
+
+.favorites-carousel .card.card--big .card__content {
+    background: transparent !important;
+    padding: 10px 0 0 0;
+    box-shadow: none !important;
+}
+
+.favorites-carousel .card.card--big .card__title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 8px;
+    margin-top: 0;
+    min-height: unset;
+}
+
+.favorites-carousel .card.card--big .card__title a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.favorites-carousel .card.card--big .card__rate {
+    font-size: 14px;
+    color: #b3b3b3;
+    display: block;
+    margin-top: 4px;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+.favorites-carousel .card.card--big .card__rate i {
+    color: #FFD700;
+    font-size: 14px;
 }
 
 .no-history {

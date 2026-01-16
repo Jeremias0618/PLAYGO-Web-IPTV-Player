@@ -16,6 +16,7 @@ function getProfilePageData($user, $pwd) {
     $userDataFile = __DIR__ . '/../../storage/users/' . $safeUser . '/user_data.json';
     $historyFile = __DIR__ . '/../../storage/users/' . $safeUser . '/history.json';
     $progressFile = __DIR__ . '/../../storage/users/' . $safeUser . '/progress.json';
+    $favoritesFile = __DIR__ . '/../../storage/users/' . $safeUser . '/favorites.json';
     
     $memberSince = 'Desconocida';
     $lastLogin = 'Desconocida';
@@ -201,7 +202,7 @@ function getProfilePageData($user, $pwd) {
                 return $dateB - $dateA;
             });
             
-            $recentHistory = array_slice($history, 0, 8);
+            $recentHistory = $history;
             
             foreach ($recentHistory as &$item) {
                 if (isset($item['date'])) {
@@ -227,6 +228,20 @@ function getProfilePageData($user, $pwd) {
         }
     }
     
+    $favorites = [];
+    if (file_exists($favoritesFile)) {
+        $favoritesContent = file_get_contents($favoritesFile);
+        $favoritesData = json_decode($favoritesContent, true);
+        if (is_array($favoritesData)) {
+            usort($favoritesData, function($a, $b) {
+                $dateA = isset($a['date']) ? strtotime($a['date']) : 0;
+                $dateB = isset($b['date']) ? strtotime($b['date']) : 0;
+                return $dateB - $dateA;
+            });
+            $favorites = $favoritesData;
+        }
+    }
+    
     return [
         'backdrop' => $backdrop,
         'username' => $user,
@@ -238,7 +253,8 @@ function getProfilePageData($user, $pwd) {
         'movies_watched' => $moviesWatched,
         'series_watched' => $seriesWatched,
         'consecutive_days' => $consecutiveDays,
-        'recent_history' => $recentHistory
+        'recent_history' => $recentHistory,
+        'favorites' => $favorites
     ];
 }
 

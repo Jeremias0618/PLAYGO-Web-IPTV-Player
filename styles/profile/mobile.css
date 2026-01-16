@@ -183,5 +183,10 @@
         width: 160px;
         min-width: 160px;
     }
+    
+    .favorites-carousel .card.card--big {
+        width: 160px;
+        min-width: 160px;
+    }
 }
 
