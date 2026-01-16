@@ -22,6 +22,7 @@ $total_hours = $pageData['total_hours'];
 $movies_watched = $pageData['movies_watched'];
 $series_watched = $pageData['series_watched'];
 $consecutive_days = $pageData['consecutive_days'];
+$recent_history = $pageData['recent_history'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -206,6 +207,60 @@ $consecutive_days = $pageData['consecutive_days'];
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="history-section-header">
+                        <h2 class="section-title"><i class="fas fa-history"></i> Historial Reciente</h2>
+                        <div class="history-nav-buttons">
+                            <button class="history-nav-btn history-nav-prev" type="button">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button class="history-nav-btn history-nav-next" type="button">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <?php if (!empty($recent_history)): ?>
+                        <div class="history-carousel-wrapper">
+                            <div class="owl-carousel history-carousel">
+                                <?php foreach ($recent_history as $item): ?>
+                                    <?php
+                                    $itemType = strtolower($item['type'] ?? '');
+                                    $is_series = ($itemType === 'serie' || $itemType === 'series');
+                                    $itemUrl = $is_series ? "serie.php?stream=" . htmlspecialchars($item['id']) . "&streamtipo=serie" : "movie.php?stream=" . htmlspecialchars($item['id']) . "&streamtipo=movie";
+                                    $itemImg = $item['img'] ?? 'assets/logo/logo.png';
+                                    $itemName = htmlspecialchars($item['name'] ?? 'Sin título');
+                                    $itemDate = $item['date_formatted'] ?? '';
+                                    $itemYear = isset($item['year']) ? substr($item['year'], 0, 4) : '';
+                                    $itemRating = isset($item['rating']) ? $item['rating'] : 'N/A';
+                                    ?>
+                                    <div class="item">
+                                        <div class="card card--big">
+                                            <div class="card__cover">
+                                                <img loading="lazy" src="<?php echo htmlspecialchars($itemImg); ?>" alt="<?php echo $itemName; ?>" onerror="this.src='assets/logo/logo.png'">
+                                                <a href="<?php echo $itemUrl; ?>" class="card__play">
+                                                    <i class="fas fa-play"></i>
+                                                </a>
+                                            </div>
+                                            <div class="card__content">
+                                                <h3 class="card__title" style="margin-top:0;">
+                                                    <a href="<?php echo $itemUrl; ?>">
+                                                        <?php echo limitar_texto(preg_replace('/\s*\(\d{4}\)$/', '', $itemName), 30); ?>
+                                                    </a>
+                                                </h3>
+                                                <span class="card__rate" style="display:block;margin-top:4px;margin-bottom:0;font-size:1.05rem;">
+                                                    <?php echo htmlspecialchars($itemYear); ?> &nbsp; <i class="fas fa-star" style="color:#FFD700"></i> <?php echo htmlspecialchars($itemRating); ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <div class="no-history">
+                            <p>No hay historial reciente</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

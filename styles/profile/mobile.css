@@ -164,5 +164,24 @@
     .info-value {
         font-size: 13px;
     }
+    
+    .history-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .history-nav-buttons {
+        align-self: flex-end;
+    }
+    
+    .history-nav-btn {
+        font-size: 28px;
+    }
+    
+    .history-carousel .card.card--big {
+        width: 160px;
+        min-width: 160px;
+    }
 }
 

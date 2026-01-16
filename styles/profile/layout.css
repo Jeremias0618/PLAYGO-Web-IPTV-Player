@@ -232,6 +232,93 @@ html, body {
     font-size: 14px;
 }
 
+.history-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin: 30px 0 20px;
+    position: relative;
+    width: 100%;
+    gap: 20px;
+}
+
+.history-section-header .section-title {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.history-nav-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.history-nav-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 32px;
+    opacity: 0.7;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.history-nav-btn:hover {
+    opacity: 1;
+}
+
+.history-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.history-carousel-wrapper {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.history-carousel {
+    position: relative;
+}
+
+.history-carousel .owl-item {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.history-carousel .owl-stage-outer {
+    overflow: hidden;
+}
+
+.history-carousel .card.card--big {
+    width: 200px;
+    min-width: 200px;
+    max-width: 100%;
+    margin: 0 auto;
+    display: block;
+    background: #181818;
+    border-radius: 12px;
+}
+
+.history-carousel .owl-item {
+    display: flex;
+    justify-content: center;
+}
+
+.no-history {
+    width: 100%;
+    text-align: center;
+    padding: 40px 20px;
+    color: #b3b3b3;
+    font-size: 16px;
+}
+
 @media (min-width: 601px) {
     .header__logo img {
         width: 240px !important;

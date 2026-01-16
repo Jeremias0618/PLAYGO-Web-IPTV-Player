@@ -190,6 +190,43 @@ function getProfilePageData($user, $pwd) {
         }
     }
     
+    $recentHistory = [];
+    if (file_exists($historyFile)) {
+        $historyContent = file_get_contents($historyFile);
+        $history = json_decode($historyContent, true);
+        if (is_array($history)) {
+            usort($history, function($a, $b) {
+                $dateA = isset($a['date']) ? strtotime($a['date']) : 0;
+                $dateB = isset($b['date']) ? strtotime($b['date']) : 0;
+                return $dateB - $dateA;
+            });
+            
+            $recentHistory = array_slice($history, 0, 8);
+            
+            foreach ($recentHistory as &$item) {
+                if (isset($item['date'])) {
+                    $viewDate = DateTime::createFromFormat('Y-m-d H:i:s', $item['date']);
+                    if ($viewDate) {
+                        $now = new DateTime();
+                        $diff = $now->diff($viewDate);
+                        
+                        if ($diff->days == 0) {
+                            $item['date_formatted'] = 'Hoy';
+                        } elseif ($diff->days == 1) {
+                            $item['date_formatted'] = 'Ayer';
+                        } else {
+                            $item['date_formatted'] = $diff->days . ' días';
+                        }
+                    } else {
+                        $item['date_formatted'] = '';
+                    }
+                } else {
+                    $item['date_formatted'] = '';
+                }
+            }
+        }
+    }
+    
     return [
         'backdrop' => $backdrop,
         'username' => $user,
@@ -200,7 +237,8 @@ function getProfilePageData($user, $pwd) {
         'total_hours' => round($totalHours),
         'movies_watched' => $moviesWatched,
         'series_watched' => $seriesWatched,
-        'consecutive_days' => $consecutiveDays
+        'consecutive_days' => $consecutiveDays,
+        'recent_history' => $recentHistory
     ];
 }
 
