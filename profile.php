@@ -136,17 +136,21 @@ $sagas = $pageData['sagas'];
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <section class="profile-header">
-                        <div class="avatar">
-                            <img src="assets/image/profile.webp" alt="Avatar del usuario">
-                        </div>
-                        <div class="profile-info">
-                            <h1>¡Bienvenido, <?php echo htmlspecialchars($username); ?>!</h1>
-                            <p><i class="fas fa-user"></i> <?php echo htmlspecialchars($username); ?>@playgo.pe</p>
-                            <p><i class="fas fa-calendar-alt"></i> Miembro Desde: <?php echo htmlspecialchars($member_since); ?></p>
-                            <span class="account-status"><i class="fas fa-check-circle"></i> Cuenta Activa</span>
-                        </div>
-                    </section>
+        <section class="profile-header">
+            <div class="avatar">
+                <img src="assets/image/profile.webp" alt="Avatar del usuario">
+            </div>
+            <div class="profile-info">
+                <h1>¡Bienvenido, <?php echo htmlspecialchars($username); ?>!</h1>
+                <p><i class="fas fa-user"></i> <?php echo htmlspecialchars($username); ?>@playgo.pe</p>
+                <p><i class="fas fa-calendar-alt"></i> Miembro Desde: <?php echo htmlspecialchars($member_since); ?></p>
+                <span class="account-status"><i class="fas fa-check-circle"></i> Cuenta Activa</span>
+            </div>
+            <button class="profile-logout-btn" id="profileLogoutBtn">
+                <span>Cerrar sesión</span>
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </section>
                     
                     <h2 class="section-title"><i class="fas fa-user-circle"></i> Información de Cuenta</h2>
                     <div class="section-grid">
@@ -343,7 +347,10 @@ $sagas = $pageData['sagas'];
                                 $playlistCover = $firstItem['backdrop'] ?? $firstItem['img'] ?? 'assets/logo/logo.png';
                                 $playlistCount = count($playlistItems);
                                 ?>
-                                <div class="playlist-card">
+                                <div class="playlist-card" data-playlist-name="<?php echo htmlspecialchars($playlistName); ?>">
+                                    <button class="playlist-delete-btn" data-playlist-name="<?php echo htmlspecialchars($playlistName); ?>" title="Eliminar lista">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                     <a href="playlist.php?name=<?php echo urlencode($playlistName); ?>" class="playlist-link">
                                         <div class="playlist-cover">
                                             <img src="<?php echo htmlspecialchars($playlistCover); ?>" alt="<?php echo htmlspecialchars($playlistName); ?>" onerror="this.src='assets/logo/logo.png'">
@@ -406,7 +413,11 @@ $sagas = $pageData['sagas'];
                                             
                                             const card = document.createElement('div');
                                             card.className = 'playlist-card';
-                                            card.innerHTML = '<a href="playlist.php?name=' + encodeURIComponent(playlistName) + '" class="playlist-link">' +
+                                            card.setAttribute('data-playlist-name', playlistName);
+                                            card.innerHTML = '<button class="playlist-delete-btn" data-playlist-name="' + playlistName.replace(/"/g, '&quot;') + '" title="Eliminar lista">' +
+                                                '<i class="fas fa-times"></i>' +
+                                            '</button>' +
+                                            '<a href="playlist.php?name=' + encodeURIComponent(playlistName) + '" class="playlist-link">' +
                                                 '<div class="playlist-cover">' +
                                                     '<img src="' + playlistCover.replace(/"/g, '&quot;') + '" alt="' + playlistName.replace(/"/g, '&quot;') + '" onerror="this.src=\'assets/logo/logo.png\'">' +
                                                     '<div class="playlist-count-badge">' +
@@ -420,6 +431,53 @@ $sagas = $pageData['sagas'];
                                             '</a>';
                                             
                                             playlistsGrid.appendChild(card);
+                                            
+                                            const newDeleteBtn = card.querySelector('.playlist-delete-btn');
+                                            if (newDeleteBtn) {
+                                                newDeleteBtn.addEventListener('click', function(e) {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deletePlaylistModal')) || new bootstrap.Modal(document.getElementById('deletePlaylistModal'));
+                                                    const deletePlaylistNameEl = document.getElementById('deletePlaylistName');
+                                                    const confirmDeleteBtn = document.getElementById('confirmDeletePlaylistBtn');
+                                                    const playlistNameToDelete = newDeleteBtn.getAttribute('data-playlist-name');
+                                                    
+                                                    deletePlaylistNameEl.textContent = playlistNameToDelete;
+                                                    deleteModal.show();
+                                                    
+                                                    const handleConfirm = function() {
+                                                        confirmDeleteBtn.disabled = true;
+                                                        confirmDeleteBtn.textContent = 'Eliminando...';
+                                                        
+                                                        fetch('libs/endpoints/UserData.php', {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/x-www-form-urlencoded',
+                                                            },
+                                                            body: 'action=playlist_delete&playlist_name=' + encodeURIComponent(playlistNameToDelete)
+                                                        })
+                                                        .then(response => response.json())
+                                                        .then(data => {
+                                                            if (data.success) {
+                                                                deleteModal.hide();
+                                                                location.reload();
+                                                            } else {
+                                                                alert('Error al eliminar la lista: ' + (data.error || 'Error desconocido'));
+                                                                confirmDeleteBtn.disabled = false;
+                                                                confirmDeleteBtn.textContent = 'Eliminar';
+                                                            }
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('Error:', error);
+                                                            alert('Error al eliminar la lista');
+                                                            confirmDeleteBtn.disabled = false;
+                                                            confirmDeleteBtn.textContent = 'Eliminar';
+                                                        });
+                                                    };
+                                                    
+                                                    confirmDeleteBtn.onclick = handleConfirm;
+                                                });
+                                            }
                                         });
                                         
                                         currentIndex += nextBatch.length;
@@ -517,6 +575,147 @@ $sagas = $pageData['sagas'];
 <script src="./scripts/vendors/select2.min.js"></script>
 <script src="./scripts/core/main.js"></script>
 <script src="./scripts/profile/init.js"></script>
+
+<div class="delete-modal-overlay" id="deletePlaylistModal">
+    <div class="delete-modal-backdrop"></div>
+    <div class="delete-modal-container">
+        <div class="delete-modal-content">
+            <div class="delete-modal-header">
+                <h3>Confirmar eliminación</h3>
+            </div>
+            <div class="delete-modal-body">
+                <div class="delete-modal-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <p>¿Estás seguro de que deseas eliminar la lista de reproducción "<strong id="deletePlaylistName"></strong>"?</p>
+                <span class="delete-modal-warning">Esta acción no se puede deshacer.</span>
+            </div>
+            <div class="delete-modal-footer">
+                <button type="button" class="delete-modal-btn delete-modal-btn-cancel" id="cancelDeletePlaylistBtn">Cancelar</button>
+                <button type="button" class="delete-modal-btn delete-modal-btn-confirm" id="confirmDeletePlaylistBtn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const deleteButtons = document.querySelectorAll('.playlist-delete-btn');
+    const deleteModal = document.getElementById('deletePlaylistModal');
+    const deleteModalBackdrop = deleteModal ? deleteModal.querySelector('.delete-modal-backdrop') : null;
+    const deletePlaylistNameEl = document.getElementById('deletePlaylistName');
+    const confirmDeleteBtn = document.getElementById('confirmDeletePlaylistBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeletePlaylistBtn');
+    let playlistToDelete = null;
+    
+    function showModal() {
+        if (deleteModal) {
+            deleteModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+    
+    function hideModal() {
+        if (deleteModal) {
+            deleteModal.classList.remove('show');
+            document.body.style.overflow = '';
+            playlistToDelete = null;
+            if (confirmDeleteBtn) {
+                confirmDeleteBtn.disabled = false;
+                confirmDeleteBtn.textContent = 'Eliminar';
+            }
+        }
+    }
+    
+    deleteButtons.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            playlistToDelete = btn.getAttribute('data-playlist-name');
+            
+            if (deletePlaylistNameEl) {
+                deletePlaylistNameEl.textContent = playlistToDelete;
+            }
+            
+            showModal();
+        });
+    });
+    
+    if (cancelDeleteBtn) {
+        cancelDeleteBtn.addEventListener('click', function() {
+            hideModal();
+        });
+    }
+    
+    if (deleteModalBackdrop) {
+        deleteModalBackdrop.addEventListener('click', function() {
+            hideModal();
+        });
+    }
+    
+    if (deleteModal) {
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === deleteModal) {
+                hideModal();
+            }
+        });
+    }
+    
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', function() {
+            if (!playlistToDelete) return;
+            
+            confirmDeleteBtn.disabled = true;
+            confirmDeleteBtn.textContent = 'Eliminando...';
+            
+            fetch('libs/endpoints/UserData.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=playlist_delete&playlist_name=' + encodeURIComponent(playlistToDelete)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    hideModal();
+                    location.reload();
+                } else {
+                    alert('Error al eliminar la lista: ' + (data.error || 'Error desconocido'));
+                    confirmDeleteBtn.disabled = false;
+                    confirmDeleteBtn.textContent = 'Eliminar';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al eliminar la lista');
+                confirmDeleteBtn.disabled = false;
+                confirmDeleteBtn.textContent = 'Eliminar';
+            });
+        });
+    }
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && deleteModal && deleteModal.classList.contains('show')) {
+            hideModal();
+        }
+    });
+})();
+
+(function() {
+    const logoutBtn = document.getElementById('profileLogoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                document.cookie = 'xuserm=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                document.cookie = 'xpwdm=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                window.location.href = 'login.php';
+            }
+        });
+    }
+})();
+</script>
 
 </body>
 </html>

@@ -320,6 +320,23 @@ try {
         exit;
     }
 
+    if ($action == 'playlist_delete') {
+        $playlistName = trim($_POST['playlist_name'] ?? '');
+        if (empty($playlistName)) {
+            echo json_encode(['success'=>false, 'error'=>'empty_name']);
+            exit;
+        }
+        $playlists = loadJsonFile($playlistsFile, []);
+        if (isset($playlists[$playlistName])) {
+            unset($playlists[$playlistName]);
+            saveJsonFile($playlistsFile, $playlists);
+            echo json_encode(['success'=>true]);
+        } else {
+            echo json_encode(['success'=>false, 'error'=>'playlist_not_found']);
+        }
+        exit;
+    }
+
     http_response_code(400);
     echo json_encode(['success'=>false, 'error'=>'invalid_action']);
     exit;

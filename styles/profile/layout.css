@@ -165,6 +165,46 @@ html, body {
     margin-right: 5px;
 }
 
+.profile-header {
+    position: relative;
+}
+
+.profile-logout-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: rgba(34, 34, 34, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.profile-logout-btn:hover {
+    background: rgba(44, 44, 44, 0.95);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.profile-logout-btn span {
+    color: inherit;
+}
+
+.profile-logout-btn i {
+    font-size: 16px;
+    color: inherit;
+}
+
 .section-title {
     font-size: 24px;
     margin: 30px 0 20px;
@@ -419,6 +459,7 @@ html, body {
     overflow: hidden;
     transition: transform 0.3s, box-shadow 0.3s;
     backdrop-filter: blur(10px);
+    position: relative;
 }
 
 .playlist-card:hover {
@@ -451,21 +492,6 @@ html, body {
     transform: scale(1.1);
 }
 
-.playlist-count-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    backdrop-filter: blur(10px);
-}
 
 .playlist-count-badge i {
     font-size: 12px;
@@ -489,6 +515,269 @@ html, body {
     font-size: 14px;
     color: #b3b3b3;
     margin: 0;
+}
+
+.playlist-delete-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(229, 9, 20, 0.9);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 15;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(229, 9, 20, 0.4);
+}
+
+.playlist-delete-btn:hover {
+    background: rgba(229, 9, 20, 1);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.6);
+}
+
+.playlist-delete-btn i {
+    font-size: 14px;
+}
+
+.playlist-card:hover .playlist-delete-btn {
+    background: rgba(229, 9, 20, 0.95);
+}
+
+.delete-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10050;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.delete-modal-overlay.show {
+    display: flex;
+}
+
+.delete-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    cursor: pointer;
+}
+
+.delete-modal-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 500px;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.delete-modal-content {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border: 1px solid rgba(229, 9, 20, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(229, 9, 20, 0.1);
+    overflow: hidden;
+}
+
+.delete-modal-header {
+    padding: 24px 24px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(31, 31, 36, 0.5);
+}
+
+.delete-modal-header h3 {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+}
+
+.delete-modal-body {
+    padding: 24px;
+    text-align: center;
+}
+
+.delete-modal-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.delete-modal-icon i {
+    color: #fff;
+    font-size: 28px;
+}
+
+.delete-modal-body p {
+    color: #e0e0e0;
+    font-size: 1rem;
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+}
+
+.delete-modal-body strong {
+    color: #e50914;
+    font-weight: 600;
+}
+
+.delete-modal-warning {
+    display: block;
+    color: #b3b3b3;
+    font-size: 0.9rem;
+    margin-top: 8px;
+}
+
+.delete-modal-footer {
+    padding: 20px 24px 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(31, 31, 36, 0.5);
+}
+
+.delete-modal-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+}
+
+.delete-modal-btn-cancel {
+    background-color: #2a2a32;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.delete-modal-btn-cancel:hover {
+    background-color: #333;
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.delete-modal-btn-confirm {
+    background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
+    color: #fff;
+}
+
+.delete-modal-btn-confirm:hover {
+    background: linear-gradient(180deg, #f01a25 0%, #d9009a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+}
+
+.delete-modal-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+@media (max-width: 600px) {
+    .delete-modal-overlay {
+        padding: 10px;
+    }
+    
+    .delete-modal-container {
+        max-width: 100%;
+    }
+    
+    .delete-modal-content {
+        border-radius: 12px;
+    }
+    
+    .delete-modal-header {
+        padding: 20px 20px 16px;
+    }
+    
+    .delete-modal-header h3 {
+        font-size: 1.3rem;
+    }
+    
+    .delete-modal-body {
+        padding: 20px;
+    }
+    
+    .delete-modal-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 16px;
+    }
+    
+    .delete-modal-icon i {
+        font-size: 24px;
+    }
+    
+    .delete-modal-footer {
+        padding: 16px 20px 20px;
+        flex-direction: column;
+    }
+    
+    .delete-modal-btn {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+.playlist-card .playlist-count-badge {
+    position: absolute;
+    top: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(10px);
+    z-index: 5;
+}
+
+.playlist-card:has(.playlist-delete-btn) .playlist-count-badge {
+    right: 48px;
+}
+
+.playlist-card:not(:has(.playlist-delete-btn)) .playlist-count-badge {
+    right: 8px;
 }
 
 .ver-mas-button-wrapper {
