@@ -482,16 +482,15 @@ $sagas = $pageData['sagas'];
                                     </a>
                                 </div>
                             <?php endforeach; ?>
-                            
-                            <?php if ($totalSagas > 6): ?>
-                                <div class="ver-mas-button-wrapper">
-                                    <a href="sagas.php" class="ver-mas-button">
-                                        <span>VER MÁS</span>
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                </div>
-                            <?php endif; ?>
                         </div>
+                        <?php if ($totalSagas > 6): ?>
+                            <div class="ver-mas-button-wrapper">
+                                <a href="sagas.php" class="ver-mas-button">
+                                    <span>VER MÁS</span>
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </div>
+                        <?php endif; ?>
                     <?php else: ?>
                         <div class="no-history">
                             <p>No hay sagas disponibles</p>
