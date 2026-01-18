@@ -11,6 +11,8 @@ $pwd = $_COOKIE['xpwdm'];
 
 $sessao = isset($_REQUEST['sessao']) ? $_REQUEST['sessao'] : gerar_hash(32);
 
+require_once(__DIR__ . '/libs/services/movies.php');
+
 $sagasFile = __DIR__ . '/storage/sagas.json';
 $sagas = [];
 
@@ -28,7 +30,15 @@ if (file_exists($sagasFile)) {
     }
 }
 
-$backdrop_fondo = 'assets/image/wallpaper_03.webp';
+$backdrop_fondo = '';
+$movies = getMoviesData($user, $pwd, null);
+if (!empty($movies) && is_array($movies)) {
+    $backdrop_fondo = getMovieBackdrop($user, $pwd, $movies);
+}
+
+if (empty($backdrop_fondo)) {
+    $backdrop_fondo = 'assets/image/wallpaper_03.webp';
+}
 
 function getRandomSagaWallpaper() {
     $wallpapers = [

@@ -411,4 +411,23 @@ For the latest version and active development, please refer to the React.js/Node
 
 ---
 
-**Desarrollado por el equipo de CYBERCODE LABS**
+---
+
+## 👥 Credits & Development Team
+
+**Developed with ❤️ by CYBERCODE LABS**
+
+This project represents a comprehensive effort in web-based IPTV streaming solutions, combining modern web technologies with robust backend architectures to deliver seamless streaming experiences.
+
+### Technical Contributions
+
+- **Architecture & Design**: Clean MVC pattern implementation with modular service layer
+- **Backend Development**: PHP 7.4+ with JSON-based storage architecture
+- **Frontend Development**: Responsive design with Bootstrap 5.0 and vanilla JavaScript
+- **API Integration**: Xtream UI API integration and RESTful endpoint development
+
+For technical inquiries, contributions, or collaboration opportunities, please refer to our [GitHub Issues](https://github.com/Jeremias0618/PLAYGO-Web-IPTV-Player/issues).
+
+---
+
+**© 2026 CYBERCODE LABS. All rights reserved.**
