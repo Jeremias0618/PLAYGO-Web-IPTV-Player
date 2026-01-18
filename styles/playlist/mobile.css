@@ -15,57 +15,18 @@
         object-fit: contain;
     }
     
-    .main-bg-fondo > div[style*="PERFIL"] {
+    .main-bg-fondo > div[style*="PELÍCULAS"] {
         margin-top: 70px !important;
         margin-bottom: 18px !important;
     }
     
-    .profile-page-title {
+    .playlist-page-title {
         margin: 80px 0 25px 0;
     }
     
-    .profile-page-title h2 {
+    .playlist-page-title h2 {
         font-size: 1.8rem;
         letter-spacing: 2px;
-    }
-    
-    .profile-content {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-    }
-    
-    .profile-header {
-        flex-direction: column;
-        text-align: center;
-        padding: 20px 15px;
-        gap: 20px;
-    }
-    
-    .profile-header .avatar {
-        width: 120px;
-        height: 120px;
-        margin: 0 auto;
-    }
-    
-    .profile-header .profile-info {
-        width: 100%;
-    }
-    
-    .profile-header .profile-info h1 {
-        font-size: 28px;
-        margin-bottom: 8px;
-    }
-    
-    .profile-header .profile-info p {
-        font-size: 14px;
-        justify-content: center;
-        margin-bottom: 4px;
-    }
-    
-    .profile-header .account-status {
-        font-size: 12px;
-        padding: 4px 8px;
-        margin-top: 8px;
     }
     
     .modal-buscador {
@@ -132,83 +93,22 @@
         font-size: 0.93rem !important;
     }
     
-    .section-title {
-        font-size: 20px;
-        margin: 25px 0 15px;
-        padding-bottom: 8px;
+    .playlist-page-title {
+        margin: 80px 0 25px 0;
     }
     
-    .section-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+    .playlist-page-title h2 {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
     }
     
-    .info-card {
-        padding: 15px;
+    .catalog.details {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
     }
     
-    .info-card h3 {
-        font-size: 16px;
-    }
-    
-    .info-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-    }
-    
-    .info-label {
-        font-size: 13px;
-    }
-    
-    .info-value {
-        font-size: 13px;
-    }
-    
-    .history-section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-    
-    .history-nav-buttons {
-        align-self: flex-end;
-    }
-    
-    .history-nav-btn {
-        font-size: 28px;
-    }
-    
-    .history-carousel .card.card--big {
-        width: 160px;
-        min-width: 160px;
-    }
-    
-    .favorites-carousel .card.card--big {
-        width: 160px;
-        min-width: 160px;
-    }
-    
-    .playlists-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 15px;
-    }
-    
-    .playlist-cover {
-        height: 150px;
-    }
-    
-    .playlist-title {
-        font-size: 16px;
-    }
-    
-    .playlist-meta {
-        font-size: 12px;
-    }
-    
-    .playlist-count-badge {
-        font-size: 12px;
-        padding: 4px 8px;
+    .card__cover img {
+        height: 260px !important;
     }
 }
 

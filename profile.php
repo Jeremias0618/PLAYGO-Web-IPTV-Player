@@ -24,6 +24,7 @@ $series_watched = $pageData['series_watched'];
 $consecutive_days = $pageData['consecutive_days'];
 $recent_history = $pageData['recent_history'];
 $favorites = $pageData['favorites'];
+$playlists = $pageData['playlists'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -313,6 +314,39 @@ $favorites = $pageData['favorites'];
                     <?php else: ?>
                         <div class="no-history">
                             <p>No hay favoritos</p>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <h2 class="section-title"><i class="fas fa-list"></i> Mis Listas</h2>
+                    <?php if (!empty($playlists)): ?>
+                        <div class="playlists-grid">
+                            <?php foreach ($playlists as $playlistName => $playlistItems): ?>
+                                <?php if (is_array($playlistItems) && !empty($playlistItems)): ?>
+                                    <?php
+                                    $firstItem = $playlistItems[0];
+                                    $playlistCover = $firstItem['backdrop'] ?? $firstItem['img'] ?? 'assets/logo/logo.png';
+                                    $playlistCount = count($playlistItems);
+                                    ?>
+                                    <div class="playlist-card">
+                                        <a href="playlist.php?name=<?php echo urlencode($playlistName); ?>" class="playlist-link">
+                                            <div class="playlist-cover">
+                                                <img src="<?php echo htmlspecialchars($playlistCover); ?>" alt="<?php echo htmlspecialchars($playlistName); ?>" onerror="this.src='assets/logo/logo.png'">
+                                                <div class="playlist-count-badge">
+                                                    <i class="fas fa-list"></i> <?php echo $playlistCount; ?>
+                                                </div>
+                                            </div>
+                                            <div class="playlist-info">
+                                                <h3 class="playlist-title"><?php echo htmlspecialchars($playlistName); ?></h3>
+                                                <p class="playlist-meta"><?php echo $playlistCount; ?> <?php echo $playlistCount == 1 ? 'elemento' : 'elementos'; ?></p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="no-history">
+                            <p>No hay listas creadas</p>
                         </div>
                     <?php endif; ?>
                 </div>

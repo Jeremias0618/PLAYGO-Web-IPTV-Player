@@ -17,6 +17,7 @@ function getProfilePageData($user, $pwd) {
     $historyFile = __DIR__ . '/../../storage/users/' . $safeUser . '/history.json';
     $progressFile = __DIR__ . '/../../storage/users/' . $safeUser . '/progress.json';
     $favoritesFile = __DIR__ . '/../../storage/users/' . $safeUser . '/favorites.json';
+    $playlistsFile = __DIR__ . '/../../storage/users/' . $safeUser . '/playlists.json';
     
     $memberSince = 'Desconocida';
     $lastLogin = 'Desconocida';
@@ -242,6 +243,15 @@ function getProfilePageData($user, $pwd) {
         }
     }
     
+    $playlists = [];
+    if (file_exists($playlistsFile)) {
+        $playlistsContent = file_get_contents($playlistsFile);
+        $playlistsData = json_decode($playlistsContent, true);
+        if (is_array($playlistsData)) {
+            $playlists = $playlistsData;
+        }
+    }
+    
     return [
         'backdrop' => $backdrop,
         'username' => $user,
@@ -254,7 +264,8 @@ function getProfilePageData($user, $pwd) {
         'series_watched' => $seriesWatched,
         'consecutive_days' => $consecutiveDays,
         'recent_history' => $recentHistory,
-        'favorites' => $favorites
+        'favorites' => $favorites,
+        'playlists' => $playlists
     ];
 }
 
