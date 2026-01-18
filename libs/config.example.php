@@ -3,16 +3,9 @@
 define('IP','URL_SERVER'); 
 define('TMDB_API_KEY', 'API_KEY_TMDB');
 define('LANGUAGE', 'LANGUAGE_DEFAULT'); // es-ES (España), es-MX (Latino), en-US, etc.
-
-$customChannelLogos = [];
-
 define("NOME_IPTV", 'PLAYGO');
 
-define("XTREAM_URL", 'https://cms-us.xtream-codes.com/');
-define("XTREAM_USER", '');
-define("XTREAM_PWD", '');
-define("XTREAM_PLANO", '1');
-define("ATIVA_BLOQUEIO_TESTE", '0');
+$customChannelLogos = [];
 
 define("SMTP_HOST", 'mail.playgo.pe');
 define("SMTP_USER", '');
