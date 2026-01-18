@@ -252,6 +252,16 @@ function getProfilePageData($user, $pwd) {
         }
     }
     
+    $sagas = [];
+    $sagasFile = __DIR__ . '/../../storage/sagas.json';
+    if (file_exists($sagasFile)) {
+        $sagasContent = file_get_contents($sagasFile);
+        $sagasData = json_decode($sagasContent, true);
+        if (is_array($sagasData)) {
+            $sagas = array_slice($sagasData, 0, 6);
+        }
+    }
+    
     return [
         'backdrop' => $backdrop,
         'username' => $user,
@@ -265,7 +275,8 @@ function getProfilePageData($user, $pwd) {
         'consecutive_days' => $consecutiveDays,
         'recent_history' => $recentHistory,
         'favorites' => $favorites,
-        'playlists' => $playlists
+        'playlists' => $playlists,
+        'sagas' => $sagas
     ];
 }
 

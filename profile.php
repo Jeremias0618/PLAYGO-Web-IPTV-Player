@@ -25,6 +25,7 @@ $consecutive_days = $pageData['consecutive_days'];
 $recent_history = $pageData['recent_history'];
 $favorites = $pageData['favorites'];
 $playlists = $pageData['playlists'];
+$sagas = $pageData['sagas'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -347,6 +348,49 @@ $playlists = $pageData['playlists'];
                     <?php else: ?>
                         <div class="no-history">
                             <p>No hay listas creadas</p>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <h2 class="section-title"><i class="fas fa-layer-group"></i> Sagas</h2>
+                    <?php if (!empty($sagas)): ?>
+                        <div class="playlists-grid">
+                            <?php foreach ($sagas as $saga): ?>
+                                <?php
+                                $sagaItems = $saga['items'] ?? [];
+                                $sagaCount = count($sagaItems);
+                                $sagaCover = $saga['image'] ?? '';
+                                
+                                if (empty($sagaCover) && !empty($sagaItems) && isset($sagaItems[0])) {
+                                    $firstItem = $sagaItems[0];
+                                    $sagaCover = $firstItem['img'] ?? $firstItem['backdrop'] ?? $firstItem['poster'] ?? 'assets/logo/logo.png';
+                                }
+                                
+                                if (empty($sagaCover)) {
+                                    $sagaCover = 'assets/logo/logo.png';
+                                }
+                                
+                                $sagaName = htmlspecialchars($saga['title'] ?? 'Sin título');
+                                $sagaId = $saga['id'] ?? '';
+                                ?>
+                                <div class="playlist-card">
+                                    <a href="collection.php?saga=<?php echo htmlspecialchars($sagaId); ?>" class="playlist-link">
+                                        <div class="playlist-cover">
+                                            <img src="<?php echo htmlspecialchars($sagaCover); ?>" alt="<?php echo $sagaName; ?>" onerror="this.src='assets/logo/logo.png'">
+                                            <div class="playlist-count-badge">
+                                                <i class="fas fa-list"></i> <?php echo $sagaCount; ?>
+                                            </div>
+                                        </div>
+                                        <div class="playlist-info">
+                                            <h3 class="playlist-title"><?php echo $sagaName; ?></h3>
+                                            <p class="playlist-meta"><?php echo $sagaCount; ?> <?php echo $sagaCount == 1 ? 'elemento' : 'elementos'; ?></p>
+                                        </div>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="no-history">
+                            <p>No hay sagas disponibles</p>
                         </div>
                     <?php endif; ?>
                 </div>
