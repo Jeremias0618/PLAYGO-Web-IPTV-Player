@@ -11,8 +11,12 @@
 
 **PLAYGO** is a production-ready, modular web-based IPTV player that connects to Xtream UI-compatible IPTV services. Built with a clean MVC architecture, it provides a comprehensive streaming platform with advanced features including user profiles, custom playlists, saga management, and real-time progress tracking. The system uses JSON-based storage for scalability and performance, eliminating the need for traditional databases.
 
+> ⚠️ **IMPORTANT NOTICE**: This PHP version is an **outdated legacy version** of the PLAYGO project. The current active version has been migrated to **React.js** and **Node.js** with **PostgreSQL** database, featuring a completely redesigned architecture and enhanced functionality. This PHP repository is maintained for historical reference and legacy deployments only.
+
 ![Preview Screenshot](assets/image/Screenshot_1.png)
+
 ![Preview Screenshot](assets/image/Screenshot_2.png)
+
 ![Preview Screenshot](assets/image/Screenshot_3.png)
 
 ---
@@ -26,13 +30,6 @@ PLAYGO follows a **Model-View-Controller (MVC)** architecture pattern with clear
 - **Endpoints** (`libs/endpoints/`): RESTful API endpoints for AJAX requests and data operations
 - **Views**: PHP templates that render the user interface
 - **Storage**: JSON-based file system for user data, playlists, history, and configuration
-
-### Key Design Patterns
-
-- **Dependency Injection**: Services are injected into controllers for testability
-- **Repository Pattern**: Data access is abstracted through service layers
-- **Factory Pattern**: Used for creating API clients and service instances
-- **Observer Pattern**: Event-driven architecture for user actions and data updates
 
 ---
 
@@ -164,7 +161,7 @@ PLAYGO/
 
 ### Server Requirements
 - **Web Server**: Apache 2.4+ or Nginx 1.18+
-- **PHP**: 7.2 or higher (PHP 8.0+ recommended)
+- **PHP**: 7.4 or higher (PHP 8.0+ recommended)
 - **PHP Extensions**:
   - `curl` - For API communication
   - `json` - For JSON data processing
@@ -179,7 +176,6 @@ PLAYGO/
 - **Permissions**: Write access required for:
   - `storage/` directory and subdirectories
   - `tmdb_cache/` directory
-  - `db/` directory (if used)
 
 ### External Services
 - **Xtream UI**: Compatible IPTV service with API access
@@ -206,17 +202,16 @@ PLAYGO/
 
 3. **Set required configuration**:
    ```php
-   define('XTREAM_URL', 'https://your-xtream-server.com/');
-   define('XTREAM_USER', 'your_username');
-   define('XTREAM_PWD', 'your_password');
-   define('TMDB_API_KEY', 'your_tmdb_api_key'); // Optional
+   define('IP', 'URL_SERVER'); // IP or URL of the Xtream Codes server
+   define('TMDB_API_KEY', 'API_KEY_TMDB'); // TMDB API key
+   define('LANGUAGE', 'LANGUAGE_DEFAULT'); // Default language for movie and series descriptions
+   define('NOME_IPTV', 'PLAYGO'); // IPTV service name
    ```
 
 4. **Set directory permissions**:
    ```bash
    chmod -R 755 storage/
    chmod -R 755 tmdb_cache/
-   chmod -R 755 db/
    ```
 
 5. **Configure web server** (Apache example):
@@ -228,13 +223,10 @@ PLAYGO/
 
 | Option | Description | Required |
 |--------|-------------|----------|
-| `XTREAM_URL` | Xtream UI server URL | Yes |
-| `XTREAM_USER` | Xtream UI username | Yes |
-| `XTREAM_PWD` | Xtream UI password | Yes |
-| `TMDB_API_KEY` | TMDB API key for metadata | No |
-| `LANGUAGE` | Default language (es-ES, en-US, etc.) | No |
-| `SAGAS_ADMIN_ENABLED` | Enable saga admin panel | No |
-| `SAGAS_ADMIN_USER` | Username for saga admin access | No |
+| `IP` | IP or URL of the Xtream Codes server | Yes |
+| `TMDB_API_KEY` | TMDB API key for metadata | Yes |
+| `LANGUAGE` | Default language (es-ES, es-MX, en-US, etc.) | Yes |
+| `NOME_IPTV` | IPTV service name | Yes |
 | `SMTP_*` | SMTP configuration for emails | No |
 
 ---
@@ -283,128 +275,6 @@ PLAYGO provides RESTful endpoints for frontend operations:
 
 ---
 
-## 📊 Data Storage Architecture
-
-### JSON Storage Structure
-
-PLAYGO uses a hierarchical JSON storage system:
-
-```json
-storage/
-├── sagas.json                    # Global saga definitions
-└── users/
-    └── [username]/
-        ├── user_data.json        # Session history
-        │   [
-        │     {"id": 1, "user": "user", "date": "2025-01-16 10:00:00"},
-        │     ...
-        │   ]
-        ├── playlists.json        # User playlists
-        │   {
-        │     "Playlist Name": [
-        │       {"id": "123", "type": "movie", "name": "...", ...},
-        │       ...
-        │     ]
-        │   }
-        ├── favorites.json        # Favorite content
-        │   [
-        │     {"id": "123", "type": "movie", "name": "...", ...},
-        │     ...
-        │   ]
-        ├── history.json          # Viewing history
-        │   [
-        │     {"id": "123", "type": "movie", "name": "...", "date": "...", ...},
-        │     ...
-        │   ]
-        └── progress.json         # Viewing progress
-            {
-              "123": {"position": 3600, "duration": 7200, "last_updated": "..."},
-              ...
-            }
-```
-
-### Saga Structure
-
-```json
-{
-  "id": 1,
-  "title": "Saga Name",
-  "image": "path/to/image.jpg",
-  "items": [
-    {
-      "id": "123",
-      "type": "movie",
-      "name": "Movie Title",
-      "order": 1
-    },
-    ...
-  ]
-}
-```
-
----
-
-## 🎨 Frontend Architecture
-
-### CSS Organization
-
-Styles are organized by page/module with mobile-first approach:
-
-- **Layout CSS**: Desktop-specific styles
-- **Mobile CSS**: Responsive styles for mobile devices (max-width: 600px)
-- **Component CSS**: Reusable component styles
-
-### JavaScript Modules
-
-JavaScript follows modular architecture:
-
-- **Page-specific modules**: Each page has its own script directory
-- **Shared utilities**: Common functions in `libs/lib.php` (PHP) or shared JS files
-- **Event-driven**: Uses jQuery for DOM manipulation and event handling
-- **Carousel integration**: Owl Carousel for content carousels
-
-### Responsive Design
-
-- **Breakpoints**: 
-  - Mobile: `max-width: 600px`
-  - Tablet: `601px - 1000px`
-  - Desktop: `> 1000px`
-- **Touch optimization**: Swipe gestures, touch-friendly buttons
-- **Performance**: Lazy loading, image optimization, code splitting
-
----
-
-## 🔐 Security Features
-
-- **Input Validation**: All user inputs are sanitized and validated
-- **XSS Protection**: Output escaping using `htmlspecialchars()`
-- **CSRF Protection**: Token-based request validation
-- **Session Security**: Secure cookie handling with expiration
-- **File Upload Validation**: Type and size restrictions
-- **Path Traversal Protection**: Sanitized file paths
-- **SQL Injection Prevention**: JSON storage eliminates SQL injection risks
-
----
-
-## 📈 Performance Optimization
-
-### Caching Strategy
-- **API Response Caching**: Reduces redundant Xtream UI API calls
-- **Image Caching**: Local storage of TMDB images
-- **Metadata Caching**: Cached content metadata for faster page loads
-
-### Code Optimization
-- **Parallel Processing**: `curl_multi` for concurrent API requests
-- **Lazy Loading**: Images and content loaded on demand
-- **Code Splitting**: Modular JavaScript and CSS loading
-- **Minification**: Production-ready minified assets (when applicable)
-
-### Database Optimization
-- **JSON Indexing**: Efficient JSON structure for quick lookups
-- **File-based Storage**: No database overhead
-- **Incremental Updates**: Only modified data is written
-
----
 
 ## 🧪 Development
 
@@ -513,17 +383,32 @@ The developers and contributors of PLAYGO are not responsible for:
 
 ---
 
-## 🗺️ Roadmap
+## ⚠️ Project Status & Migration Notice
 
-- [ ] Database migration support (MySQL/PostgreSQL)
-- [ ] Multi-language interface
-- [ ] Advanced analytics dashboard
-- [ ] RESTful API for mobile apps
-- [ ] WebSocket support for real-time updates
-- [ ] Advanced recommendation engine
-- [ ] Social features (sharing, reviews)
-- [ ] Chromecast/Apple TV support
+**This PHP version is deprecated and no longer actively maintained.**
+
+The PLAYGO project has been **fully migrated** to a modern technology stack:
+
+- **Frontend**: React.js with modern UI/UX design
+- **Backend**: Node.js with Express.js framework
+- **Database**: PostgreSQL for robust data management
+- 
+- **Architecture**: RESTful API with microservices architecture
+
+The current active version features:
+- Complete redesign with improved user experience
+- Enhanced performance and scalability
+- Advanced features and functionality
+- Better security and maintainability
+- Modern development workflow
+
+**This PHP repository is maintained for:**
+- Historical reference
+- Legacy deployments still in use
+- Educational purposes
+
+For the latest version and active development, please refer to the React.js/Node.js repository.
 
 ---
 
-**Built with ❤️ by the PLAYGO development team**
+**Desarrollado por el equipo de CYBERCODE LABS**
