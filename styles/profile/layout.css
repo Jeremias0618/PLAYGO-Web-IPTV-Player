@@ -491,6 +491,59 @@ html, body {
     margin: 0;
 }
 
+.ver-mas-button-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.ver-mas-button {
+    background: linear-gradient(180deg, #e50914 0%, #c8008f 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(229, 9, 20, 0.3);
+}
+
+.ver-mas-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(229, 9, 20, 0.5);
+    background: linear-gradient(180deg, #f01a25 0%, #d9009a 100%);
+}
+
+.ver-mas-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(229, 9, 20, 0.3);
+}
+
+.ver-mas-button span {
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.ver-mas-button i {
+    color: #fff;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
+
+.ver-mas-button:hover i {
+    transform: translateX(4px);
+}
+
 .no-history {
     width: 100%;
     text-align: center;

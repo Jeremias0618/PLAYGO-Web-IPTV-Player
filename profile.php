@@ -320,31 +320,122 @@ $sagas = $pageData['sagas'];
                     
                     <h2 class="section-title"><i class="fas fa-list"></i> Mis Listas</h2>
                     <?php if (!empty($playlists)): ?>
-                        <div class="playlists-grid">
-                            <?php foreach ($playlists as $playlistName => $playlistItems): ?>
-                                <?php if (is_array($playlistItems) && !empty($playlistItems)): ?>
-                                    <?php
-                                    $firstItem = $playlistItems[0];
-                                    $playlistCover = $firstItem['backdrop'] ?? $firstItem['img'] ?? 'assets/logo/logo.png';
-                                    $playlistCount = count($playlistItems);
-                                    ?>
-                                    <div class="playlist-card">
-                                        <a href="playlist.php?name=<?php echo urlencode($playlistName); ?>" class="playlist-link">
-                                            <div class="playlist-cover">
-                                                <img src="<?php echo htmlspecialchars($playlistCover); ?>" alt="<?php echo htmlspecialchars($playlistName); ?>" onerror="this.src='assets/logo/logo.png'">
-                                                <div class="playlist-count-badge">
-                                                    <i class="fas fa-list"></i> <?php echo $playlistCount; ?>
-                                                </div>
+                        <?php
+                        $playlistsArray = [];
+                        foreach ($playlists as $playlistName => $playlistItems) {
+                            if (is_array($playlistItems) && !empty($playlistItems)) {
+                                $playlistsArray[] = [
+                                    'name' => $playlistName,
+                                    'items' => $playlistItems
+                                ];
+                            }
+                        }
+                        $totalPlaylists = count($playlistsArray);
+                        $initialPlaylists = array_slice($playlistsArray, 0, 6);
+                        $remainingPlaylists = array_slice($playlistsArray, 6);
+                        ?>
+                        <div class="playlists-grid" id="playlistsGrid">
+                            <?php foreach ($initialPlaylists as $playlist): ?>
+                                <?php
+                                $playlistName = $playlist['name'];
+                                $playlistItems = $playlist['items'];
+                                $firstItem = $playlistItems[0];
+                                $playlistCover = $firstItem['backdrop'] ?? $firstItem['img'] ?? 'assets/logo/logo.png';
+                                $playlistCount = count($playlistItems);
+                                ?>
+                                <div class="playlist-card">
+                                    <a href="playlist.php?name=<?php echo urlencode($playlistName); ?>" class="playlist-link">
+                                        <div class="playlist-cover">
+                                            <img src="<?php echo htmlspecialchars($playlistCover); ?>" alt="<?php echo htmlspecialchars($playlistName); ?>" onerror="this.src='assets/logo/logo.png'">
+                                            <div class="playlist-count-badge">
+                                                <i class="fas fa-list"></i> <?php echo $playlistCount; ?>
                                             </div>
-                                            <div class="playlist-info">
-                                                <h3 class="playlist-title"><?php echo htmlspecialchars($playlistName); ?></h3>
-                                                <p class="playlist-meta"><?php echo $playlistCount; ?> <?php echo $playlistCount == 1 ? 'elemento' : 'elementos'; ?></p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                <?php endif; ?>
+                                        </div>
+                                        <div class="playlist-info">
+                                            <h3 class="playlist-title"><?php echo htmlspecialchars($playlistName); ?></h3>
+                                            <p class="playlist-meta"><?php echo $playlistCount; ?> <?php echo $playlistCount == 1 ? 'elemento' : 'elementos'; ?></p>
+                                        </div>
+                                    </a>
+                                </div>
                             <?php endforeach; ?>
                         </div>
+                        <?php if ($totalPlaylists > 6): ?>
+                            <div class="ver-mas-button-wrapper">
+                                <button class="ver-mas-button" id="playlistVerMasBtn">
+                                    <span>VER MÁS</span>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($totalPlaylists > 6): ?>
+                        <script>
+                        (function() {
+                            const allPlaylists = <?php echo json_encode($remainingPlaylists); ?>;
+                            const playlistsGrid = document.getElementById('playlistsGrid');
+                            let currentIndex = 0;
+                            
+                            function getVerMasButton() {
+                                return document.getElementById('playlistVerMasBtn');
+                            }
+                            
+                            function getVerMasButtonWrapper() {
+                                const btn = getVerMasButton();
+                                return btn ? btn.closest('.ver-mas-button-wrapper') : null;
+                            }
+                            
+                            if (allPlaylists && allPlaylists.length > 0 && playlistsGrid) {
+                                const verMasBtn = getVerMasButton();
+                                if (verMasBtn) {
+                                    verMasBtn.addEventListener('click', function() {
+                                        const nextBatch = allPlaylists.slice(currentIndex, currentIndex + 6);
+                                        
+                                        if (nextBatch.length === 0) {
+                                            const wrapper = getVerMasButtonWrapper();
+                                            if (wrapper) {
+                                                wrapper.style.display = 'none';
+                                            }
+                                            return;
+                                        }
+                                        
+                                        nextBatch.forEach(function(playlist) {
+                                            const playlistName = playlist.name;
+                                            const playlistItems = playlist.items;
+                                            const firstItem = playlistItems[0];
+                                            const playlistCover = firstItem['backdrop'] || firstItem['img'] || 'assets/logo/logo.png';
+                                            const playlistCount = playlistItems.length;
+                                            
+                                            const card = document.createElement('div');
+                                            card.className = 'playlist-card';
+                                            card.innerHTML = '<a href="playlist.php?name=' + encodeURIComponent(playlistName) + '" class="playlist-link">' +
+                                                '<div class="playlist-cover">' +
+                                                    '<img src="' + playlistCover.replace(/"/g, '&quot;') + '" alt="' + playlistName.replace(/"/g, '&quot;') + '" onerror="this.src=\'assets/logo/logo.png\'">' +
+                                                    '<div class="playlist-count-badge">' +
+                                                        '<i class="fas fa-list"></i> ' + playlistCount +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="playlist-info">' +
+                                                    '<h3 class="playlist-title">' + playlistName.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</h3>' +
+                                                    '<p class="playlist-meta">' + playlistCount + ' ' + (playlistCount == 1 ? 'elemento' : 'elementos') + '</p>' +
+                                                '</div>' +
+                                            '</a>';
+                                            
+                                            playlistsGrid.appendChild(card);
+                                        });
+                                        
+                                        currentIndex += nextBatch.length;
+                                        
+                                        if (currentIndex >= allPlaylists.length) {
+                                            const wrapper = getVerMasButtonWrapper();
+                                            if (wrapper) {
+                                                wrapper.style.display = 'none';
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        })();
+                        </script>
+                        <?php endif; ?>
                     <?php else: ?>
                         <div class="no-history">
                             <p>No hay listas creadas</p>
@@ -353,8 +444,12 @@ $sagas = $pageData['sagas'];
                     
                     <h2 class="section-title"><i class="fas fa-layer-group"></i> Sagas</h2>
                     <?php if (!empty($sagas)): ?>
+                        <?php
+                        $totalSagas = count($sagas);
+                        $initialSagas = array_slice($sagas, 0, 6);
+                        ?>
                         <div class="playlists-grid">
-                            <?php foreach ($sagas as $saga): ?>
+                            <?php foreach ($initialSagas as $saga): ?>
                                 <?php
                                 $sagaItems = $saga['items'] ?? [];
                                 $sagaCount = count($sagaItems);
@@ -387,6 +482,15 @@ $sagas = $pageData['sagas'];
                                     </a>
                                 </div>
                             <?php endforeach; ?>
+                            
+                            <?php if ($totalSagas > 6): ?>
+                                <div class="ver-mas-button-wrapper">
+                                    <a href="sagas.php" class="ver-mas-button">
+                                        <span>VER MÁS</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     <?php else: ?>
                         <div class="no-history">

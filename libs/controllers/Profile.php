@@ -258,7 +258,7 @@ function getProfilePageData($user, $pwd) {
         $sagasContent = file_get_contents($sagasFile);
         $sagasData = json_decode($sagasContent, true);
         if (is_array($sagasData)) {
-            $sagas = array_slice($sagasData, 0, 6);
+            $sagas = $sagasData;
         }
     }
     
