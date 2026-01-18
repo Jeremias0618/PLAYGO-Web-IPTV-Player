@@ -21,29 +21,32 @@
     }
     
     .profile-page-title {
-        margin: 80px 0 25px 0;
+        margin: 80px 0 20px 0;
     }
     
     .profile-page-title h2 {
-        font-size: 1.8rem;
-        letter-spacing: 2px;
+        font-size: 1.6rem;
+        letter-spacing: 1.5px;
     }
     
     .profile-content {
         margin-top: 0 !important;
         padding-top: 0 !important;
+        padding-bottom: 20px;
     }
     
     .profile-header {
         flex-direction: column;
         text-align: center;
-        padding: 20px 15px;
-        gap: 20px;
+        padding: 25px 15px 20px 15px;
+        gap: 18px;
+        position: relative;
+        margin-bottom: 30px;
     }
     
     .profile-header .avatar {
-        width: 120px;
-        height: 120px;
+        width: 110px;
+        height: 110px;
         margin: 0 auto;
     }
     
@@ -52,20 +55,43 @@
     }
     
     .profile-header .profile-info h1 {
-        font-size: 28px;
-        margin-bottom: 8px;
+        font-size: 24px;
+        margin-bottom: 10px;
+        line-height: 1.3;
     }
     
     .profile-header .profile-info p {
-        font-size: 14px;
+        font-size: 13px;
         justify-content: center;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
+        line-height: 1.4;
     }
     
     .profile-header .account-status {
-        font-size: 12px;
-        padding: 4px 8px;
-        margin-top: 8px;
+        font-size: 11px;
+        padding: 5px 10px;
+        margin-top: 10px;
+        display: inline-block;
+    }
+    
+    .profile-logout-btn {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        width: 100%;
+        max-width: 280px;
+        margin: 15px auto 0 auto;
+        padding: 12px 18px;
+        font-size: 13px;
+        justify-content: center;
+    }
+    
+    .profile-logout-btn span {
+        font-size: 13px;
+    }
+    
+    .profile-logout-btn i {
+        font-size: 14px;
     }
     
     .modal-buscador {
@@ -133,82 +159,365 @@
     }
     
     .section-title {
-        font-size: 20px;
-        margin: 25px 0 15px;
+        font-size: 18px;
+        margin: 20px 0 12px 0;
         padding-bottom: 8px;
+        line-height: 1.3;
+    }
+    
+    .history-carousel-wrapper + .section-title,
+    .history-carousel-wrapper:has(.favorites-carousel) + .section-title {
+        margin-top: 15px !important;
+    }
+    
+    .section-title i {
+        font-size: 16px;
     }
     
     .section-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 18px;
+        margin-bottom: 20px;
     }
     
     .info-card {
-        padding: 15px;
+        padding: 18px;
+        border-radius: 10px;
     }
     
     .info-card h3 {
-        font-size: 16px;
+        font-size: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .info-card h3 i {
+        font-size: 14px;
     }
     
     .info-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
     }
     
     .info-label {
-        font-size: 13px;
+        font-size: 12px;
+        color: #b3b3b3;
+        flex-shrink: 0;
+        text-align: left;
     }
     
     .info-value {
-        font-size: 13px;
+        font-size: 12px;
+        color: #fff;
+        text-align: right;
+        word-break: break-word;
+        flex: 1;
     }
     
     .history-section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+        margin-top: 15px;
+        padding-bottom: 0;
+    }
+    
+    .history-section-header + .history-carousel-wrapper {
+        margin-top: 0;
+    }
+    
+    .history-carousel-wrapper + .history-section-header {
+        margin-top: 15px;
+    }
+    
+    .history-section-header .section-title {
+        margin: 0;
+        flex: 1;
     }
     
     .history-nav-buttons {
-        align-self: flex-end;
+        display: flex;
+        gap: 8px;
+        align-items: center;
     }
     
     .history-nav-btn {
-        font-size: 28px;
+        font-size: 24px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        transition: all 0.3s ease;
+    }
+    
+    .history-nav-btn:active {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(0.95);
+    }
+    
+    .history-carousel-wrapper {
+        margin: 0 -5px 0 -5px;
+        padding: 0 5px 0 5px;
+    }
+    
+    .history-carousel-wrapper .owl-stage-outer {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .history-carousel-wrapper .owl-stage {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .history-carousel .owl-item {
+        padding-left: 4px;
+        padding-right: 4px;
+        margin-bottom: 0;
     }
     
     .history-carousel .card.card--big {
-        width: 160px;
-        min-width: 160px;
+        width: 120px;
+        min-width: 120px;
+        max-width: 120px;
+    }
+    
+    .history-carousel .card.card--big .card__cover {
+        height: 180px;
+    }
+    
+    .history-carousel .card.card--big .card__cover img {
+        height: 100%;
+    }
+    
+    .history-carousel .card.card--big .card__title {
+        font-size: 13px;
+        line-height: 1.3;
+        margin-top: 6px;
+    }
+    
+    .history-carousel .card.card--big .card__rate {
+        font-size: 11px;
+        margin-top: 3px;
+        margin-bottom: 0;
+    }
+    
+    .history-carousel .card.card--big .card__content {
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    
+    .history-carousel .card.card--big {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .history-carousel-wrapper:has(.favorites-carousel),
+    .favorites-carousel-wrapper {
+        margin: 0 -5px 0 -5px;
+        padding: 0 5px 0 5px;
+    }
+    
+    .history-carousel-wrapper:has(.favorites-carousel) .owl-stage-outer,
+    .favorites-carousel-wrapper .owl-stage-outer {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .history-carousel-wrapper:has(.favorites-carousel) .owl-stage,
+    .favorites-carousel-wrapper .owl-stage {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .favorites-carousel .owl-item {
+        padding-left: 4px;
+        padding-right: 4px;
+        margin-bottom: 0;
     }
     
     .favorites-carousel .card.card--big {
-        width: 160px;
-        min-width: 160px;
+        width: 120px;
+        min-width: 120px;
+        max-width: 120px;
+    }
+    
+    .favorites-carousel .card.card--big .card__cover {
+        height: 180px;
+    }
+    
+    .favorites-carousel .card.card--big .card__cover img {
+        height: 100%;
+    }
+    
+    .favorites-carousel .card.card--big .card__title {
+        font-size: 13px;
+        line-height: 1.3;
+        margin-top: 6px;
+    }
+    
+    .favorites-carousel .card.card--big .card__rate {
+        font-size: 11px;
+        margin-top: 3px;
+        margin-bottom: 0;
+    }
+    
+    .favorites-carousel .card.card--big .card__content {
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    
+    .favorites-carousel .card.card--big {
+        margin-bottom: 0;
+        padding-bottom: 0;
     }
     
     .playlists-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .playlist-card {
+        border-radius: 10px;
     }
     
     .playlist-cover {
-        height: 150px;
+        height: 120px;
+    }
+    
+    .playlist-info {
+        padding: 12px;
     }
     
     .playlist-title {
-        font-size: 16px;
+        font-size: 14px;
+        line-height: 1.3;
+        margin-bottom: 4px;
     }
     
     .playlist-meta {
-        font-size: 12px;
+        font-size: 11px;
     }
     
     .playlist-count-badge {
-        font-size: 12px;
+        font-size: 11px;
         padding: 4px 8px;
+        top: 6px;
+        right: 6px;
+    }
+    
+    .playlist-delete-btn {
+        width: 28px;
+        height: 28px;
+        top: 6px;
+        right: 6px;
+    }
+    
+    .playlist-delete-btn i {
+        font-size: 12px;
+    }
+    
+    .playlist-card:has(.playlist-delete-btn) .playlist-count-badge {
+        right: 40px;
+    }
+    
+    .ver-mas-button-wrapper {
+        margin-top: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .ver-mas-button {
+        padding: 10px 20px;
+        font-size: 13px;
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .ver-mas-button span {
+        font-size: 13px;
+    }
+    
+    .ver-mas-button i {
+        font-size: 12px;
+    }
+    
+    .delete-modal-overlay {
+        padding: 15px;
+    }
+    
+    .delete-modal-container {
+        max-width: 90%;
+    }
+    
+    .delete-modal-content {
+        padding: 25px 20px;
+        border-radius: 12px;
+    }
+    
+    .delete-modal-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .delete-modal-title {
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+    }
+    
+    .delete-modal-message {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 8px;
+    }
+    
+    .delete-modal-warning {
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+    }
+    
+    .delete-modal-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .delete-modal-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .no-history {
+        text-align: center;
+        padding: 40px 20px;
+        color: #b3b3b3;
+    }
+    
+    .no-history p {
+        font-size: 14px;
+    }
+    
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
     }
 }
 

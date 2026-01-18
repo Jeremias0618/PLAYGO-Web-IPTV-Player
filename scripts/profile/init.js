@@ -19,7 +19,7 @@ $(document).ready(function(){
             pullDrag: true,
             freeDrag: false,
             responsive:{
-                0:{ items:1, margin: 20 },
+                0:{ items:2.5, margin: 10 },
                 600:{ items:3, margin: 25 },
                 1000:{ items:5, margin: 30 }
             }
@@ -56,7 +56,7 @@ $(document).ready(function(){
             pullDrag: true,
             freeDrag: false,
             responsive:{
-                0:{ items:1, margin: 20 },
+                0:{ items:2.5, margin: 10 },
                 600:{ items:3, margin: 25 },
                 1000:{ items:5, margin: 30 }
             }
